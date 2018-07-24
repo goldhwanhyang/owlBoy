@@ -158,6 +158,9 @@
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework2D\매니져</Filter>
     </ClInclude>
+    <ClInclude Include="soundManager.h">
+      <Filter>GameFramework2D\매니져</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -239,6 +242,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="timeManager.cpp">
+      <Filter>GameFramework2D\매니져</Filter>
+    </ClCompile>
+    <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
     </ClCompile>
   </ItemGroup>

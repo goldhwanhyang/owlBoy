@@ -28,6 +28,7 @@ HRESULT gameNode::init(bool managerInit)
 		EFFECT->init();
 		RENDERMANAGER->init();
 		TIMEMANAGER->init();
+		SOUNDMANAGER->init();
 	}
 
 	return S_OK;
@@ -66,6 +67,10 @@ void gameNode::release()
 		// 타임매니져 싱글톤 해제
 		TIMEMANAGER->release();
 		TIMEMANAGER->releaseSingleton();
+		// 사운드매니져 싱글톤 해제
+		SOUNDMANAGER->release();
+		SOUNDMANAGER->releaseSingleton();
+
 
 		// 임시
 		CAM->release();
