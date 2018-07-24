@@ -10,6 +10,7 @@ HRESULT mainGame::init()
 	//이곳에서 초기화를 한다
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
 	SCENEMANAGER->addScene("널", new nullScene);
+	SCENEMANAGER->addScene("playingScene", new playingScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
 

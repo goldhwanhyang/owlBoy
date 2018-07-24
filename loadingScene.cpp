@@ -29,7 +29,7 @@ void loadingScene::update(void)
 	//로딩완료후 씬변경
 	if (_loading->loadingDone()) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
 	{
-		SCENEMANAGER->loadScene("널"); //게임씬으로 전환
+		SCENEMANAGER->loadScene("playingScene"); //게임씬으로 전환
 	}
 }
 

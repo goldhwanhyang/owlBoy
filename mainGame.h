@@ -2,6 +2,8 @@
 #include "gameNode.h"
 #include "loadingScene.h"
 #include "nullScene.h"
+#include "playingScene.h"
+
 //#include "enemyManager.h"
 class mainGame : public gameNode
 {
