@@ -27,7 +27,8 @@ HRESULT gameNode::init(bool managerInit)
 		CAM->init();
 		EFFECT->init();
 		RENDERMANAGER->init();
-
+		TIMEMANAGER->init();
+		SOUNDMANAGER->init();
 	}
 
 	return S_OK;
@@ -63,6 +64,12 @@ void gameNode::release()
 		//씬매니져 싱글톤 해제
 		SCENEMANAGER->release();
 		SCENEMANAGER->releaseSingleton();
+		// 타임매니져 싱글톤 해제
+		TIMEMANAGER->release();
+		TIMEMANAGER->releaseSingleton();
+		// 사운드매니져 싱글톤 해제
+		SOUNDMANAGER->release();
+		SOUNDMANAGER->releaseSingleton();
 
 
 		// 임시
@@ -85,7 +92,7 @@ void gameNode::update()
 {
 	//새로고침 (나중에 고성능 타이머를 만든 후에는 사용하지 않는다)
 	//더블버퍼링 이후 사용하지 않는다(true => false)
-	InvalidateRect(_hWnd, NULL, FALSE);
+	//InvalidateRect(_hWnd, NULL, FALSE);
 	//새로고침해주는 함수 - 인터넷익스플로어의 F5와 같다
 }
 
@@ -106,14 +113,14 @@ LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 
 	switch (iMessage)
 	{
-	case WM_TIMER:
-		this->update();
-		break;
-	case WM_PAINT:							//출력에 관한 모든것을 담당한다(문자, 그림, 도형등등 화면에 보이는 모든것)
-		hdc = BeginPaint(hWnd, &ps);
-		this->render();						//이미지 매니저를 추가하면서 HDC매개변수 제거
-		EndPaint(hWnd, &ps);
-		break;
+	//case WM_TIMER:
+	//	this->update();
+	//	break;
+	//case WM_PAINT:							//출력에 관한 모든것을 담당한다(문자, 그림, 도형등등 화면에 보이는 모든것)
+	//	hdc = BeginPaint(hWnd, &ps);
+	//	this->render();						//이미지 매니저를 추가하면서 HDC매개변수 제거
+	//	EndPaint(hWnd, &ps);
+	//	break;
 	case WM_MOUSEMOVE:		
 		_ptMouse.x = LOWORD(lParam);
 		_ptMouse.y = HIWORD(lParam);

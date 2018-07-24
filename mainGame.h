@@ -3,6 +3,7 @@
 #include "loadingScene.h"
 #include "nullScene.h"
 #include "playingScene.h"
+#include "dungeonScene.h"
 
 //#include "enemyManager.h"
 class mainGame : public gameNode

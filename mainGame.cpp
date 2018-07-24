@@ -11,6 +11,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
 	SCENEMANAGER->addScene("널", new nullScene);
 	SCENEMANAGER->addScene("playingScene", new playingScene);
+	SCENEMANAGER->addScene("dungeonScene", new dungeonScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
 
@@ -30,7 +31,14 @@ void mainGame::release()
 //=============================================================
 void mainGame::update()
 {
-	gameNode::update();
+	if (KEYMANAGER->isOnceKeyDown(VK_F5))
+	{
+		SCENEMANAGER->loadScene("playingScene");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F6))
+	{
+		SCENEMANAGER->loadScene("dungeonScene");
+	}
 
 	SCENEMANAGER->update();
 }
@@ -55,6 +63,7 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	{
 		TextOut(getMemDC(), WINSIZEX / 2 - 40, 200, "디버그 모드", strlen("디버그 모드"));
 
+		TIMEMANAGER->render(getMemDC());
 	}
 	_isDebug = FALSE; //모든 클래스 디버그모드 끄기
 
