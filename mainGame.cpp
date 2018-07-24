@@ -31,8 +31,6 @@ void mainGame::release()
 //=============================================================
 void mainGame::update()
 {
-	gameNode::update();
-
 	if (KEYMANAGER->isOnceKeyDown(VK_F5))
 	{
 		SCENEMANAGER->loadScene("playingScene");
@@ -65,6 +63,7 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	{
 		TextOut(getMemDC(), WINSIZEX / 2 - 40, 200, "디버그 모드", strlen("디버그 모드"));
 
+		TIMEMANAGER->render(getMemDC());
 	}
 	_isDebug = FALSE; //모든 클래스 디버그모드 끄기
 
