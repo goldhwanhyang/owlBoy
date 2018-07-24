@@ -11,6 +11,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
 	SCENEMANAGER->addScene("널", new nullScene);
 	SCENEMANAGER->addScene("playingScene", new playingScene);
+	SCENEMANAGER->addScene("dungeonScene", new dungeonScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
 
@@ -31,6 +32,15 @@ void mainGame::release()
 void mainGame::update()
 {
 	gameNode::update();
+
+	if (KEYMANAGER->isOnceKeyDown(VK_F5))
+	{
+		SCENEMANAGER->loadScene("playingScene");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F6))
+	{
+		SCENEMANAGER->loadScene("dungeonScene");
+	}
 
 	SCENEMANAGER->update();
 }

@@ -137,6 +137,24 @@
     <ClInclude Include="RenderManager.h">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
     </ClInclude>
+    <ClInclude Include="boss1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeonScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="playingScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="actor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -198,6 +216,24 @@
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeonScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="boss1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="playingScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="actor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
