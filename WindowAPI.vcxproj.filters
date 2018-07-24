@@ -33,9 +33,6 @@
     <Filter Include="GameFramework2D\애드온\총알">
       <UniqueIdentifier>{bf483cdc-0061-43a7-b258-9a4fa4e2fc54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework2D\애드온\에너미">
-      <UniqueIdentifier>{3ed4abcc-0819-4ea8-b79e-e3168e55b954}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework2D\애드온\체력바">
       <UniqueIdentifier>{413af328-8855-4598-a0a0-8dcf58fca46b}</UniqueIdentifier>
     </Filter>
@@ -97,15 +94,6 @@
     </ClInclude>
     <ClInclude Include="bullet.h">
       <Filter>GameFramework2D\애드온\총알</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyManager.h">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
-    </ClInclude>
-    <ClInclude Include="minion.h">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
     </ClInclude>
     <ClInclude Include="saveData.h">
       <Filter>GameFramework2D\데이터 입출력\싱글톤데이터</Filter>
@@ -174,15 +162,6 @@
     </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>GameFramework2D\애드온\총알</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyManager.cpp">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
-    </ClCompile>
-    <ClCompile Include="minion.cpp">
-      <Filter>GameFramework2D\애드온\에너미</Filter>
     </ClCompile>
     <ClCompile Include="saveData.cpp">
       <Filter>GameFramework2D\데이터 입출력\싱글톤데이터</Filter>
