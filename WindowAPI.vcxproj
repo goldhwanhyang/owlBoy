@@ -152,8 +152,6 @@
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="nullScene.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="enemyManager.h" />
     <ClInclude Include="gameNode.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="imageManager.h" />
@@ -162,7 +160,6 @@
     <ClInclude Include="loading.h" />
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
-    <ClInclude Include="minion.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFuntion.h" />
     <ClInclude Include="RenderManager.h" />
@@ -178,8 +175,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="nullScene.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="enemyManager.cpp" />
     <ClCompile Include="gameNode.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="imageManager.cpp" />
@@ -188,7 +183,6 @@
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
-    <ClCompile Include="minion.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="saveData.cpp" />
