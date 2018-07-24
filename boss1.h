@@ -2,7 +2,21 @@
 #include "enemy.h"
 class boss1 : public enemy
 {
+private:
+	enum STATE1
+	{
+		READY,
+		WALK,
+		ATTACK,
+		TAKE_SHIELD,
+		OFF_SHIELD,
+		OFF_WALK
+	};
+	STATE1 _state;
+	float _speed2;
+	bool _isShield;
 	RECT _shieldHitBox;
+	bool _isAttack;
 	char _debug[128];
 public:
 	virtual void attack();
