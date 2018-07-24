@@ -21,4 +21,3 @@ public:
 	player(){}
 	~player(){}
 };
-

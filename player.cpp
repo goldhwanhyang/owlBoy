@@ -11,7 +11,7 @@ HRESULT player::init()
 	_x = 140.f;	// 플레이어 x좌표
 	_y = 450.f; // 플레이어 y좌표
 	_speed = 5.0f;	// 플레이어 속도
-	_proveY = _y + img->getHeight()/2; 
+	//_proveY = _y + img->getHeight()/2; 
 	// 아울보이의 y축 감지범위 ( 아울보이 아래에 작은 사각형 만들기 )
 	// 플레이어의 y좌표 + 이미지세로크기 / 2 만큼 감지
 	_hitBox = RectMakeCenter(_x, _y, img->getFrameWidth(), img->getFrameHeight()); // 
@@ -55,52 +55,73 @@ void player::update()
 		}
 		img->setFrameX(_index);
 	}
-
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
-	//아울보이 픽셀충돌 하는 부분
-		// 탑
-	//for (int i = _hitBox.top; i < _hitBox.top-10; i++)	// 처음 범위 i 부터 최대까지 i++하면서 검사 
-	//{
-	//	COLORREF color = GetPixel(_testMap->getMemDC(), _x, i);
-	//	int r = GetRValue(color);
-	//	int g = GetGValue(color);
-	//	int b = GetBValue(color);
-	//
-	//	if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
-	//	{
-	//		if (isDrop == false)
-	//		{
-	//			_y = _hitBox.top;
-	//		} 
-	//		break;
-	//	}
-	//}
-	for (int i = _hitBox.bottom; i < _hitBox.bottom + 5; i++)
+	//위에 검사
+	for (int i = _hitBox.top; i < _hitBox.top + 1; i++)
 	{
 		COLORREF color = GetPixel(_testMap->getMemDC(), _x, i);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
 
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_y = _hitBox.top + 30;
+			break;
+		}
+	}
+	//아래 검사
+	for (int i = _hitBox.bottom; i < _hitBox.bottom+1; i++)
+	{
+		COLORREF color = GetPixel(_testMap->getMemDC(), _x, i);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+	
 		if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 		{
-			//_y = i - _hitBox.bottom+350;		
 			_y = _hitBox.bottom-30;
 			break;
 		}
 	}
+	//왼쪽 검사
+	for (int i = _hitBox.left; i < _hitBox.left + 1; i++)
+	{
+		COLORREF color = GetPixel(_testMap->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
 
-	// 아울보이 렉트
-	// 감지범위 = 플레이어의 y좌표 + 이미지세로크기/2 만큼
+		if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
+		{
+			_x = _hitBox.left + 20;
+			break;
+		}
+	}
+	//오른쪽 검사
+	for (int i = _hitBox.right; i < _hitBox.right + 1; i++)
+	{
+		COLORREF color = GetPixel(_testMap->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
+		{
+			_x = _hitBox.right - 20;
+			break;
+		}
+	}
 }
 
 void player::render()
 {
 	_testMap->render(getMemDC());
-
-	RECT rc = RectMakeCenter(_x, _hitBox.bottom, 10, 10);	// 감지범위 렉트
-	Rectangle(getMemDC(), rc);
+	RECT topRc = RectMakeCenter(_x, _hitBox.top, 10, 10);
+	//Rectangle(getMemDC(), topRc);
+	RECT BottomRc = RectMakeCenter(_x, _hitBox.bottom, 10, 10);	// 감지 
+	//Rectangle(getMemDC(), BottomRc);
 	Rectangle(getMemDC(), _hitBox);
 	
 	img->frameRender(getMemDC(), _x-img->getFrameWidth()/2, _y-img->getFrameHeight()/2);
