@@ -2,17 +2,17 @@
 #include "singletonBase.h"
 #include "image.h"
 
-struct Effect
+struct MyEffect
 {
 	image * eImage;
 	float x, y;
 	int index, count, frameY;
 };
 
-class EffectManager : public singletonBase<EffectManager>
+class MyEffectManager : public singletonBase<MyEffectManager>
 {
 private:
-	list<Effect> effectList;
+	list<MyEffect> effectList;
 
 public:
 	HRESULT init();	// void를 사용해도 됨. HRESULT: 정상적인 종료 여부 등의 여러 값을 가질 수 있음. 제일 많이 사용하는 것이 S_OK(정상 종료), E_FAIL(에러 발생)
@@ -21,7 +21,7 @@ public:
 
 	void generateEffect(const char *effectName, float x, float y, int frameY = 0);
 
-	EffectManager();
-	~EffectManager();
+	MyEffectManager();
+	~MyEffectManager();
 };
 

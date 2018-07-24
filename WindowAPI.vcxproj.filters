@@ -131,9 +131,6 @@
     <ClInclude Include="Camera.h">
       <Filter>GameFramework2D\Director 상균\카메라</Filter>
     </ClInclude>
-    <ClInclude Include="EffectManager.h">
-      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
-    </ClInclude>
     <ClInclude Include="RenderManager.h">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
     </ClInclude>
@@ -160,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="soundManager.h">
       <Filter>GameFramework2D\매니져</Filter>
+    </ClInclude>
+    <ClInclude Include="MyEffectManager.h">
+      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -217,9 +217,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>GameFramework2D\Director 상균\카메라</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp">
-      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
-    </ClCompile>
     <ClCompile Include="RenderManager.cpp">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
     </ClCompile>
@@ -246,6 +243,9 @@
     </ClCompile>
     <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
+    </ClCompile>
+    <ClCompile Include="MyEffectManager.cpp">
+      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

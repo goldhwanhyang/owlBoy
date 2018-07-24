@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "EffectManager.h"
+#include "MyEffectManager.h"
 
 
-HRESULT EffectManager::init()
+HRESULT MyEffectManager::init()
 {
 	return S_OK;
 }
 
-void EffectManager::release()
+void MyEffectManager::release()
 {
-	list<Effect>::iterator iter = effectList.begin();
+	list<MyEffect>::iterator iter = effectList.begin();
 
 	effectList.clear();
 }
 
 
-void EffectManager::render(HDC hdc)
+void MyEffectManager::render(HDC hdc)
 {
-	list<Effect>::iterator iter;
+	list<MyEffect>::iterator iter;
 
 	if (!effectList.empty())
 	{
@@ -44,9 +44,9 @@ void EffectManager::render(HDC hdc)
 
 
 
-void EffectManager::generateEffect(const char * effectName, float x, float y, int frameY)
+void MyEffectManager::generateEffect(const char * effectName, float x, float y, int frameY)
 {
-	Effect e;
+	MyEffect e;
 	e.eImage = IMAGEMANAGER->findImage(effectName);
 	e.x = x;
 	e.y = y;
@@ -58,11 +58,11 @@ void EffectManager::generateEffect(const char * effectName, float x, float y, in
 
 
 
-EffectManager::EffectManager()
+MyEffectManager::MyEffectManager()
 {
 }
 
 
-EffectManager::~EffectManager()
+MyEffectManager::~MyEffectManager()
 {
 }
