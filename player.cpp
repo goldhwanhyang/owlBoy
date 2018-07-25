@@ -4,15 +4,12 @@
 HRESULT player::init()
 {
 	//_testMap = IMAGEMANAGER->addImage("map", "Texture/player/1000x1000_map.bmp", 1000, 1000, true, RGB(255, 0, 255));
-	_TownMap = IMAGEMANAGER->addImage("Town", "Texture/Maps/Town/townMap_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
-	_TownMapPixel = IMAGEMANAGER->addImage("TownPixel", "Texture/Maps/Town/townMapPixelCollision_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
-	CAM->setRange(_TownMap->getWidth(), _TownMap->getHeight());
 
-	img[IDLE] = IMAGEMANAGER->addFrameImage("IDLE", "Texture/player/otusIdle_700x250_10x2.bmp", 700, 250, 10, 2);
-	img[WALK] = IMAGEMANAGER->addFrameImage("Walk", "Texture/player/otusWalk_1000x270_8x2.bmp", 1000, 270, 8, 2);
-	img[JUMP] = IMAGEMANAGER->addFrameImage("Jump", "Texture/player/otusJump_360x260_3x2.bmp", 360, 260, 3, 2);
-	img[JUMPFALL] = IMAGEMANAGER->addFrameImage("Fall", "Texture/player/otusJumpFall_700x280_5x2.bmp", 700, 280, 5, 2);
-	img[FLY] = IMAGEMANAGER->addFrameImage("FLY", "Texture/player/otusFly_1530x390_6x2.bmp", 1530, 390, 6, 2);
+	img[IDLE] = IMAGEMANAGER->findImage("IDLE");
+	img[WALK] = IMAGEMANAGER->findImage("Walk");
+	img[JUMP] = IMAGEMANAGER->findImage("Jump");
+	img[JUMPFALL] = IMAGEMANAGER->findImage("Fall");
+	img[FLY] = IMAGEMANAGER->findImage("FLY");
 
 	_isLeft = false;	// 왼쪽 오른쪽
 	_isWalk = false;	
@@ -85,7 +82,7 @@ void player::update()
 	//위에 검사
 	//for (int i = _hitBox.top; i < _hitBox.top + 1; i++)
 	{
-		COLORREF color = GetPixel(_TownMapPixel->getMemDC(), _x, _hitBox.top);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
@@ -99,7 +96,7 @@ void player::update()
 	//아래 검사
 	//for (int i = _hitBox.bottom; i < _hitBox.bottom+1; i++)
 	{
-		COLORREF color = GetPixel(_TownMapPixel->getMemDC(), _x, _hitBox.bottom);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
@@ -118,7 +115,7 @@ void player::update()
 	//왼쪽 검사
 	//for (int i = _hitBox.left; i < _hitBox.left + 1; i++)
 	{
-		COLORREF color = GetPixel(_TownMapPixel->getMemDC(), _hitBox.left, _y);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _hitBox.left, _y);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
@@ -132,7 +129,7 @@ void player::update()
 	//오른쪽 검사
 	//for (int i = _hitBox.right; i < _hitBox.right + 1; i++)
 	{
-		COLORREF color = GetPixel(_TownMapPixel->getMemDC(), _hitBox.right, _y);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _hitBox.right, _y);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
@@ -144,7 +141,6 @@ void player::update()
 		}
 	}
 
-	CAM->videoShooting(_x, _y);
 
 	//아울보이 프레임 돌리기
 	_count++;
@@ -178,14 +174,11 @@ void player::update()
 
 void player::render()
 {
-	_TownMap->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
+	//cout << _gravity << endl;
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
-		_TownMapPixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
-	//cout << _gravity << endl;
-	
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 	char str[128];
 	sprintf_s(str, "X좌표 : %.3f Y좌표 : %.3f 중력 : %.3f", _x, _y,_gravity);

@@ -56,6 +56,7 @@ public:		// ¸â¹ö ÇÔ¼ö
 	float getSpeed() { return _speed; }
 	float getPower() { return _power; }
 	float getAngle() { return _angle; }
+	RECT getHitbox() { return _hitBox; }
 
 	int getHp() { return _hp; }
 	int getMaxHp() { return _maxHp; }

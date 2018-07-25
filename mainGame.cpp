@@ -7,13 +7,18 @@
 HRESULT mainGame::init()
 {
 	gameNode::init(TRUE);
+
 	//이곳에서 초기화를 한다
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
 	SCENEMANAGER->addScene("널", new nullScene);
-	SCENEMANAGER->addScene("playingScene", new playingScene);
+	SCENEMANAGER->addScene("townScene", new townScene);
 	SCENEMANAGER->addScene("dungeonScene", new dungeonScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
+
+
+	_player = new player;
+	SAVEDATA->setPlayer(_player);
 
 	return S_OK;
 }
@@ -24,6 +29,9 @@ HRESULT mainGame::init()
 void mainGame::release()
 {
 	gameNode::release();
+
+	_player->release();
+	SAFE_DELETE(_player);
 }
 
 //=============================================================
@@ -31,16 +39,18 @@ void mainGame::release()
 //=============================================================
 void mainGame::update()
 {
-	if (KEYMANAGER->isOnceKeyDown(VK_F5))
+
+	SCENEMANAGER->update();
+
+	if (KEYMANAGER->isOnceKeyDown(VK_F7))
 	{
-		SCENEMANAGER->loadScene("playingScene");
+		SCENEMANAGER->loadScene("townScene");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F6))
 	{
 		SCENEMANAGER->loadScene("dungeonScene");
 	}
 
-	SCENEMANAGER->update();
 }
 
 //=============================================================

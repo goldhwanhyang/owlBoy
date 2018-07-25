@@ -51,9 +51,6 @@
     <Filter Include="GameFramework2D\데이터 입출력\INI데이터">
       <UniqueIdentifier>{099fb0a7-c9ae-4204-b02b-52bb71ca0033}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\LoadingScene">
-      <UniqueIdentifier>{341396ee-3e30-486f-8e55-bddb70a82424}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework2D\로딩">
       <UniqueIdentifier>{7f7e5c41-672d-4ff5-b6e3-026a2efaa45f}</UniqueIdentifier>
     </Filter>
@@ -71,6 +68,9 @@
     </Filter>
     <Filter Include="GameFramework2D\액터">
       <UniqueIdentifier>{1a04f8b4-c7be-4006-b6df-f2d5efd83435}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\로딩\LoadingScene">
+      <UniqueIdentifier>{341396ee-3e30-486f-8e55-bddb70a82424}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +123,7 @@
       <Filter>GameFramework2D\로딩</Filter>
     </ClInclude>
     <ClInclude Include="loadingScene.h">
-      <Filter>MainGame\LoadingScene</Filter>
+      <Filter>GameFramework2D\로딩\LoadingScene</Filter>
     </ClInclude>
     <ClInclude Include="nullScene.h">
       <Filter>GameFramework2D\씬</Filter>
@@ -136,9 +136,6 @@
     </ClInclude>
     <ClInclude Include="RenderManager.h">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
-    </ClInclude>
-    <ClInclude Include="playingScene.h">
-      <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework2D\매니져</Filter>
@@ -166,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="gawk.h">
       <Filter>GameFramework2D\액터</Filter>
+    </ClInclude>
+    <ClInclude Include="storeScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="townScene.h">
+      <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,7 +215,7 @@
       <Filter>GameFramework2D\로딩</Filter>
     </ClCompile>
     <ClCompile Include="loadingScene.cpp">
-      <Filter>MainGame\LoadingScene</Filter>
+      <Filter>GameFramework2D\로딩\LoadingScene</Filter>
     </ClCompile>
     <ClCompile Include="nullScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
@@ -225,9 +228,6 @@
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
-    </ClCompile>
-    <ClCompile Include="playingScene.cpp">
-      <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
@@ -255,6 +255,12 @@
     </ClCompile>
     <ClCompile Include="gawk.cpp">
       <Filter>GameFramework2D\액터</Filter>
+    </ClCompile>
+    <ClCompile Include="storeScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="townScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

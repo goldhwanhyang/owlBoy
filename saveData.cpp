@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "saveData.h"
-
+#include "player.h"
 
 HRESULT saveData::init()
 {
@@ -13,3 +13,4 @@ void saveData::release()
 	_stprintf_s(_data, "%f", _hp);
 	WriteFile(_saveHandle, _T(_data), sizeof(float), &_result, NULL);
 }
+

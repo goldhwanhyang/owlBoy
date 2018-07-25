@@ -166,7 +166,7 @@
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="playingScene.h" />
+    <ClInclude Include="townScene.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFuntion.h" />
     <ClInclude Include="RenderManager.h" />
@@ -176,6 +176,7 @@
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="timeManager.h" />
+    <ClInclude Include="storeScene.h" />
     <ClInclude Include="txtData.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
@@ -198,7 +199,7 @@
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="playingScene.cpp" />
+    <ClCompile Include="townScene.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="saveData.cpp" />
@@ -211,6 +212,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="timeManager.cpp" />
+    <ClCompile Include="storeScene.cpp" />
     <ClCompile Include="txtData.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="winMain.cpp" />
