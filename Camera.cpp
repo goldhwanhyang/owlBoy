@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-void Camera::videoShooting(int _x, int _y, float _speed = 0)
+void Camera::videoShooting(int _x, int _y, float _speed)
 {
 	speed = _speed;
 	if (speed != 0)
