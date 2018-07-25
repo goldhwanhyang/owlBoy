@@ -6,8 +6,9 @@ HRESULT player::init()
 	_testMap = IMAGEMANAGER->addImage("map", "Texture/player/1000x1000_map.bmp", 1000, 1000, true, RGB(255, 0, 255));
 	CAM->setRange(_testMap->getWidth(), _testMap->getHeight());
 
-	//img = IMAGEMANAGER->addFrameImage("owl", "Texture/player/fly_7x2.bmp", 2373, 580, 7, 2, true, RGB(255, 0, 255));
+	//img = IMAGEMANAGER->addFrameImage("owl", "Texture/player/otusFly_1530x390_6x2.bmp", 1530, 390, 6, 2, true, RGB(255, 0, 255));
 	img = IMAGEMANAGER->addFrameImage("owl", "Texture/player/otusFly_949x232_7x2.bmp", 949, 232, 7, 2, true, RGB(255, 0, 255));
+	
 	_x = 140.f;	// 플레이어 x좌표
 	_y = 450.f; // 플레이어 y좌표
 	_speed = 5.0f;	// 플레이어 속도
