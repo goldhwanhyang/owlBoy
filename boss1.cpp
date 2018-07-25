@@ -9,12 +9,12 @@ HRESULT boss1::init(float x, float y)
 	_angle = 0;
 	_speed = 2.0f;
 	_speed2 = 3.4f;
+	_boss1Image[TURN] = IGM->addFrameImage("보스1꺽기", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	_boss1Image[WALK] = IGM->addFrameImage("보스1걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_boss1Image[WALK_SHINING] = IGM->addFrameImage("보스1걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_boss1Image[ATTACK] = IGM->addFrameImage("보스1쏘기", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	IGM->addImage("Null불릿", 10, 10);
 	_bullet = new bullet;
-	_bullet->init("Null불릿",5,1920);
 
 	_hitBox = RectMakeCenter(_x, _y+60, 230, 160);
 	_isShield = true;
@@ -113,14 +113,18 @@ void boss1::attack()
 
 void boss1::move()
 {
+	//_x끝점이면 턴상태가 될것, x좌표 업데이트를 멈출것 _angle을 90으로
+	//턴상태가 끝나면 방향 바꾸게 할것
 	//방향바꿈
 	if (_x > IGM->findI("보스방1")->getWidth() - 310 && _dir == 0)
 	{
+		//_state = TURN;
 		_dir = 1;
 		_angle = 180;
 	}
 	else if (_x < 310 && _dir == 1)
 	{
+		//_state = TURN;
 		_dir = 0;
 		_angle = 0;
 	}
