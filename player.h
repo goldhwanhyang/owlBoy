@@ -12,8 +12,8 @@ class player : public actor
 private:
 	STATE _state;
 	image* img[STATE_MAX];
-	image* _TownMapPixel;
-	image* _TownMap;
+	image* _mapPixel;
+	image* _map;
 
 	bool _isLeft;
 	bool _isWalk;
@@ -23,6 +23,9 @@ public:
 	void update();
 	void render();
 	void release();
+
+	void setMap(image *map) { _map = map; }
+	void setMapPixel(image *mapPixel) { _mapPixel = mapPixel; }
 
 	player(){}
 	~player(){}

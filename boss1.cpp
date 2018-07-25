@@ -9,10 +9,10 @@ HRESULT boss1::init(float x, float y)
 	_angle = 0;
 	_speed = 2.0f;
 	_speed2 = 3.4f;
-	_boss1Image[TURN] = IGM->addFrameImage("º¸½º1²©±â", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
-	_boss1Image[WALK] = IGM->addFrameImage("º¸½º1°È±â", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	_boss1Image[WALK_SHINING] = IGM->addFrameImage("º¸½º1°È±âºû", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	_boss1Image[ATTACK] = IGM->addFrameImage("º¸½º1½î±â", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_boss1Image[TURN] = IGM->findImage("º¸½º1²©±â");
+	_boss1Image[WALK] = IGM->findImage("º¸½º1°È±â");
+	_boss1Image[WALK_SHINING] = IGM->findImage("º¸½º1°È±âºû");
+	_boss1Image[ATTACK] = IGM->findImage("º¸½º1½î±â");
 	//IGM->addImage("NullºÒ¸´", 10, 10);
 	//_bullet = new bullet;
 
