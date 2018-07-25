@@ -2,8 +2,10 @@
 #include "actor.h"
 class enemy : public actor
 {
+private:
+	float _playerX, _playerY;
 public:
-	virtual HRESULT init();
+	virtual HRESULT init(float x, float y);
 	virtual void update();
 	virtual void render();
 	virtual void release();
