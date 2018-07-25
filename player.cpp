@@ -17,7 +17,7 @@ HRESULT player::init()
 	_isLeft = false;	// 왼쪽 오른쪽
 	_isWalk = false;	
 	_isJump = false;
-	_isFly = false;	
+
 	_x = 540.f;			// 플레이어 x좌표
 	_y = 465.f;			// 플레이어 y좌표
 	_speed = 6.0f;		// 플레이어 속도
@@ -25,7 +25,7 @@ HRESULT player::init()
 	_gravity = 0;		// 플레이어 중력
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH); 
 	_count = _index = 0;	// 프레임이미지 돌리기 위한 초기화
-	_weight = 0.f;
+
 	_state = IDLE;
 
 	return S_OK;
@@ -56,9 +56,10 @@ void player::update()
 	}
 	if (KEYMANAGER->isStayKeyDown('W'))
 	{
+		
 		_gravity -= 0.1f;
 		_isJump = true;
-		_state = JUMP;	
+		_state = JUMP;
 	}
 
 	if (KEYMANAGER->isStayKeyDown('S'))
@@ -106,14 +107,12 @@ void player::update()
 		if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 		{
 			_y = _hitBox.bottom - (OTUS_HEIGTH / 2);
-
-
 			_gravity = 0.f;
 			_weight = 0.f;
 			_isJump = false;
 			//break;
-			//IDLE상태 일려면 바닥에 닿아있어야 하고 점프상태가 아니고 달리기 상태일 때
-			_state = IDLE;
+			//IDLE상태 일려면?
+			
 		}
 	}
 	//왼쪽 검사

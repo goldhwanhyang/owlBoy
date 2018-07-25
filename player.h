@@ -15,11 +15,9 @@ private:
 	image* _TownMapPixel;
 	image* _TownMap;
 
-	float weight;
 	bool _isLeft;
 	bool _isWalk;
 	bool _isJump;
-	bool _isFly;
 public:
 	HRESULT init();
 	void update();
