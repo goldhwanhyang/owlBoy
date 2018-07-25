@@ -9,6 +9,7 @@ private:
 	enum STATE
 	{
 		READY,
+		TURN,
 		WALK,
 		WALK_SHINING,
 		ATTACK,
