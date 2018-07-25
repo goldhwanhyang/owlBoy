@@ -13,8 +13,8 @@ HRESULT boss1::init(float x, float y)
 	_boss1Image[WALK] = IGM->addFrameImage("보스1걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_boss1Image[WALK_SHINING] = IGM->addFrameImage("보스1걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_boss1Image[ATTACK] = IGM->addFrameImage("보스1쏘기", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	IGM->addImage("Null불릿", 10, 10);
-	_bullet = new bullet;
+	//IGM->addImage("Null불릿", 10, 10);
+	//_bullet = new bullet;
 
 	_hitBox = RectMakeCenter(_x, _y+60, 230, 160);
 	_isShield = true;
@@ -82,11 +82,11 @@ void boss1::render()
 	//기존의 frameMake를 사용했더니 움찔거림이 생겼기 때문에 currentX , Y에 _index와 _dir을 직접 써넣었다.  //_boss1Image[_state]->setFrameY(_dir);
 	if (_dir == 0)
 	{
-		_boss1Image[_state]->frameRender(getMemDC(), _x - 135, _y - 110, _index, _dir);
+		_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
 	}
 	else if (_dir == 1)
 	{
-		_boss1Image[_state]->frameRender(getMemDC(), _x - 120, _y - 110, _index, _dir);
+		_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
 	}
 
 	if (_isDebug)

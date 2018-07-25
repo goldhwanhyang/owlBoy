@@ -21,7 +21,6 @@ private:
 	bool _isShield;
 	RECT _shieldHitBox;
 	bool _isAttack;
-	bullet* _bullet;
 
 	image* _boss1Image[MAX_STATE];
 
