@@ -69,6 +69,9 @@
     <Filter Include="GameFramework2D\Director 상균\렌더">
       <UniqueIdentifier>{6ffdf735-11ca-43db-b794-8cb57119cce9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework2D\액터">
+      <UniqueIdentifier>{1a04f8b4-c7be-4006-b6df-f2d5efd83435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonMacroFunction.h">
@@ -134,23 +137,8 @@
     <ClInclude Include="RenderManager.h">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
     </ClInclude>
-    <ClInclude Include="boss1.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="dungeonScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="playingScene.h">
       <Filter>GameFramework2D\씬</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="actor.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework2D\매니져</Filter>
@@ -160,6 +148,24 @@
     </ClInclude>
     <ClInclude Include="MyEffectManager.h">
       <Filter>GameFramework2D\Director 상균\이펙트</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeonScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClInclude>
+    <ClInclude Include="actor.h">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClInclude>
+    <ClInclude Include="boss1.h">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClInclude>
+    <ClInclude Include="gawk.h">
+      <Filter>GameFramework2D\액터</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -220,23 +226,8 @@
     <ClCompile Include="RenderManager.cpp">
       <Filter>GameFramework2D\Director 상균\렌더</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="dungeonScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="boss1.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="playingScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
-    </ClCompile>
-    <ClCompile Include="actor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
@@ -246,6 +237,24 @@
     </ClCompile>
     <ClCompile Include="MyEffectManager.cpp">
       <Filter>GameFramework2D\Director 상균\이펙트</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeonScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClCompile>
+    <ClCompile Include="actor.cpp">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClCompile>
+    <ClCompile Include="boss1.cpp">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>GameFramework2D\액터</Filter>
+    </ClCompile>
+    <ClCompile Include="gawk.cpp">
+      <Filter>GameFramework2D\액터</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

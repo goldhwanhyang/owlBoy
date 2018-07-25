@@ -80,8 +80,8 @@ public:
 //=============================================================
 //	## 프레임메이커 ## 
 //=============================================================
-	void frameMake(image * bmp, int &count, int &index, int frameY1, int frameY2, int cooltime, bool renderDir = false);
-	void frameMake(string strKey, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir = false);
+	bool frameMake(image * bmp, int &count, int &index, int frameY1, int frameY2, int cooltime, bool renderDir = false);
+	bool frameMake(string strKey, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir = false);
 	
 	//imageManager();
 	//~imageManager();

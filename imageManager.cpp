@@ -303,7 +303,7 @@ void imageManager::alphaFrameRender(string strKey, HDC hdc, int destX, int destY
 }
 
 //ADDED : 프레임 인덱스 좌우로 움직여주는 함수
-void imageManager::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
+bool imageManager::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
 {
 	if (renderDir)
 	{
@@ -316,6 +316,7 @@ void imageManager::frameMake(image * bmp, int & count, int & index, int frameY1,
 			if (index < 0)
 			{
 				index = bmp->getMaxFrameX();
+				return true;
 			}
 			bmp->setFrameX(index);
 		}
@@ -330,13 +331,15 @@ void imageManager::frameMake(image * bmp, int & count, int & index, int frameY1,
 			if (index > bmp->getMaxFrameX())
 			{
 				index = 0;
+				return true;
 			}
 			bmp->setFrameX(index);
 		}
 	}
+	return false;
 }
 
-void imageManager::frameMake(string strKey, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
+bool imageManager::frameMake(string strKey, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
 {
 	if (renderDir)
 	{
@@ -349,6 +352,7 @@ void imageManager::frameMake(string strKey, int & count, int & index, int frameY
 			if (index < 0)
 			{
 				index = findImage(strKey)->getMaxFrameX();
+				return true;
 			}
 			findImage(strKey)->setFrameX(index);
 		}
@@ -363,8 +367,10 @@ void imageManager::frameMake(string strKey, int & count, int & index, int frameY
 			if (index > findImage(strKey)->getMaxFrameX())
 			{
 				index = 0;
+				return true;
 			}
 			findImage(strKey)->setFrameX(index);
 		}
 	}
+	return false;
 }

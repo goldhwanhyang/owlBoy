@@ -153,6 +153,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="dungeonScene.h" />
+    <ClInclude Include="gawk.h" />
     <ClInclude Include="MyEffectManager.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="nullScene.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="dungeonScene.cpp" />
+    <ClCompile Include="gawk.cpp" />
     <ClCompile Include="MyEffectManager.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="nullScene.cpp" />
