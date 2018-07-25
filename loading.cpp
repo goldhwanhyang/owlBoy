@@ -83,6 +83,19 @@ HRESULT loadItem::init(string keyName, const char * fileName, float x, float y, 
 	return S_OK;
 }
 
+HRESULT loadItem::init(string keyName, string soundName, bool bgm, bool loop)
+{
+	//로딩종류 초기화
+	_kind = LOAD_KIND_SOUND;
+	//사운드 구조체 초기화
+	_soundResource.keyName = keyName;
+	_soundResource.soundName = soundName;
+	_soundResource.bgm = bgm;
+	_soundResource.loop = loop;
+
+	return S_OK;
+}
+
 
 //=============================================================
 //	## loading ## (로딩클래스)
@@ -180,6 +193,13 @@ void loading::loadFrameImage(string keyName, const char * fileName, float x, flo
 	_vLoadItem.push_back(item);
 }
 
+void loading::loadSound(string keyName, string soundName, bool bgm, bool loop)
+{
+	loadItem* item = new loadItem;
+	item->init(keyName, soundName, bgm, loop);
+	_vLoadItem.push_back(item);
+}
+
 BOOL loading::loadingDone()
 {
 	//로딩이 완료됨
@@ -222,6 +242,10 @@ BOOL loading::loadingDone()
 		break;
 	//곧 사운드 배우고 난후 알아서...
 	case LOAD_KIND_SOUND:
+		{
+			tagSoundResource bgm = item->getSoundResource();
+			SOUNDMANAGER->addSound(bgm.keyName, bgm.soundName, bgm.bgm, bgm.loop);
+		}
 		break;
 	}
 

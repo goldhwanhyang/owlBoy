@@ -1,5 +1,6 @@
 #pragma once
 #include "enemy.h"
+#include "bullet.h"
 class boss1 : public enemy
 {
 private:
@@ -12,11 +13,13 @@ private:
 		OFF_SHIELD,
 		OFF_WALK
 	};
-	STATE1 _state;
+	STATE1 _state1;
 	float _speed2;
 	bool _isShield;
 	RECT _shieldHitBox;
 	bool _isAttack;
+	bullet* _bullet;
+
 	char _debug[128];
 public:
 	virtual void attack();

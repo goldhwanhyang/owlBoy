@@ -18,10 +18,13 @@ HRESULT boss1::init(float x, float y)
 	IGM->addFrameImage("보스1걷기", "Texture/Enemies/Boss1/bossWalk_3936x504_16x2.bmp", 3936, 504, 16, 2);
 	IGM->addFrameImage("보스1쏘기", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
 
+	_bullet = new bullet;
+	//_bullet->init();
+
 	_hitBox = RectMakeCenter(_x, _y+60, 230, 160);
 	_isShield = true;
 	_isAttack = false;
-	_state = ATTACK;
+	_state1 = ATTACK;
 
 	return S_OK;
 }
@@ -30,8 +33,15 @@ void boss1::update()
 {
 	//공격과 걷기 상태를 바꾸어주어야함
 	//공격시 한발쏘고 WALK상태로 다시 ATTACK상태로 번갈아간다
-
-	switch (_state)
+	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
+	{
+		_state1 = WALK;
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		_state1 = ATTACK;
+	}
+	switch (_state1)
 	{
 	case READY:
 		break;
@@ -61,7 +71,7 @@ void boss1::render()
 	//히트박스와 텍스쳐 위치 맞추기위해 방향에 따라 렌더바꿈
 	if (_dir == 0)
 	{
-		switch (_state)
+		switch (_state1)
 		{
 		case READY:
 			break;
@@ -81,7 +91,7 @@ void boss1::render()
 	}
 	else if (_dir == 1)
 	{
-		switch (_state)
+		switch (_state1)
 		{
 		case READY:
 			break;
