@@ -185,6 +185,9 @@
     <ClInclude Include="effectManager.h">
       <Filter>GameFramework2D\매니져</Filter>
     </ClInclude>
+    <ClInclude Include="bulletManager.h">
+      <Filter>GameFramework2D\애드온\총알</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -285,6 +288,9 @@
     </ClCompile>
     <ClCompile Include="effectManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
+    </ClCompile>
+    <ClCompile Include="bulletManager.cpp">
+      <Filter>GameFramework2D\애드온\총알</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

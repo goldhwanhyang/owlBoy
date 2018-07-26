@@ -151,6 +151,7 @@
     <ClInclude Include="animation.h" />
     <ClInclude Include="boss1.h" />
     <ClInclude Include="bullet.h" />
+    <ClInclude Include="bulletManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="dungeonScene.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="boss1.cpp" />
     <ClCompile Include="bullet.cpp" />
+    <ClCompile Include="bulletManager.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="dungeonScene.cpp" />
     <ClCompile Include="effect.cpp" />
