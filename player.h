@@ -4,8 +4,8 @@
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 120
 #define PI 3.14
-#define STATE_MAX 5
-enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY };
+#define STATE_MAX 6
+enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN };
 
 class player : public actor
 {
@@ -18,6 +18,8 @@ private:
 	bool _isLeft;
 	bool _isWalk;
 	bool _isJump;
+	bool _isFly;
+	int _jumpCount;
 public:
 	HRESULT init();
 	void update();

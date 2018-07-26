@@ -54,23 +54,29 @@
     <Filter Include="GameFramework2D\로딩">
       <UniqueIdentifier>{7f7e5c41-672d-4ff5-b6e3-026a2efaa45f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework2D\Director 상균">
-      <UniqueIdentifier>{96e20af2-c278-43ed-bf1c-148474ce4076}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameFramework2D\Director 상균\카메라">
-      <UniqueIdentifier>{2f9a6893-1952-4acc-ac4d-96a2bf1d9f37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameFramework2D\Director 상균\이펙트">
-      <UniqueIdentifier>{22c46b63-5213-4bb4-b8bb-6c24546dbf09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameFramework2D\Director 상균\렌더">
-      <UniqueIdentifier>{6ffdf735-11ca-43db-b794-8cb57119cce9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework2D\액터">
       <UniqueIdentifier>{1a04f8b4-c7be-4006-b6df-f2d5efd83435}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameFramework2D\로딩\LoadingScene">
       <UniqueIdentifier>{341396ee-3e30-486f-8e55-bddb70a82424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\매니져%28임시%29">
+      <UniqueIdentifier>{96e20af2-c278-43ed-bf1c-148474ce4076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\매니져%28임시%29\카메라">
+      <UniqueIdentifier>{2f9a6893-1952-4acc-ac4d-96a2bf1d9f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\매니져%28임시%29\이펙트">
+      <UniqueIdentifier>{22c46b63-5213-4bb4-b8bb-6c24546dbf09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\매니져%28임시%29\렌더">
+      <UniqueIdentifier>{6ffdf735-11ca-43db-b794-8cb57119cce9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\애니메이션">
+      <UniqueIdentifier>{8f828bfa-0ab5-4a74-b070-242ad9b66752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework2D\이펙트">
+      <UniqueIdentifier>{aa84c84e-6e3f-43e4-9923-f67a664100ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,10 +138,10 @@
       <Filter>GameFramework2D\WinMain</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>GameFramework2D\Director 상균\카메라</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\카메라</Filter>
     </ClInclude>
     <ClInclude Include="RenderManager.h">
-      <Filter>GameFramework2D\Director 상균\렌더</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\렌더</Filter>
     </ClInclude>
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework2D\매니져</Filter>
@@ -144,7 +150,7 @@
       <Filter>GameFramework2D\매니져</Filter>
     </ClInclude>
     <ClInclude Include="MyEffectManager.h">
-      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\이펙트</Filter>
     </ClInclude>
     <ClInclude Include="dungeonScene.h">
       <Filter>GameFramework2D\씬</Filter>
@@ -169,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="townScene.h">
       <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>GameFramework2D\애니메이션</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>GameFramework2D\이펙트</Filter>
+    </ClInclude>
+    <ClInclude Include="effectManager.h">
+      <Filter>GameFramework2D\매니져</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,10 +239,10 @@
       <Filter>GameFramework2D\WinMain</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>GameFramework2D\Director 상균\카메라</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\카메라</Filter>
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
-      <Filter>GameFramework2D\Director 상균\렌더</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\렌더</Filter>
     </ClCompile>
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
@@ -236,7 +251,7 @@
       <Filter>GameFramework2D\매니져</Filter>
     </ClCompile>
     <ClCompile Include="MyEffectManager.cpp">
-      <Filter>GameFramework2D\Director 상균\이펙트</Filter>
+      <Filter>GameFramework2D\매니져%28임시%29\이펙트</Filter>
     </ClCompile>
     <ClCompile Include="dungeonScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
@@ -261,6 +276,15 @@
     </ClCompile>
     <ClCompile Include="townScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>GameFramework2D\애니메이션</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>GameFramework2D\이펙트</Filter>
+    </ClCompile>
+    <ClCompile Include="effectManager.cpp">
+      <Filter>GameFramework2D\매니져</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

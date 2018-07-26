@@ -34,7 +34,7 @@ void townScene::update()
 {
 	_player->update();
 
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	if (KEYMANAGER->isOnceKeyDown('1'))
 	{
 		if (SOUNDMANAGER->isPlaySound("사운드1"))
 		{
@@ -43,11 +43,11 @@ void townScene::update()
 		}
 	}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
+	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
 		SOUNDMANAGER->pause("사운드2");
 	}
-	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+	if (KEYMANAGER->isOnceKeyDown('3'))
 	{
 		SOUNDMANAGER->resume("사운드2");
 	}
@@ -56,7 +56,13 @@ void townScene::update()
 	{
 		SCENEMANAGER->loadScene("dungeonScene");
 	}
+	
 
+	/*이펙트 매니져 사용시*/
+	if (KEYMANAGER->isStayKeyDown(VK_RBUTTON))
+	{
+		EFFECTMANAGER->play("폭발", _ptMouse.x, _ptMouse.y);
+	}
 
 	CAM->videoShooting(_player->getX(), _player->getY());
 }
@@ -71,4 +77,6 @@ void townScene::render()
 		Rectangle(getMemDC(), portal.left - CAM->getX(), portal.top - CAM->getY(), portal.right - CAM->getX(), portal.bottom - CAM->getY());
 	}
 	_player->render();
+
+
 }

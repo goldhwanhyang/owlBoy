@@ -41,6 +41,7 @@ void mainGame::update()
 {
 
 	SCENEMANAGER->update();
+	EFFECTMANAGER->update();
 
 	if (KEYMANAGER->isOnceKeyDown(VK_F7))
 	{
@@ -67,6 +68,7 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	}
 
 	SCENEMANAGER->render();
+	EFFECTMANAGER->render();
 
 	//토글키는 디버깅용으로 많이 사용한다
 	if (_isDebug)

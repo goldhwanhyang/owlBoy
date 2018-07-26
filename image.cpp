@@ -867,3 +867,12 @@ void image::alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, i
 			_imageInfo->frameWidth, _imageInfo->frameHeight, _blendFunc);
 	}
 }
+
+void image::aniRender(HDC hdc, int destX, int destY, animation * ani)
+{
+	render(hdc, destX, destY, ani->getFramePos().x, ani->getFramePos().y, ani->getFrameWidth(), ani->getFrameHeight());
+}
+void image::aniAlphaRender(HDC hdc, int destX, int destY, animation * ani, BYTE alpha)
+{
+	alphaRender(hdc, destX, destY, ani->getFramePos().x, ani->getFramePos().y, ani->getFrameWidth(), ani->getFrameHeight(), alpha);
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include "animation.h"
 //=============================================================
 //	## image ## (앞으로 계속 업데이트 된다)
 //=============================================================
@@ -112,13 +113,20 @@ public:
 //=============================================================
 //	## 스트레치렌더 ## (이미지 스케일링)
 //=============================================================
-void stretchRender(HDC hdc, int destX, int destY, float scale = 1.0f);
-void stretchFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale = 1.0f);
+	void stretchRender(HDC hdc, int destX, int destY, float scale = 1.0f);
+	void stretchFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale = 1.0f);
 
 //=============================================================
 //	## 알파프레임렌더 ## (made by 상균)
 //=============================================================
-void alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha);
+	void alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha);
+
+//=============================================================
+//	## 애니렌더 ## 
+//=============================================================
+	void aniRender(HDC hdc, int destX, int destY, animation* ani);
+	void aniAlphaRender(HDC hdc, int destX, int destY, animation* ani, BYTE alpha);
+
 
 //=============================================================
 //	## inline ## (인라인 함수들 - 겟터, 셋터)
