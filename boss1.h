@@ -17,10 +17,16 @@ private:
 		OFF_SHIELD,
 		OFF_WALK
 	};
+	enum DIRECTION
+	{
+		RIGHT,
+		LEFT
+	};
 	float _speed2;
 	bool _isShield;
 	RECT _shieldHitBox;
 	bool _isAttack;
+	int _attackCount;
 
 	image* _boss1Image[MAX_STATE];
 
@@ -28,6 +34,7 @@ private:
 public:
 	virtual void attack();
 	virtual void move();
+	virtual void turn();
 
 	virtual HRESULT init(float x, float y);
 	virtual void update();
