@@ -23,6 +23,7 @@ HRESULT dungeonScene::init()
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
 	CAM->setPosition(_player->getX(), _player->getY());
 
+	_boss1->setPlayerLink(_player);
 	return S_OK;
 }
 

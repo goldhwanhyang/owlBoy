@@ -27,14 +27,22 @@ private:
 	RECT _shieldHitBox;
 	bool _isAttack;
 	int _attackCount;
+	int _delayCount;
 
 	image* _boss1Image[MAX_STATE];
+	image* _shieldDropImage;
+
+	vector<bullet> _vBullet;
 
 	char _debug[128];
 public:
 	virtual void attack();
 	virtual void move();
 	virtual void turn();
+
+	void Bfire(float angle = 50);
+	void Bmove();
+	void Brender();
 
 	virtual HRESULT init(float x, float y);
 	virtual void update();
