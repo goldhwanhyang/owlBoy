@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "player.h"
+#include "effect.h"
 class townScene : public gameNode
 {
 private:
@@ -9,6 +10,7 @@ private:
 	image* _TownMapPixel;
 	player* _player;
 	RECT portal;
+
 public:
 
 	HRESULT init();

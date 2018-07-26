@@ -67,6 +67,11 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("º¸½º1°È±âºû", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_loading->loadFrameImage("º¸½º1½î±â", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
 
+	_loading->loadFrameImage("Ä£±¸µé±âÀÌÆåÆ®", "Texture/Effect/takeFriendsEffect_1260x90_6x1.bmp", 1260, 90, 6, 1);
+	_loading->loadFrameImage("ÃÑ¾ËÆø¹ßÀÌÆåÆ®", "Texture/Effect/bulletExplodeEffect_1116x128_9x1.bmp", 1116, 128, 9, 1);
+	_loading->loadFrameImage("Ä£±¸¼ÒÈ¯ÀÌÆåÆ®", "Texture/Effect/callFriendsEffect_1680x300_6x1.bmp", 1680, 300, 6, 1);
+	_loading->loadFrameImage("±¸¸£±â¸ÕÁöÀÌÆåÆ®", "Texture/Effect/rollDustEffect_912x320_8x2.bmp", 912, 320, 8, 2);
+
 
 	_loading->loadImage("º¸½º¹æ1", "Texture/Maps/Boss1/Map.bmp", 1920, 1080);
 	_loading->loadImage("º¸½º¹æ1ÇÈ¼¿", "Texture/Maps/Boss1/MapPixel.bmp", 1920, 1080);
