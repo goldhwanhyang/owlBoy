@@ -2,7 +2,7 @@
 #include "actor.h"
 class enemy : public actor
 {
-private:
+protected:
 	float _playerX, _playerY;
 public:
 	virtual HRESULT init(float x, float y);
