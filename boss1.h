@@ -9,14 +9,17 @@ private:
 	enum STATE
 	{
 		READY,
+
 		TURN,
 		WALK,
 		WALK_SHINING,
 		ATTACK,
+
 		TAKE_SHIELD,
+
 		OFF_SHIELD,
-		OFF_WALK,
-		OFF_TURN
+		OFF_TURN,
+		OFF_WALK
 	};
 	enum DIRECTION
 	{
@@ -40,6 +43,7 @@ private:
 
 	image* _boss1Image[MAX_STATE];	//보스 이미지[상태]
 	image* _shieldDropImage;		//떨어진 방패 이미지
+	//image* _bulletImage;
 	Shield _shield;					//방패의 데이터
 
 	vector<bullet> _vBullet;		//불릿
@@ -52,6 +56,9 @@ public:
 
 	void shieldOff();
 	void moveOff();
+	//void turnOff();
+
+	void takeShield();
 	virtual void damaged(actor *e);
 
 	void Bfire(float angle);

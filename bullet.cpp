@@ -57,7 +57,7 @@ void bullet::collide(string pixelImageName)
 	int r = GetRValue(color);
 	int g = GetGValue(color);
 	int b = GetBValue(color);
-	if (r == 0 && g == 0 && b == 0)
+	if (!(r == 255 && g == 0 && b == 255))
 	{
 		if(_isActive) _isActive = false;
 	}

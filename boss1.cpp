@@ -2,13 +2,18 @@
 #include "boss1.h"
 #include "player.h"
 
+//hit박스의 크기, 이미지 좌표 보정값등을 숫자가 아니라 WINSIZEX, _image->getWidth() 등을 사용해서 표현할수 있게 해주자.
+
 HRESULT boss1::init(float x, float y)
 {
 	//  ===============추가할 이미지=================
 	IGM->addFrameImage("보스1떨어진방패", "Texture/Enemies/Boss1/bossShieldDrop_3672x366_17_2.bmp", 3672, 366, 17, 2);
 	IGM->addFrameImage("보스1불릿", "Texture/Enemies/Boss1/bossBullet_525x138_7x2.bmp", 525, 138, 7, 2);
+
 	IGM->addFrameImage("보스1걷기방패없이", "Texture/Enemies/Boss1/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	IGM->addFrameImage("보스1방패떨어뜨리기", "Texture/Enemies/Boss1/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
+	IGM->addFrameImage("보스1꺽기방패없이", "Texture/Enemies/Boss1/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	IGM->addFrameImage("보스1방패줍기", "Texture/Enemies/Boss1/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
 
 	//  ============================================
 	
@@ -21,9 +26,16 @@ HRESULT boss1::init(float x, float y)
 	_boss1Image[WALK] = IGM->findImage("보스1걷기");
 	_boss1Image[WALK_SHINING] = IGM->findImage("보스1걷기빛");
 	_boss1Image[ATTACK] = IGM->findImage("보스1쏘기");
+
+	_boss1Image[TAKE_SHIELD] = IGM->findImage("보스1방패줍기");
+
 	_boss1Image[OFF_SHIELD] = IGM->findImage("보스1방패떨어뜨리기");
+	_boss1Image[OFF_TURN] = IGM->findImage("보스1꺽기방패없이");
 	_boss1Image[OFF_WALK] = IGM->findImage("보스1걷기방패없이");
+
 	_shieldDropImage = IGM->findImage("보스1떨어진방패");
+	//_bulletImage = IGM->findImage("보스1불릿");
+
 	_delayCount = 0;
 
 	_hitBox = RectMakeCenter(_x, _y + 60, 230, 160);
@@ -56,7 +68,7 @@ void boss1::update()
 	_playerY = _player->getY();
 	//프레임 돌려줌
 	bool aniDone;
-	if (TURN != _state || OFF_SHIELD != _state)	aniDone = frameMake(_boss1Image[_state], _count, _index, 1, 0, 7, _dir);
+	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state)	aniDone = frameMake(_boss1Image[_state], _count, _index, 1, 0, 7, _dir);
 	else aniDone = frameMake(_boss1Image[_state], _count, _index, 1, 0, 12, _dir);
 	
 	if (!_shield.on && _shield.index != _shieldDropImage->getMaxFrameX()) //맥스프레임이면 프레임 안돈다.
@@ -68,7 +80,7 @@ void boss1::update()
 	{
 	case READY:
 		break;
-	case TURN:					//회전
+	case TURN:					//꺽기
 		if (aniDone) turn();	//TURN상태가 되면 이미지프레임이 돌고 다돌고나면(aniDone==true) 방향바꿈
 		break;
 	case WALK:					//걷기
@@ -82,10 +94,13 @@ void boss1::update()
 		attack();
 		break;
 	case TAKE_SHIELD:			//방패줍기
+		if (aniDone) takeShield();
 		break;
 	case OFF_SHIELD:			//방패 떨어뜨리기
 		shieldOff();
 		break;
+	case OFF_TURN:				//방패없이 꺽기
+		if (aniDone) turn();
 	case OFF_WALK:				//방패없이 걷기
 		moveOff();
 		break;
@@ -112,8 +127,8 @@ void boss1::update()
 		_shield.x = _x;
 		_shield.y = _y;
 	}
-	_hitBox = RectMakeCenter(_x - CAM->getX(), _y + 60 - CAM->getY(), 220, 160);
-	_shield.hitBox = RectMakeCenter(_shield.x - CAM->getX(), _shield.y + 20 - CAM->getY(), 220, 240); //실드가 보스에게 달려있음
+	_hitBox = RectMakeCenter(_x, _y + 60, 220, 160);
+	_shield.hitBox = RectMakeCenter(_shield.x, _shield.y + 20, 220, 240); //실드가 보스에게 달려있음
 
 	//불릿무브
 	Bmove();
@@ -123,13 +138,32 @@ void boss1::render()
 {
 	//히트박스와 텍스쳐 위치 맞추기위해 방향에 따라 렌더바꿈
 	//기존의 frameMake를 사용했더니 움찔거림이 생겼기 때문에 currentX , Y에 _index와 _dir을 직접 써넣었다.  //_boss1Image[_state]->setFrameY(_dir);
-	if (_dir == 0)
+
+	if (_isDebug)
 	{
-		_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+		IMAGEMANAGER->findImage("보스방1픽셀")->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	}
-	else if (_dir == 1)
+	if (_state != TAKE_SHIELD)
 	{
-		_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+		if (_dir == 0)
+		{
+			_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+		}
+		else if (_dir == 1)
+		{
+			_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+		}
+	}
+	else
+	{
+		if (_dir == 0)
+		{
+			_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
+		}
+		else if (_dir == 1)
+		{
+			_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
+		}
 	}
 
 	if (!_shield.on)
@@ -142,8 +176,8 @@ void boss1::render()
 
 	if (_isDebug)
 	{
-		RectangleLine(getMemDC(), _hitBox);
-		RectangleLine(getMemDC(), _shield.hitBox);
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		Rectangle(getMemDC(), _shield.hitBox.left - CAM->getX(), _shield.hitBox.top - CAM->getY(), _shield.hitBox.right - CAM->getX(), _shield.hitBox.bottom - CAM->getY());
 		_stprintf_s(_debug, "PX: %f, X: %f", _playerX , _x);
 		TextOut(getMemDC(), 100, 100, _debug, strlen(_debug));
 		TextOut(getMemDC(), _x, _y, "X", strlen("X"));
@@ -194,10 +228,12 @@ void boss1::attack()
 
 void boss1::move()
 {
+	_x += _speed * cosf(_angle * 0.017);
+	
 	if (_dir == RIGHT)
 	{
 		//턴상태가 될때 index와 count를 0으로해야 Trun의 프레임이 작동한다.
-		if (_x > IGM->findI("보스방1")->getWidth() - 310)
+		if (_x > IGM->findImage("보스방1")->getWidth() - 310)
 		{
 			_state = TURN;
 			_index = 0;
@@ -215,42 +251,89 @@ void boss1::move()
 			_dir = RIGHT;
 		}
 	}
-
-	_x += _speed * cosf(_angle * 0.017);
 }
 
 void boss1::shieldOff()
 {
 	//차후에 actor::throwed(_speed, _angle)를 사용해서 움직임을 구현하자.
-	
-	//임시
-	_x += 1;
-	_shield.x -= 1;
+	_gravity += 0.05;
+	//임시==============
+	if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+	{
+		_x += 1;
+	}
+	if (310 < _shield.x && _shield.x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+	{
+		_shield.x -= 1;
+	}
+	//점프활용
+	_y += -2 + _gravity;
+	_shield.y += -2 + _gravity;
+	//==================
 
-	COLORREF color = GetPixel(IGM->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+	//보스몸체 픽셀충돌
+	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+	int r = GetRValue(color);
+	int g = GetGValue(color);
+	int b = GetBValue(color);
+
+	if (!(r == 255 && g == 0 && b == 255))
+	{
+		_y = _hitBox.bottom - 160;
+		_gravity = 0;
+		_state = OFF_WALK;
+		_shield.y = _shield.hitBox.bottom - 160;
+	}
 }
 
 void boss1::moveOff()
 {
 	_angle = utl::getAngle(_x, _y, _shield.x, _shield.y);
+	_shield.offSpeed += 0.1f; //가속한다.
 	_x += _shield.offSpeed * cosf(_angle);
+	
+	if (utl::getDistance(_x,_y, _shield.x,_shield.y) < _shieldDropImage->getFrameWidth())
+	{
+		_shield.on = true;
+		_state = TAKE_SHIELD;
+	}
+
+	//턴하는 조건을 변경해야함
+	//if (_dir == RIGHT)
+	//{
+	//	if (_x > IGM->findImage("보스방1")->getWidth() - 310)
+	//	{
+	//		_state = OFF_TURN;
+	//		_index = 0;
+	//		_count = 0;
+	//		_dir = LEFT;
+	//	}
+	//}
+	//else if (_dir == LEFT)
+	//{
+	//	if (_x < 310)
+	//	{
+	//		_state = OFF_TURN;
+	//		_index = 0;
+	//		_count = 0;
+	//		_dir = RIGHT;
+	//	}
+	//}
+
+	//float oldAngle = _angle;
 }
 
-void boss1::damaged(actor * e)
+void boss1::takeShield()
 {
-	//플레이어에 의해 공격당했을때 보스가 해야할 액션
+	if (_dir == RIGHT)
+	{
 
-	//임시
-	if (PtInRect(&_hitBox, _ptMouse) && _x > _ptMouse.x) //왼쪽에서 오른쪽에 있는 보스를 때림
-	{
-		_state = OFF_SHIELD;
-		_shield.on = false;
 	}
-	if (PtInRect(&_hitBox, _ptMouse) && _x < _ptMouse.x) //오른쪽에서 왼쪽에 있는 보스를 때림
+	else if (_dir == LEFT)
 	{
-		_state = OFF_SHIELD;
-		_shield.on = false;
+
 	}
+	_state = WALK;
 }
 
 void boss1::turn()
@@ -258,13 +341,53 @@ void boss1::turn()
 	//방향바꿈
 	if (_dir == RIGHT)
 	{
-		_state = WALK;
+		if(_shield.on) _state = WALK;
+		else
+		{
+			_state = OFF_WALK;
+			_shield.offSpeed = 3.4f; //턴할때 가속도 초기화
+		}
 		_angle = 0;
 	}
 	else if (_dir == LEFT)
 	{
-		_state = WALK;
+		if (_shield.on) _state = WALK;
+		else
+		{
+			_state = OFF_WALK;
+			_shield.offSpeed = 3.4f; //턴할때 가속도 초기화
+		}
 		_angle = 180;
+	}
+}
+
+void boss1::damaged(actor * e)
+{
+	//플레이어에 의해 공격당했을때 보스가 해야할 액션
+
+	//임시
+	POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
+	
+	if (_shield.on)
+	{
+		if (PtInRect(&_hitBox, t) && _x > t.x) //왼쪽에서 오른쪽에 있는 보스를 때림
+		{
+			_state = OFF_SHIELD;
+			_shield.on = false;
+		}
+		if (PtInRect(&_hitBox, t) && _x < t.x) //오른쪽에서 왼쪽에 있는 보스를 때림
+		{
+			_state = OFF_SHIELD;
+			_shield.on = false;
+		}
+	}
+	else
+	{
+		if (PtInRect(&_shield.hitBox, t))
+		{
+			_shield.x = t.x;
+			_shield.y = t.y;
+		}
 	}
 }
 
