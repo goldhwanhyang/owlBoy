@@ -9,21 +9,19 @@ class bullet : public actor
 	float _fireX, _fireY;
 	
 	bool _isActive;
-	
-	char _debug[64];
 public:
 	virtual HRESULT init(float radius, float speed, float range, const char* imageName = "없음");
 	virtual void update();
 	virtual void render();
 	virtual void release();
 
-	virtual void collide();
+	virtual void collide(string pixelImageName); //벽과의 충돌을 하기위해 픽셀이미지키값을 넘겨주게 했음
 
 	float getRange() { return _range; }
 	bool getIsActive() { return _isActive; }
 
 	void setIsActive(bool isActive) { _isActive = isActive; }
-	void setFireLocationXY(float fireX, float fireY) { _fireX = fireX; _fireY = fireY; _x = fireX; _y = fireY; }
+	void setFireCenter(float fireX, float fireY) { _fireX = fireX; _fireY = fireY; _x = fireX; _y = fireY; }
 
 	bullet() {}
 	~bullet() {}

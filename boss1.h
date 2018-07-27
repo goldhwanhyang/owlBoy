@@ -1,7 +1,7 @@
 #pragma once
 #include "enemy.h"
 #include "bullet.h"
-#define MAX_STATE 7
+#define MAX_STATE 9
 
 class boss1 : public enemy
 {
@@ -15,34 +15,49 @@ private:
 		ATTACK,
 		TAKE_SHIELD,
 		OFF_SHIELD,
-		OFF_WALK
+		OFF_WALK,
+		OFF_TURN
 	};
 	enum DIRECTION
 	{
 		RIGHT,
 		LEFT
 	};
-	float _speed2;
-	bool _isShield;
-	RECT _shieldHitBox;
-	bool _isAttack;
-	int _attackCount;
-	int _delayCount;
+	struct Shield
+	{
+		bool on;					//방패 챙겼니?
+		float x;					//방패 x
+		float y;					//방패 y
+		RECT hitBox;				//방패 충돌박스
+		int count;					//방패 프레임 카운트
+		int index;					//방패 프레임 인덱스
+		float offSpeed;				//방패가 없을때 속도
+	};
 
-	image* _boss1Image[MAX_STATE];
-	image* _shieldDropImage;
+	bool _isAttack;					//공격중
+	int _attackCount;				//몇발쐈는지 체크
+	int _delayCount;				//불릿 딜레이
 
-	vector<bullet> _vBullet;
+	image* _boss1Image[MAX_STATE];	//보스 이미지[상태]
+	image* _shieldDropImage;		//떨어진 방패 이미지
+	Shield _shield;					//방패의 데이터
+
+	vector<bullet> _vBullet;		//불릿
 
 	char _debug[128];
 public:
 	virtual void attack();
 	virtual void move();
-	virtual void turn();
+	void turn();
 
-	void Bfire(float angle = 50);
+	void shieldOff();
+	void moveOff();
+	virtual void damaged(actor *e);
+
+	void Bfire(float angle);
 	void Bmove();
 	void Brender();
+
 
 	virtual HRESULT init(float x, float y);
 	virtual void update();
