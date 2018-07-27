@@ -18,19 +18,22 @@ protected:
 	int _state;
 	int _dir;		// 방향: 상화에 따라 사용
 
+	int _curFrameX, _curFrameY;
 	int _count;			// 프레임 인덱스 값 더하기
 	int _index;			// 프레임 돌리기
 	RECT _hitBox;
 
+	bool _isLiftable;
 
 public:		// 멤버 함수
 	virtual void attack() {}
 	virtual void damaged(actor *e) {}	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
-	virtual void move() {}
+	virtual void move();
 	virtual void collide(){}
 	virtual void throwed(float speed, float angle);
-	void drawUI() {}
+	virtual void drawUI() {}
 
+	void setIsLiftable(bool isLiftable) { _isLiftable = isLiftable; }
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
 	void setWeight(float weight) { _weight = weight; }
@@ -50,6 +53,7 @@ public:		// 멤버 함수
 	void setCount(int count) { _count = count; }
 	void setIndex(int index) { _index = index; }
 
+	bool getIsLiftable() { return _isLiftable; }
 	float getX() { return _x; }
 	float getY() { return _y; }
 	float getWeight() { return _weight; }
@@ -69,13 +73,14 @@ public:		// 멤버 함수
 	int getIndex() { return _index; }
 	RECT getRect() { return _hitBox; }
 
+	bool collide(actor* a);
 
 	virtual HRESULT init();
 	virtual void update();
 	virtual void render();
 	virtual void release();
 public:
-	actor() {}
-	~actor() {}
+	actor();
+	virtual ~actor() {}
 };
 

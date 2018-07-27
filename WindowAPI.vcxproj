@@ -158,6 +158,7 @@
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
     <ClInclude Include="gawk.h" />
+    <ClInclude Include="ironWeight.h" />
     <ClInclude Include="MyEffectManager.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="nullScene.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="stuff.h" />
     <ClInclude Include="townScene.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFuntion.h" />
@@ -195,6 +197,7 @@
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
     <ClCompile Include="gawk.cpp" />
+    <ClCompile Include="ironWeight.cpp" />
     <ClCompile Include="MyEffectManager.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="nullScene.cpp" />
@@ -207,6 +210,7 @@
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="stuff.cpp" />
     <ClCompile Include="townScene.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="RenderManager.cpp" />

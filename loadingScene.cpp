@@ -55,6 +55,7 @@ void loadingScene::loadingImage()
 	//백그라운드 이미지
 	//_loading->loadImage("mountain", "mountain.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	
+	// player
 	_loading->loadFrameImage("IDLE", "Texture/player/otusIdle_700x250_10x2.bmp", 700, 250, 10, 2);
 	_loading->loadFrameImage("Walk", "Texture/player/otusWalk_1000x270_8x2.bmp", 1000, 270, 8, 2);
 	_loading->loadFrameImage("Jump", "Texture/player/otusJump_360x260_3x2.bmp", 360, 260, 3, 2);
@@ -63,6 +64,8 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("FLYDOWN", "Texture/player/otusFlyDown_585x360_3x2.bmp", 585, 360, 3, 2);
 	_loading->loadFrameImage("ROLL", "Texture/player/otusRoll_1200x400_4x2.bmp", 1200, 400, 4, 2);
 
+
+	// enemy
 	_loading->loadFrameImage("보스1꺽기", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	_loading->loadFrameImage("보스1걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_loading->loadFrameImage("보스1걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
@@ -74,6 +77,16 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("구르기먼지이펙트", "Texture/Effect/rollDustEffect_912x320_8x2.bmp", 912, 320, 8, 2);
 
 
+	// stuff
+	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
+	_loading->loadFrameImage("무게추공중", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
+	_loading->loadImage("과일1", "Texture/Stuff/fruit_60x95.bmp", 60, 95);
+	_loading->loadImage("과일2", "Texture/Stuff/fruit2_70x110.bmp", 70, 110);
+	_loading->loadImage("버튼", "Texture/Stuff/button_114x44.bmp", 114, 44);
+	_loading->loadImage("버튼받침", "Texture/Stuff/buttonBottom_145x30.bmp", 145, 30);
+
+
+	// map
 	_loading->loadImage("보스방1", "Texture/Maps/Boss1/Map.bmp", 1920, 1080);
 	_loading->loadImage("보스방1픽셀", "Texture/Maps/Boss1/MapPixel.bmp", 1920, 1080);
 

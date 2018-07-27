@@ -2,6 +2,8 @@
 #include "gameNode.h"
 #include "player.h"
 #include "effect.h"
+#include "ironWeight.h"
+
 class townScene : public gameNode
 {
 private:
@@ -10,6 +12,8 @@ private:
 	image* _TownMapPixel;
 	player* _player;
 	RECT portal;
+
+	ironWeight temp;
 
 public:
 
