@@ -133,26 +133,26 @@ void boss1::attack()
 	{
 		if (_playerX > _x)
 		{
-			Bfire(utl::getAngle(_x, _y, _playerX, _playerY) * 58.8);
+			Bfire(utl::getAngle(_x, _y, _playerX, _playerY) * 58.8); //degree값으로 다시 바꾸기 위해 58.8를 곱했다.
 			//감지범위에 플레이어가 있으면 getAngle(보스위치,플레이어위치)로 쏜다.
 		}
 		else
 		{
-			Bfire();
-			//감지범위에 플레이어가 없으면 50도로 쏜다.
+			Bfire(35);
+			//감지범위에 플레이어가 없으면 35도로 쏜다.
 		}
 	}
 	else if (_dir == LEFT)
 	{
 		if (_playerX < _x)
 		{
-			Bfire(utl::getAngle(_x, _y, _playerX, _playerY) * 58.8);
+			Bfire(utl::getAngle(_x, _y, _playerX, _playerY) * 58.8); //degree값으로 다시 바꾸기 위해 58.8를 곱했다.
 			//감지범위에 플레이어가 있으면 getAngle(보스위치,플레이어위치)로 쏜다.
 		}
 		else
 		{
-			Bfire();
-			//감지범위에 플레이어가 없으면 50도로 쏜다.
+			Bfire(145);
+			//감지범위에 플레이어가 없으면 145도로 쏜다.
 		}
 	}
 

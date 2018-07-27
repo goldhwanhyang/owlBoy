@@ -40,7 +40,7 @@ public:
 	virtual void move();
 	virtual void turn();
 
-	void Bfire(float angle = 50);
+	void Bfire(float angle);
 	void Bmove();
 	void Brender();
 
