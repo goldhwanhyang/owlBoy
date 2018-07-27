@@ -11,7 +11,10 @@ HRESULT bullet::init(float radius, float speed, float range, const char * imageN
 	_range = range;
 	_isActive = false;
 
-	_index = 0;
+	_x = _y = _fireX = _fireY = 0;
+	_angle = 0;
+	_gravity = 0;
+	_count = _index = 0;
 
 	return S_OK;
 }
@@ -21,7 +24,7 @@ void bullet::update()
 	if (_isActive)
 	{
 		_x += _speed * cosf(_angle * 0.017);
-		_y += _speed * -sinf(_angle * 0.017);
+		_y += _speed * -sinf(_angle * 0.017) + _gravity;
 		_hitBox = RectMakeCenter(_x-CAM->getX(), _y-CAM->getY(), _radius * 2, _radius * 2);
 
 		if (_image != NULL)
@@ -31,7 +34,6 @@ void bullet::update()
 			if (_index > _image->getMaxFrameX()) _index = 0;
 		}
 	}
-	collide();
 }
 
 void bullet::render()
@@ -40,26 +42,18 @@ void bullet::render()
 	{
 		if (_image == NULL) Ellipse(getMemDC(), _hitBox);
 		else _image->frameRender(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), _index, _dir); //회전렌더로 바꾸자
-	}
-
-	if (_isDebug)
-	{
-		RectangleLine(getMemDC(), _hitBox);
-		SetBkMode(getMemDC(), OPAQUE);
-		wsprintf(_debug, "%d", _index);
-		TextOut(getMemDC(), _x, _y, _debug, strlen(_debug));
+		//else _image->rotateframeRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _index, _dir, _angle);
 	}
 }
 
 void bullet::release()
 {
-
 }
 
-void bullet::collide()
+void bullet::collide(string pixelImageName)
 {
 	//벽과 충돌할떄
-	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _y);
+	COLORREF color = GetPixel(IMAGEMANAGER->findImage(pixelImageName)->getMemDC(), _x, _y);
 	int r = GetRValue(color);
 	int g = GetGValue(color);
 	int b = GetBValue(color);
