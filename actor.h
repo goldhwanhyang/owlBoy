@@ -25,9 +25,10 @@ protected:
 
 public:		// 멤버 함수
 	virtual void attack() {}
-	//virtual void damaged(Enemy *e);	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
+	virtual void damaged(actor *e) {}	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
 	virtual void move() {}
 	virtual void collide(){}
+	virtual void throwed(float speed, float angle);
 	void drawUI() {}
 
 	void setX(float x) { _x = x; }

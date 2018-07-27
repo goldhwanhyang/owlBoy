@@ -20,7 +20,7 @@ HRESULT townScene::init()
 	CAM->setPosition(_player->getX(), _player->getY());
 
 
-	SOUNDMANAGER->play("사운드1");
+	//SOUNDMANAGER->play("사운드1");
 	portal = RectMakeCenter(4000, 7500, 100, 100);
 
 	return S_OK;
