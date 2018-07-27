@@ -608,6 +608,44 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 	}
 }
 
+void image::frameRender(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight, int currentFrameX, int currentFrameY)
+{
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameY;
+	}
+
+	if (_isTrans) //배경색 없앨꺼냐?
+	{
+		//GdiTransparentBlt : 비트맵의 특정색상을 제외하고 고속복사 해주는 함수
+		GdiTransparentBlt(
+			hdc,						//복사할 장소의 DC - memDC
+			destX,						//복사될 좌표 시작점 X - hdc의 좌표
+			destY,						//복사될 좌표 시작점 Y - hdc의 좌표
+			sourWidth,		//복사될 1 프레임당 가로크기 
+			sourHeight,	//복사될 1 프레임당 세로크기
+			_imageInfo->hMemDC,			//복사될 대상 DC
+			_imageInfo->currentFrameX *_imageInfo->frameWidth + sourX,	//복사 시작지점, 출력할 프레임 시작지점(인덱스처럼 사용)
+			_imageInfo->currentFrameY *_imageInfo->frameHeight + sourY,	//복사 시작지점
+			sourWidth,		//복사 영역 가로크기 (1프레임크기)
+			sourHeight,	//복사 영역 세로크기 (1프레임크기)
+			_transColor);				//복사할때 제외할 색상 (마젠타)
+	}
+	else //원본 이미지 그래도 출력할꺼냐?
+	{
+		BitBlt(hdc, destX, destY, sourWidth, sourHeight,
+			_imageInfo->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth + sourX,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight + sourY, SRCCOPY);	//currentFrameX * frameWidth ->가로세로*인덱스
+	}
+}
+
 void image::loopRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY)
 {
 	//offset 값이 음수인 경우 보정하기

@@ -103,6 +103,7 @@ public:
 //=============================================================
 	void frameRender(HDC hdc, int destX, int destY);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY);
+	void frameRender(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight, int currentFrameX, int currentFrameY);
 
 //=============================================================
 //	## ∑Á«¡∑ª¥ı ##

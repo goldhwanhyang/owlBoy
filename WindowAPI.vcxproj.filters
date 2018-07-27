@@ -78,13 +78,13 @@
     <Filter Include="GameFramework2D\이펙트">
       <UniqueIdentifier>{aa84c84e-6e3f-43e4-9923-f67a664100ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework2D\액터\애너미">
+      <UniqueIdentifier>{de2b913d-2638-496f-89d3-b45ef7bf61dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonMacroFunction.h">
       <Filter>GameFramework2D\유틸</Filter>
-    </ClInclude>
-    <ClInclude Include="mainGame.h">
-      <Filter>MainGame</Filter>
     </ClInclude>
     <ClInclude Include="keyManager.h">
       <Filter>GameFramework2D\매니져</Filter>
@@ -161,15 +161,6 @@
     <ClInclude Include="actor.h">
       <Filter>GameFramework2D\액터</Filter>
     </ClInclude>
-    <ClInclude Include="boss1.h">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClInclude>
-    <ClInclude Include="gawk.h">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClInclude>
     <ClInclude Include="storeScene.h">
       <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
@@ -187,6 +178,24 @@
     </ClInclude>
     <ClInclude Include="bulletManager.h">
       <Filter>GameFramework2D\애드온\총알</Filter>
+    </ClInclude>
+    <ClInclude Include="stuff.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ironWeight.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="boss1.h">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClInclude>
+    <ClInclude Include="gawk.h">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClInclude>
+    <ClInclude Include="mainGame.h">
+      <Filter>MainGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,15 +274,6 @@
     <ClCompile Include="actor.cpp">
       <Filter>GameFramework2D\액터</Filter>
     </ClCompile>
-    <ClCompile Include="boss1.cpp">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClCompile>
-    <ClCompile Include="gawk.cpp">
-      <Filter>GameFramework2D\액터</Filter>
-    </ClCompile>
     <ClCompile Include="storeScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
@@ -291,6 +291,21 @@
     </ClCompile>
     <ClCompile Include="bulletManager.cpp">
       <Filter>GameFramework2D\애드온\총알</Filter>
+    </ClCompile>
+    <ClCompile Include="stuff.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ironWeight.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="boss1.cpp">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClCompile>
+    <ClCompile Include="gawk.cpp">
+      <Filter>GameFramework2D\액터\애너미</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

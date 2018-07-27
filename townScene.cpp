@@ -23,6 +23,10 @@ HRESULT townScene::init()
 	//SOUNDMANAGER->play("사운드1");
 	portal = RectMakeCenter(4000, 7500, 100, 100);
 
+	temp.init();
+	temp.setX(_player->getX());
+	temp.setY(_player->getY());
+
 	return S_OK;
 }
 
@@ -34,22 +38,24 @@ void townScene::update()
 {
 	_player->update();
 
-	if (KEYMANAGER->isOnceKeyDown('1'))
+	if (KEYMANAGER->isStayKeyDown('1'))
 	{
-		if (SOUNDMANAGER->isPlaySound("사운드1"))
+		RECT temp1;
+		if (IntersectRect(&temp1, &temp.getHitbox(), &_player->getHitbox()))
 		{
-			SOUNDMANAGER->stop("사운드1");
-			SOUNDMANAGER->play("사운드2");
+			temp.lifted(_player);
+			_player->setState(FLY);
 		}
 	}
+	if (temp.getState() == HANG)
+		temp.lifted(_player);
 
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
-		SOUNDMANAGER->pause("사운드2");
-	}
-	if (KEYMANAGER->isOnceKeyDown('3'))
-	{
-		SOUNDMANAGER->resume("사운드2");
+		if (temp.getState() == HANG)
+		{
+			temp.throwed(10, getAngle(temp.getX() - CAM->getX(), temp.getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
+		}
 	}
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
@@ -63,6 +69,8 @@ void townScene::update()
 	{
 		EFFECTMANAGER->play("폭발", _ptMouse.x, _ptMouse.y);
 	}
+
+	this->temp.update();
 
 	CAM->videoShooting(_player->getX(), _player->getY());
 }
@@ -78,5 +86,5 @@ void townScene::render()
 	}
 	_player->render();
 
-
+	temp.render();
 }
