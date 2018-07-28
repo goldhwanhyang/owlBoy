@@ -185,9 +185,6 @@
     <ClInclude Include="ironWeight.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="boss1.h">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>GameFramework2D\액터\애너미</Filter>
     </ClInclude>
@@ -196,6 +193,12 @@
     </ClInclude>
     <ClInclude Include="mainGame.h">
       <Filter>MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoise.h">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoiseShield.h">
+      <Filter>GameFramework2D\액터\애너미</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -298,13 +301,16 @@
     <ClCompile Include="ironWeight.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="boss1.cpp">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClCompile>
     <ClCompile Include="enemy.cpp">
       <Filter>GameFramework2D\액터\애너미</Filter>
     </ClCompile>
     <ClCompile Include="gawk.cpp">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoise.cpp">
+      <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoiseShield.cpp">
       <Filter>GameFramework2D\액터\애너미</Filter>
     </ClCompile>
   </ItemGroup>

@@ -149,7 +149,7 @@
   <ItemGroup>
     <ClInclude Include="actor.h" />
     <ClInclude Include="animation.h" />
-    <ClInclude Include="boss1.h" />
+    <ClInclude Include="tortoise.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="bulletManager.h" />
     <ClInclude Include="Camera.h" />
@@ -172,6 +172,7 @@
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="stuff.h" />
+    <ClInclude Include="tortoiseShield.h" />
     <ClInclude Include="townScene.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFuntion.h" />
@@ -189,7 +190,7 @@
   <ItemGroup>
     <ClCompile Include="actor.cpp" />
     <ClCompile Include="animation.cpp" />
-    <ClCompile Include="boss1.cpp" />
+    <ClCompile Include="tortoise.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="bulletManager.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="stuff.cpp" />
+    <ClCompile Include="tortoiseShield.cpp" />
     <ClCompile Include="townScene.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="RenderManager.cpp" />

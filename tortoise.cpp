@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "boss1.h"
+#include "tortoise.h"
 #include "player.h"
 
 //hit박스의 크기, 이미지 좌표 보정값등을 숫자가 아니라 WINSIZEX, _image->getWidth() 등을 사용해서 표현할수 있게 해주자.
 
-HRESULT boss1::init(float x, float y)
+HRESULT tortoise::init(float x, float y)
 {
 	//  ===============추가할 이미지=================
 	IGM->addFrameImage("보스1떨어진방패", "Texture/Enemies/Boss1/bossShieldDrop_3672x366_17_2.bmp", 3672, 366, 17, 2);
@@ -22,19 +22,18 @@ HRESULT boss1::init(float x, float y)
 	_dir = RIGHT;
 	_angle = 0;
 	_speed = 2.0f;
-	_boss1Image[TURN] = IGM->findImage("보스1꺽기");
-	_boss1Image[WALK] = IGM->findImage("보스1걷기");
-	_boss1Image[WALK_SHINING] = IGM->findImage("보스1걷기빛");
-	_boss1Image[ATTACK] = IGM->findImage("보스1쏘기");
+	_tortoiseImage[TURN] = IGM->findImage("보스1꺽기");
+	_tortoiseImage[WALK] = IGM->findImage("보스1걷기");
+	_tortoiseImage[WALK_SHINING] = IGM->findImage("보스1걷기빛");
+	_tortoiseImage[ATTACK] = IGM->findImage("보스1쏘기");
 
-	_boss1Image[TAKE_SHIELD] = IGM->findImage("보스1방패줍기");
+	_tortoiseImage[TAKE_SHIELD] = IGM->findImage("보스1방패줍기");
 
-	_boss1Image[OFF_SHIELD] = IGM->findImage("보스1방패떨어뜨리기");
-	_boss1Image[OFF_TURN] = IGM->findImage("보스1꺽기방패없이");
-	_boss1Image[OFF_WALK] = IGM->findImage("보스1걷기방패없이");
+	_tortoiseImage[OFF_SHIELD] = IGM->findImage("보스1방패떨어뜨리기");
+	_tortoiseImage[OFF_TURN] = IGM->findImage("보스1꺽기방패없이");
+	_tortoiseImage[OFF_WALK] = IGM->findImage("보스1걷기방패없이");
 
 	_shieldDropImage = IGM->findImage("보스1떨어진방패");
-	//_bulletImage = IGM->findImage("보스1불릿");
 
 	_delayCount = 0;
 
@@ -57,7 +56,7 @@ HRESULT boss1::init(float x, float y)
 	return S_OK;
 }
 
-void boss1::update()
+void tortoise::update()
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
@@ -68,8 +67,8 @@ void boss1::update()
 	_playerY = _player->getY();
 	//프레임 돌려줌
 	bool aniDone;
-	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state)	aniDone = frameMake(_boss1Image[_state], _count, _index, 1, 0, 7, _dir);
-	else aniDone = frameMake(_boss1Image[_state], _count, _index, 1, 0, 12, _dir);
+	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 7, _dir);
+	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 12, _dir);
 	
 	if (!_shield.on && _shield.index != _shieldDropImage->getMaxFrameX()) //맥스프레임이면 프레임 안돈다.
 	{
@@ -134,7 +133,7 @@ void boss1::update()
 	Bmove();
 }
 
-void boss1::render()
+void tortoise::render()
 {
 	//히트박스와 텍스쳐 위치 맞추기위해 방향에 따라 렌더바꿈
 	//기존의 frameMake를 사용했더니 움찔거림이 생겼기 때문에 currentX , Y에 _index와 _dir을 직접 써넣었다.  //_boss1Image[_state]->setFrameY(_dir);
@@ -147,22 +146,22 @@ void boss1::render()
 	{
 		if (_dir == 0)
 		{
-			_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
 		}
 		else if (_dir == 1)
 		{
-			_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
 		}
 	}
 	else
 	{
 		if (_dir == 0)
 		{
-			_boss1Image[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
+			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
 		}
 		else if (_dir == 1)
 		{
-			_boss1Image[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
+			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
 		}
 	}
 
@@ -184,11 +183,11 @@ void boss1::render()
 	}
 }
 
-void boss1::release()
+void tortoise::release()
 {
 }
 
-void boss1::attack()
+void tortoise::attack()
 {
 	//공격중에도 이동이 계속되며 렌더할 프레임만 바뀐다.
 	if (_dir == RIGHT)
@@ -226,7 +225,7 @@ void boss1::attack()
 	}
 }
 
-void boss1::move()
+void tortoise::move()
 {
 	_x += _speed * cosf(_angle * 0.017);
 	
@@ -253,7 +252,7 @@ void boss1::move()
 	}
 }
 
-void boss1::shieldOff()
+void tortoise::shieldOff()
 {
 	//차후에 actor::throwed(_speed, _angle)를 사용해서 움직임을 구현하자.
 	_gravity += 0.05;
@@ -264,7 +263,7 @@ void boss1::shieldOff()
 	}
 	if (310 < _shield.x && _shield.x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
 	{
-		_shield.x -= 1;
+		_shield.x -= 4;
 	}
 	//점프활용
 	_y += -2 + _gravity;
@@ -286,7 +285,7 @@ void boss1::shieldOff()
 	}
 }
 
-void boss1::moveOff()
+void tortoise::moveOff()
 {
 	_angle = utl::getAngle(_x, _y, _shield.x, _shield.y);
 	_shield.offSpeed += 0.1f; //가속한다.
@@ -299,44 +298,23 @@ void boss1::moveOff()
 	}
 
 	//턴하는 조건을 변경해야함
-	//if (_dir == RIGHT)
-	//{
-	//	if (_x > IGM->findImage("보스방1")->getWidth() - 310)
-	//	{
-	//		_state = OFF_TURN;
-	//		_index = 0;
-	//		_count = 0;
-	//		_dir = LEFT;
-	//	}
-	//}
-	//else if (_dir == LEFT)
-	//{
-	//	if (_x < 310)
-	//	{
-	//		_state = OFF_TURN;
-	//		_index = 0;
-	//		_count = 0;
-	//		_dir = RIGHT;
-	//	}
-	//}
-
-	//float oldAngle = _angle;
 }
 
-void boss1::takeShield()
+void tortoise::takeShield()
 {
+	//실드 주울때 방향에 따라 앵글값 다시지정
 	if (_dir == RIGHT)
 	{
-
+		_angle = 0;
 	}
 	else if (_dir == LEFT)
 	{
-
+		_angle = 180;
 	}
 	_state = WALK;
 }
 
-void boss1::turn()
+void tortoise::turn()
 {
 	//방향바꿈
 	if (_dir == RIGHT)
@@ -361,7 +339,7 @@ void boss1::turn()
 	}
 }
 
-void boss1::damaged(actor * e)
+void tortoise::damaged(actor * e)
 {
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
@@ -391,7 +369,7 @@ void boss1::damaged(actor * e)
 	}
 }
 
-void boss1::Bfire(float angle)
+void tortoise::Bfire(float angle)
 {
 	//딜레이 주는방법
 	_delayCount = (_delayCount + 1) % 30;
@@ -411,7 +389,7 @@ void boss1::Bfire(float angle)
 	}
 }
 
-void boss1::Bmove()
+void tortoise::Bmove()
 {
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
@@ -420,7 +398,7 @@ void boss1::Bmove()
 	}
 }
 
-void boss1::Brender()
+void tortoise::Brender()
 {
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
@@ -428,7 +406,7 @@ void boss1::Brender()
 	}
 }
 
-bool boss1::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
+bool tortoise::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
 {
 	//if (renderDir)
 	{
