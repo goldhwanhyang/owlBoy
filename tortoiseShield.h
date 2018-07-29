@@ -2,18 +2,23 @@
 #include "enemy.h"
 class tortoiseShield : public enemy
 {
-	bool on;						//방패 챙겼니?
-	float x;						//방패 x
-	float y;						//방패 y
-	RECT hitBox;					//방패 충돌박스
-	int count;						//방패 프레임 카운트
-	int index;						//방패 프레임 인덱스
-	float offSpeed;					//방패가 없을때 속도
+	image* _image;					//떨어진 방패 이미지
+	bool _isActive;					//방패 챙겼니?
 public:
-	HRESULT init();
+	virtual void damaged(actor *e);
+	virtual void move(float angle);
+	virtual void collide();
+
+	HRESULT init(float x, float y);
 	void update();
 	void render();
 	void release();
+
+	bool getIsActive() { return _isActive; }
+	void setIsActive(bool isActive) { _isActive = isActive; }
+
+	int getWidth() { return _image->getFrameWidth(); }
+	int getHeight() { return _image->getFrameHeight(); }
 
 	tortoiseShield() {}
 	~tortoiseShield() {}

@@ -7,6 +7,7 @@
 class dungeonScene : public gameNode
 {
 	tortoise* _tortoise;
+	tortoiseShield* _shield;
 	image* _stage;
 	image* _stagePixel;
 	enemy* _gawk1;
