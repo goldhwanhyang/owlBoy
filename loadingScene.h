@@ -13,10 +13,12 @@ public:
 	void update(void);
 	void render(void);
 
-	//로딩이미지 함수(이곳에 이미지를 전부 넣어라)
+	//로딩이미지 함수
 	void loadingImage();
-	//로딩사운드 함수(이곳에 사운드를 전부 넣어라)
+	//로딩사운드 함수
 	void loadingSound();
+	//로딩이펙트 함수
+	void loadingEffect();
 
 	loadingScene() {}
 	~loadingScene() {}
