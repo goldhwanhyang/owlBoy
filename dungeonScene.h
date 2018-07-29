@@ -1,12 +1,12 @@
 #pragma once
 #include "gameNode.h"
-#include "boss1.h"
+#include "tortoise.h"
 #include "gawk.h"
 #include "player.h"
 
 class dungeonScene : public gameNode
 {
-	boss1* _boss1;
+	tortoise* _tortoise;
 	image* _stage;
 	image* _stagePixel;
 	enemy* _gawk1;
