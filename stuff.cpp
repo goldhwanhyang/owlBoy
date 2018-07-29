@@ -41,7 +41,6 @@ void stuff::lifted(player * _player)
 				_height = _maxHeight;
 				_state = HANG;
 				_y -= 10;
-				EFFECT->generateEffect("친구들기이펙트", _player->getX(), _player->getY());
 			}
 		}
 
