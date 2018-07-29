@@ -27,11 +27,27 @@ HRESULT townScene::init()
 	temp.setX(_player->getX());
 	temp.setY(_player->getY());
 
+	cloud *temp;
+	for (int i = 0; i < 40; ++i)
+	{
+		temp = new cloud;
+		temp->init();
+		RENDERMANAGER->addBackground(temp->getZ(), temp);
+	}
+	stone *temp1;
+	for (int i = 0; i < 20; ++i)
+	{
+		temp1 = new stone;
+		temp1->init();
+		RENDERMANAGER->addBackground(temp1->getZ(), temp1);
+	}
+
 	return S_OK;
 }
 
 void townScene::release()
 {
+	RENDERMANAGER->clearBackground();
 }
 
 void townScene::update()
@@ -77,6 +93,8 @@ void townScene::update()
 
 void townScene::render()
 {
+	RENDERMANAGER->backgroundRender(getMemDC());
+
 	//_testMap->render(getMemDC());
 	_TownMap->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	if (KEYMANAGER->isToggleKey(VK_F1))
@@ -86,5 +104,5 @@ void townScene::render()
 	}
 	_player->render();
 
-	temp.render();
+	RENDERMANAGER->addRender(0, &temp);
 }

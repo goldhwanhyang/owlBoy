@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RenderManager.h"
-#include "gameNode.h"
+#include "actor.h"
+#include "backgroundActor.h"
 
 HRESULT RenderManager::init()
 {
@@ -14,20 +15,79 @@ void RenderManager::release()
 
 void RenderManager::render(HDC hdc)
 {
-	multimap<float, gameNode *>::iterator iter;
-
+	multimap<float, actor *>::iterator iter;
+	int x, y;
 	if (!renderList.empty())
 	{
 		for (iter = renderList.begin(); iter != renderList.end(); ++iter)
 		{
-			iter->second->render();
+			x = iter->second->getX() - CAM->getX();
+			y = iter->second->getY() - CAM->getY();
+			if (0 < x + 200 && x - 200 < WINSIZEX &&
+				0 < y + 200 && y - 200 < WINSIZEY)
+			{
+				iter->second->render();
+			}
 		}
 	}
 
 	renderList.clear();
 }
 
-void RenderManager::addRender(gameNode * effectName, float z)
+void RenderManager::backgroundRender(HDC hdc)
 {
-	renderList.insert(make_pair(z, effectName));
+	multimap<float, backgroundActor *>::iterator iter;
+	int centerX = CAM->getX() + WINSIZEX / 2, centerY = CAM->getY() + WINSIZEY / 2;
+	int x, y, z;
+	int width, height;
+	if (!backgroundList.empty())
+	{
+		for (iter = backgroundList.begin(); iter != backgroundList.end(); ++iter)
+		{
+			iter->second->update();
+			width = iter->second->getImage()->getWidth();
+			height = iter->second->getImage()->getHeight();
+			z = iter->second->getZ();
+
+			if (z >= 4)
+			{
+				z = 5;
+			}
+
+			x = WINSIZEX / 2 + (iter->second->getX() - centerX) / (5 - z);
+			y = WINSIZEY / 2 + (iter->second->getY() - centerY) / (5 - z);
+			//x = (iter->second->getX() - CAM->getX());
+			//y = iter->second->getY() - CAM->getY();
+			if (0 < x + width && x < WINSIZEX &&
+				0 < y + height && y < WINSIZEY)
+			{
+				iter->second->render(x, y);
+			}
+		}
+	}
+
+}
+
+void RenderManager::addRender(float z, actor *name)
+{
+	renderList.insert(make_pair(z, name));
+}
+
+void RenderManager::addBackground(float z, backgroundActor *backActor)
+{
+	backgroundList.insert(make_pair(z, backActor));
+}
+
+void RenderManager::clearBackground()
+{
+	multimap<float, backgroundActor *>::iterator iter;
+	if (!backgroundList.empty())
+	{
+		for (iter = backgroundList.begin(); iter != backgroundList.end(); ++iter)
+		{
+			SAFE_DELETE(iter->second);
+		}
+	}
+
+	backgroundList.clear();
 }

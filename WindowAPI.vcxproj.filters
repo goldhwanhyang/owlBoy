@@ -200,6 +200,18 @@
     <ClInclude Include="tortoiseShield.h">
       <Filter>GameFramework2D\액터\애너미</Filter>
     </ClInclude>
+    <ClInclude Include="stone.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="backgroundActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cloud.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="fruit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -312,6 +324,18 @@
     </ClCompile>
     <ClCompile Include="tortoiseShield.cpp">
       <Filter>GameFramework2D\액터\애너미</Filter>
+    </ClCompile>
+    <ClCompile Include="backgroundActor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cloud.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="fruit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stone.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -56,12 +56,24 @@ void loadingScene::loadingImage()
 	//백그라운드 이미지
 	//_loading->loadImage("mountain", "mountain.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	
+	// background
+	_loading->loadImage("구름1", "Texture/background/cloud_462x174.bmp", 462, 174, true, RGB(255, 0, 255));
+	_loading->loadImage("구름2", "Texture/background/cloud2_789x478.bmp", 789, 478, true, RGB(255, 0, 255));
+	_loading->loadImage("구름3", "Texture/background/cloud3_484x201.bmp", 484, 201, true, RGB(255, 0, 255));
+	_loading->loadImage("구름4", "Texture/background/cloud4_537x185.bmp", 537, 185, true, RGB(255, 0, 255));
+	_loading->loadImage("구름5", "Texture/background/cloud5_319x286.bmp", 319, 286, true, RGB(255, 0, 255));
+	_loading->loadImage("구름6", "Texture/background/cloud6_402x235.bmp", 402, 235, true, RGB(255, 0, 255));
+	_loading->loadImage("구름7", "Texture/background/cloud7_510x255.bmp", 510, 255, true, RGB(255, 0, 255));
+	_loading->loadImage("돌1", "Texture/background/ston1_167x192.bmp", 167, 192, true, RGB(255, 0, 255));
+	_loading->loadImage("돌2", "Texture/background/ston2_189x171.bmp", 189, 171, true, RGB(255, 0, 255));
 
-	// Effect
+	// effect
 	_loading->loadFrameImage("친구들기이펙트", "Texture/Effect/takeFriendsEffect_1260x90_6x1.bmp", 1260, 90, 6, 1);
 	_loading->loadFrameImage("총알폭발이펙트", "Texture/Effect/bulletExplodeEffect_1116x128_9x1.bmp", 1116, 128, 9, 1);
 	_loading->loadFrameImage("친구소환이펙트", "Texture/Effect/callFriendsEffect_1680x300_6x1.bmp", 1680, 300, 6, 1);
 	_loading->loadFrameImage("구르기먼지이펙트", "Texture/Effect/rollDustEffect_912x320_8x2.bmp", 912, 320, 8, 2);
+	_loading->loadFrameImage("구르기먼지왼쪽이펙트", "Texture/Effect/rollDustLeftEffect_912x160_8x1.bmp", 912, 160, 8, 1);
+	_loading->loadFrameImage("구르기먼지오른쪽이펙트", "Texture/Effect/rollDustRightEffect_912x160_8x1.bmp", 912, 160, 8, 1);
 
 
 	// player
@@ -119,4 +131,6 @@ void loadingScene::loadingEffect()
 	EFFECTMANAGER->addEffect("총알폭발", "총알폭발이펙트", 0.5, 20);
 	EFFECTMANAGER->addEffect("소환", "친구소환이펙트", 0.5, 5);
 	EFFECTMANAGER->addEffect("구르기먼지", "구르기먼지이펙트", 0.5, 10);
+	EFFECTMANAGER->addEffect("구르기왼쪽", "구르기먼지왼쪽이펙트", 0.2, 10);
+	EFFECTMANAGER->addEffect("구르기오른쪽", "구르기먼지오른쪽이펙트", 0.2, 10);
 }

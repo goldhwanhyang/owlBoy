@@ -69,23 +69,6 @@ void ironWeight::render()
 }
 
 
-void ironWeight::move()
-{
-	_gravity += 0.1f;
-	_x += cos(_angle) * _speed;
-	_y += -sin(_angle) * _speed + _gravity;
-}
-
-void ironWeight::throwed(float speed, float angle)
-{
-	actor::throwed(speed, angle);
-	_state = ON_AIR;
-}
-
-void ironWeight::collide()
-{
-	stuff::collide();
-}
 
 
 //

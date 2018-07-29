@@ -28,6 +28,8 @@ public:
 	virtual void used(player* _player) {}
 	virtual void lifted(player* _player);
 	virtual void collide();
+	virtual void move();
+	virtual void throwed(float speed, float angle);
 
 	stuff() : actor() {}
 	~stuff() {}

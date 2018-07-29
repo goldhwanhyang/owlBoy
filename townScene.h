@@ -3,6 +3,8 @@
 #include "player.h"
 #include "effect.h"
 #include "ironWeight.h"
+#include "cloud.h"
+#include "stone.h"
 
 class townScene : public gameNode
 {

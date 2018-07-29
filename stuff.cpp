@@ -41,6 +41,7 @@ void stuff::lifted(player * _player)
 				_height = _maxHeight;
 				_state = HANG;
 				_y -= 10;
+				EFFECT->generateEffect("친구들기이펙트", _player->getX(), _player->getY());
 			}
 		}
 
@@ -108,5 +109,18 @@ void stuff::collide()
 		//break;
 	}
 
+}
+
+void stuff::move()
+{
+	_gravity += 0.1f;
+	_x += cos(_angle) * _speed;
+	_y += -sin(_angle) * _speed + _gravity;
+}
+
+void stuff::throwed(float speed, float angle)
+{
+	actor::throwed(speed, angle);
+	_state = ON_AIR;
 }
 

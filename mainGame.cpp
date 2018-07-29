@@ -68,6 +68,7 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	}
 
 	SCENEMANAGER->render();
+	RENDERMANAGER->render(getMemDC());
 	EFFECTMANAGER->render();
 	//EFFECT->render(getMemDC());
 
@@ -76,9 +77,9 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	{
 		TextOut(getMemDC(), WINSIZEX / 2 - 40, 200, "디버그 모드", strlen("디버그 모드"));
 
-		TIMEMANAGER->render(getMemDC());
 	}
 	_isDebug = FALSE; //모든 클래스 디버그모드 끄기
+	TIMEMANAGER->render(getMemDC());
 
 //=============================================================	
 	//백버퍼의 내용을 HDC에 그린다 (이것도 렌더에 그냥 둘것!!)
