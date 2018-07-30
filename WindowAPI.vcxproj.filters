@@ -81,6 +81,9 @@
     <Filter Include="GameFramework2D\액터\애너미">
       <UniqueIdentifier>{de2b913d-2638-496f-89d3-b45ef7bf61dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework2D\액터\애너미\거북이보스">
+      <UniqueIdentifier>{0944fced-b1cc-4af0-b5e4-29ef9dcb99d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonMacroFunction.h">
@@ -194,12 +197,6 @@
     <ClInclude Include="mainGame.h">
       <Filter>MainGame</Filter>
     </ClInclude>
-    <ClInclude Include="tortoise.h">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClInclude>
-    <ClInclude Include="tortoiseShield.h">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClInclude>
     <ClInclude Include="stone.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -211,6 +208,18 @@
     </ClInclude>
     <ClInclude Include="fruit.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoiseShield.h">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoisePhase1.h">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoisePhase2.h">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClInclude>
+    <ClInclude Include="tortoise.h">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -319,12 +328,6 @@
     <ClCompile Include="gawk.cpp">
       <Filter>GameFramework2D\액터\애너미</Filter>
     </ClCompile>
-    <ClCompile Include="tortoise.cpp">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClCompile>
-    <ClCompile Include="tortoiseShield.cpp">
-      <Filter>GameFramework2D\액터\애너미</Filter>
-    </ClCompile>
     <ClCompile Include="backgroundActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -336,6 +339,18 @@
     </ClCompile>
     <ClCompile Include="stone.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoiseShield.cpp">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoisePhase1.cpp">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoisePhase2.cpp">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoise.cpp">
+      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

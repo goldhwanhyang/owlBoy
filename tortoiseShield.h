@@ -2,6 +2,7 @@
 #include "enemy.h"
 class tortoiseShield : public enemy
 {
+private:
 	image* _image;					//떨어진 방패 이미지
 	bool _isActive;					//방패 챙겼니?
 

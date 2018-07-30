@@ -28,7 +28,7 @@ HRESULT townScene::init()
 	temp.setY(_player->getY());
 
 	cloud *temp;
-	for (int i = 0; i < 40; ++i)
+	for (int i = 0; i < 70; ++i)
 	{
 		temp = new cloud;
 		temp->init();

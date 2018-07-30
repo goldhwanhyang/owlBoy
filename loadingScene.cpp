@@ -94,10 +94,29 @@ void loadingScene::loadingImage()
 
 
 	// enemy
-	_loading->loadFrameImage("보스1꺽기", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
-	_loading->loadFrameImage("보스1걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	_loading->loadFrameImage("보스1걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	_loading->loadFrameImage("보스1쏘기", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	// tortoise
+	_loading->loadFrameImage("거북이_떨어진방패", "Texture/Enemies/Boss1/bossShieldDrop_3672x366_17_2.bmp", 3672, 366, 17, 2);
+	_loading->loadFrameImage("거북이_불릿", "Texture/Enemies/Boss1/bossBullet_525x138_7x2.bmp", 525, 138, 7, 2);
+								   
+	_loading->loadFrameImage("거북이_페이즈1_꺽기", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈1_걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈1_걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈1_쏘기", "Texture/Enemies/Boss1/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
+								   		   
+	_loading->loadFrameImage("거북이_페이즈1_걷기방패없이", "Texture/Enemies/Boss1/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈1_방패떨어뜨리기", "Texture/Enemies/Boss1/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈1_스턴", "Texture/Enemies/Boss1/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈1_방패줍기", "Texture/Enemies/Boss1/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
+								   
+	_loading->loadFrameImage("거북이_페이즈2_준비", "Texture/Enemies/Boss1/phase2Ready_2496x684_8x2", 2496, 684, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈2_날기", "Texture/Enemies/Boss1/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈2_쏘기", "Texture/Enemies/Boss1/phase2Shoot_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈2_방패줍기", "Texture/Enemies/Boss1/phase2TakeShield_2448x684_8x2.bmp", 2448, 684, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈2_방패떨어뜨리기", "Texture/Enemies/Boss1/phase2OffShield_636x420_2x2.bmp", 636, 420, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈2_스턴", "Texture/Enemies/Boss1/phase2OffStun_636x420_2x2.bmp", 636, 420, 2, 2);
+	_loading->loadFrameImage("거북이_페이즈2_날기방패없이", "Texture/Enemies/Boss1/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+
 
 	// stuff
 	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);

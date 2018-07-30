@@ -5,7 +5,7 @@ HRESULT tortoiseShield::init(float x, float y)
 {
 	enemy::init(x, y);
 
-	_image = IGM->findImage("보스1떨어진방패");
+	_image = IGM->findImage("거북이_떨어진방패");
 	_isActive = true;
 	_speed = 2.8f;
 	_gravity = 0;

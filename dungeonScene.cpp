@@ -12,12 +12,15 @@ HRESULT dungeonScene::init()
 	_stagePixel = IMAGEMANAGER->findImage("보스방1픽셀");
 	_player->setMap(_stage);
 	_player->setMapPixel(_stagePixel);
-
+	
 	_tortoise = new tortoise;
-	_tortoise->init(1400, 850);
+	_shield = new tortoiseShield; //_tortoise->setShieldLink를 써야하므로 이 위치에서 동적할당
 
-	_shield = new tortoiseShield;
-	_shield->init(_tortoise->getX(), _tortoise->getY());
+	_tortoise->setPlayerLink(_player);
+	_tortoise->setShieldLink(_shield);
+	_tortoise->init(1400,850); //init함수 안에 setLink들이 있으므로 위의 2줄 _tortoise->setLink부터 해야함
+
+	_shield->init(_tortoise->getX(), _tortoise->getY()); //_tortoise의 x,y를 받아서 init해야하므로 맨 마지막
 
 	_gawk1 = new gawk;
 	_gawk1->init(1200, 300);
@@ -26,8 +29,7 @@ HRESULT dungeonScene::init()
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
 	CAM->setPosition(_player->getX(), _player->getY());
 
-	_tortoise->setPlayerLink(_player);
-	_tortoise->setShieldLink(_shield);
+
 	return S_OK;
 }
 
@@ -58,5 +60,4 @@ void dungeonScene::release()
 	SAFE_DELETE(_gawk1);
 	_shield->release();
 	SAFE_DELETE(_shield);
-
 }
