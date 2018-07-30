@@ -3,7 +3,12 @@
 #include "bullet.h"
 #include "tortoiseShield.h"
 
-#define MAX_STATE 9
+namespace PHASE1_CONST
+{
+	const int MAX_STATE = 10;
+	const float DEFAULT_OFF_SPEED = 2.8f;
+	const float MAX_OFF_SPEED = 8.0f;
+}
 
 class tortoise : public enemy
 {
@@ -20,6 +25,7 @@ private:
 		TAKE_SHIELD,
 
 		OFF_SHIELD,
+		OFF_STUN,
 		OFF_TURN,
 		OFF_WALK
 	};
@@ -33,40 +39,41 @@ private:
 	int _attackCount;					//몇발쐈는지 체크
 	int _delayCount;					//불릿 딜레이
 
-	image* _tortoiseImage[MAX_STATE];	//보스 이미지[상태]			
+	image* _tortoiseImage[PHASE1_CONST::MAX_STATE];	//보스 이미지[상태]			
 	tortoiseShield* _shield;			//방패
 	float _offSpeed;					//방패없을때 보스의 속도
+	bool _isActiveShield;
 
 	vector<bullet> _vBullet;			//불릿
 
-	char _debug[128];
+	char _debug[64];
 public:
 	virtual void attack();
 	virtual void move();
 	virtual void collide();
-	void turn();
+	virtual void turn();
 
-	void shieldOff();
-	void moveOff();
+	virtual void shieldOff();
+	virtual bool stun();
+	virtual void moveOff();
 	//void turnOff();
 
-	void takeShield();
+	virtual void takeShield();
 	virtual void damaged(actor *e);
 
-	void Bfire(float angle);
-	void Bmove();
-	void Brender();
+	virtual void Bfire(float angle);
+	virtual void Bmove();
+	virtual void Brender();
 
 	virtual HRESULT init(float x, float y);
 	virtual void update();
 	virtual void render();
 	virtual void release();
 
-	bool frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir);
+	virtual bool frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir);
 
-	void setShieldLink(tortoiseShield* shield) { _shield = shield; }
+	virtual void setShieldLink(tortoiseShield* shield) { _shield = shield; }
 
 	tortoise() {}
 	~tortoise() {}
 };
-

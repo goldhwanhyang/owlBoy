@@ -4,9 +4,11 @@ class tortoiseShield : public enemy
 {
 	image* _image;					//떨어진 방패 이미지
 	bool _isActive;					//방패 챙겼니?
+
+	char _debug[64];
 public:
 	virtual void damaged(actor *e);
-	virtual void move(float angle);
+	virtual void move();
 	virtual void collide();
 
 	HRESULT init(float x, float y);

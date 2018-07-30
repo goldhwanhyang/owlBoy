@@ -17,6 +17,8 @@ void tortoiseShield::update()
 
 	if (!_isActive) 
 	{
+		move();
+		collide();
 		_hitBox = RectMakeCenter(_x, _y, 220, 160);
 		//방패 프레임 돌리기, 맥스프레임이면 프레임 안돈다.
 		if (_index != _image->getMaxFrameX())
@@ -45,6 +47,8 @@ void tortoiseShield::render()
 	}
 	if (_isDebug)
 	{
+		_stprintf_s(_debug, "angle: %f, speed: %f", _angle, _speed);
+		TextOut(getMemDC(), 100, 120, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 }
@@ -58,26 +62,20 @@ void tortoiseShield::damaged(actor * e)
 	//떨어진 실드를 회전공격으로 때렸을때의 반응
 }
 
-void tortoiseShield::move(float angle)
+void tortoiseShield::move()
 {
 	_gravity += 0.05f;
 	if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
 	{
-		_x += 7 * cos(PI - angle);
+		_x += _speed * cos(PI - _angle);
 	}
-	_y += -3 * -sin(angle) + _gravity;
-
-	//if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
-	//{
-	//	_x += 4;
-	//}
-	//_gravity += 0.05f;
-	//_y += -2 + _gravity;
+	_y += _speed * -sin(_angle) + _gravity;
 }
 
 void tortoiseShield::collide()
 {
-	/* //추후에 플레이어가 들고 나를것까지 생각해야한다.
+	/* //TODO : 추후에 플레이어가 들고 나를것까지 생각해야한다.
+
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
 	int r = GetRValue(color);
 	int g = GetGValue(color);
@@ -138,6 +136,7 @@ void tortoiseShield::collide()
 	if (!(r == 255 && g == 0 && b == 255))
 	{
 		_y = _hitBox.bottom - 90;
+		_speed = 0;
 		_gravity = 0;
 	}
 }

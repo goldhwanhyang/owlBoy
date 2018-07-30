@@ -13,6 +13,7 @@ HRESULT tortoise::init(float x, float y)
 
 	IGM->addFrameImage("보스1걷기방패없이", "Texture/Enemies/Boss1/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	IGM->addFrameImage("보스1방패떨어뜨리기", "Texture/Enemies/Boss1/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
+	IGM->addFrameImage("보스1스턴", "Texture/Enemies/Boss1/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
 	IGM->addFrameImage("보스1꺽기방패없이", "Texture/Enemies/Boss1/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	IGM->addFrameImage("보스1방패줍기", "Texture/Enemies/Boss1/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
 
@@ -31,6 +32,7 @@ HRESULT tortoise::init(float x, float y)
 	_tortoiseImage[TAKE_SHIELD] = IGM->findImage("보스1방패줍기");
 
 	_tortoiseImage[OFF_SHIELD] = IGM->findImage("보스1방패떨어뜨리기");
+	_tortoiseImage[OFF_STUN] = IGM->findImage("보스1스턴");
 	_tortoiseImage[OFF_TURN] = IGM->findImage("보스1꺽기방패없이");
 	_tortoiseImage[OFF_WALK] = IGM->findImage("보스1걷기방패없이");
 
@@ -41,7 +43,7 @@ HRESULT tortoise::init(float x, float y)
 	_attackCount = 0;
 	_state = WALK;
 
-	_offSpeed = 2.8f;
+	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
 	blt.init(10, 5,IGM->findImage("보스방1")->getWidth(), "보스1불릿");
@@ -55,6 +57,7 @@ HRESULT tortoise::init(float x, float y)
 
 void tortoise::update()
 {
+	//TODO : 임시
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		damaged(_player);
@@ -62,10 +65,11 @@ void tortoise::update()
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
+	_isActiveShield = _shield->getIsActive();
 
 	//프레임 돌려줌
 	bool aniDone;
-	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 7, _dir);
+	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 7, _dir);
 	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 12, _dir);
 
 	switch (_state)
@@ -90,6 +94,9 @@ void tortoise::update()
 		break;
 	case OFF_SHIELD:			//방패 떨어뜨리기
 		shieldOff();
+		break;
+	case OFF_STUN:				//스턴
+		if(stun()) _state = OFF_WALK;
 		break;
 	case OFF_TURN:				//방패없이 꺽기
 		if (aniDone) turn();
@@ -116,8 +123,8 @@ void tortoise::update()
 
 	_hitBox = RectMakeCenter(_x, _y + 60, 220, 160);
 
-	//실드가 달리면 보스위치를 따라감
-	if (_shield->getIsActive())
+	//실드를 활성하면 보스위치를 따라감
+	if (_isActiveShield)
 	{
 		_shield->setX(_x);
 		_shield->setY(_y);
@@ -165,7 +172,7 @@ void tortoise::render()
 	if (_isDebug)
 	{
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		_stprintf_s(_debug, "angle: %f, X: %f", _angle, _x);
+		_stprintf_s(_debug, "angle: %f, offSpeed: %f", _angle, _offSpeed);
 		TextOut(getMemDC(), 100, 100, _debug, strlen(_debug));
 		TextOut(getMemDC(), _x, _y, "X", strlen("X"));
 	}
@@ -245,21 +252,21 @@ void tortoise::turn()
 	//방향바꿈
 	if (_dir == RIGHT)
 	{
-		if (_shield->getIsActive()) _state = WALK;
+		if (_isActiveShield) _state = WALK;
 		//else
 		//{
 		//	_state = OFF_WALK;
-		//	_shield.offSpeed = 2.8f; //턴할때 가속도 초기화
+		//	_shield.offSpeed = DEFAULT_OFF_SPEED; //턴할때 가속도 초기화
 		//}
 		_angle = 0;
 	}
 	else if (_dir == LEFT)
 	{
-		if (_shield->getIsActive()) _state = WALK;
+		if (_isActiveShield) _state = WALK;
 		//else
 		//{
 		//	_state = OFF_WALK;
-		//	_shield.offSpeed = 2.8f; //턴할때 가속도 초기화
+		//	_shield.offSpeed = DEFAULT_OFF_SPEED; //턴할때 가속도 초기화
 		//}
 		_angle = 180;
 	}
@@ -267,13 +274,11 @@ void tortoise::turn()
 
 void tortoise::collide()
 {
-	//플레이어랑 보스몸체랑 충돌했을때
+	//TODO : 플레이어랑 보스몸체랑 충돌했을때?
 }
 
 void tortoise::shieldOff()
 {
-	//TODO : 차후에 actor::throwed(_speed, _angle)를 사용해서 움직임을 구현하자.
-	//TODO : 실드off스턴시간이 너무 짧다. , takeShield가능까지 딜레이 줘야함
 	_gravity += 0.05;
 	float temp = utl::getAngle(_playerX, _playerY, _x, _y);
 	if (301 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
@@ -282,7 +287,7 @@ void tortoise::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->move(temp);
+	_shield->throwed(6, temp); //TODO : 진동, 통통 버그
 
 	//보스몸체 픽셀충돌
 	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
@@ -294,14 +299,23 @@ void tortoise::shieldOff()
 	{
 		_y = _hitBox.bottom - 160;
 		_gravity = 0;
-		_state = OFF_WALK;
+		_state = OFF_STUN;
 	}
+}
+
+bool tortoise::stun()
+{
+	_delayCount = (_delayCount + 1) % 120;
+	if (_delayCount != 0) return false;
+
+	 return true;
 }
 
 void tortoise::moveOff()
 {
-	_angle = utl::getAngle(_x, _y, _shield->getX(), _shield->getY()) * 58.8; // degree값으로 변경하기 위해 58.8을 곱했다.
-	_offSpeed += 0.1f; //가속한다.
+	_angle = utl::getAngle(_x, _y, _shield->getX(), _shield->getY());
+	_angle *= 58.8; // degree값으로 변경하기 위해 58.8을 곱했다.
+	if(_offSpeed < PHASE1_CONST::MAX_OFF_SPEED) _offSpeed += 0.1f; // 가속한다.
 	_x += _offSpeed * cosf(_angle * 0.017); // cosf에 넣기위해 다시 radian으로 변경
 	//앵글값 변경에 따른 문워크 방지
 	// TODO : offTrun을 만들어서 문워크 방지해야함 아직도 버그가 있다.
@@ -313,8 +327,8 @@ void tortoise::moveOff()
 	{
 		_dir = RIGHT;
 	}
-	
-	if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth())
+	//실드의 폭보다 가까워지면 실드를 줍줍
+	if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth() && _state == OFF_WALK)
 	{
 		_shield->setIsActive(true);
 		_state = TAKE_SHIELD;
@@ -330,12 +344,12 @@ void tortoise::takeShield()
 	if (_dir == RIGHT)
 	{
 		_angle = 0;
-		_offSpeed = 2.8f;
+		_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 	}
 	else if (_dir == LEFT)
 	{
 		_angle = 180;
-		_offSpeed = 2.8f;
+		_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 	}
 	_state = WALK;
 }
@@ -347,7 +361,7 @@ void tortoise::damaged(actor * e)
 	//TODO : 임시
 	POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
 	
-	if (_shield->getIsActive())
+	if (_isActiveShield)
 	{
 		if (PtInRect(&_hitBox, t))
 		{
@@ -397,6 +411,7 @@ void tortoise::Brender()
 	{
 		_vBullet[i].render();
 	}
+	
 }
 
 bool tortoise::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
