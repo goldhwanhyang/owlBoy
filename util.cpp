@@ -18,3 +18,8 @@ float MY_UTIL::getAngle(float startX, float startY, float endX, float endY)
 {
 	return atan2(startY - endY, endX - startX);
 }
+
+float MY_UTIL::getAnglef(float startX, float startY, float endX, float endY)
+{
+	return atan2(startY - endY, endX - startX);
+}

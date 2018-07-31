@@ -62,6 +62,8 @@ private:
 	BLENDFUNCTION	_blendFunc;		// 알파블랜드 기능 		memDC의 이미지를 blendDC로 옮기고 그걸 hdc로 옮김
 
 	LPIMAGE_INFO	_stretchImage;	//스트레치이미지
+	LPIMAGE_INFO		_rotateImage;	//로테이트이미지
+
 public:
 	image();
 	~image();
@@ -121,6 +123,13 @@ public:
 //	## 알파프레임렌더 ## (made by 상균)
 //=============================================================
 	void alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha);
+
+//=============================================================
+//	## 로테이트렌더 ## (이미지 회전)
+//=============================================================
+	void rotateRender(HDC hdc, float centerX, float centerY, float angle);
+	void rotateFrameRender(HDC hdc, float centerX, float centerY, float angle);
+	void rotateFrameRender(HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle);
 
 //=============================================================
 //	## 애니렌더 ## 

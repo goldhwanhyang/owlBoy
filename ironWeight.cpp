@@ -63,9 +63,21 @@ void ironWeight::render()
 		break;
 	}
 
-	_img[_state]->frameRender(getMemDC(), _x - _img[_state]->getFrameWidth()/2 - CAM->getX(),
-		_y - _img[_state]->getFrameHeight()/2 - CAM->getY(),
-		0, 0, _img[_state]->getFrameWidth(), _height, _curFrameX, 0);
+	if (_state == BURIED)
+	{
+		_img[_state]->frameRender(getMemDC(), _x - _img[_state]->getFrameWidth() / 2 - CAM->getX(),
+			_y - _img[_state]->getFrameHeight() / 2 - CAM->getY(),
+			0, 0, _img[_state]->getFrameWidth(), _height, _curFrameX, 0);
+	}
+	else
+	{
+		int size = (_img[_state]->getFrameWidth() >  _img[_state]->getFrameHeight())?_img[_state]->getFrameWidth() : _img[_state]->getFrameHeight();
+		float angle = getAnglef(_x - CAM->getX(), _y - CAM->getY(), _ptMouse.x, _ptMouse.y);
+		_img[_state]->rotateFrameRender(getMemDC(),
+			_x - CAM->getX(),
+			_y - CAM->getY(),
+			_curFrameX, 0, angle);
+	}
 }
 
 
