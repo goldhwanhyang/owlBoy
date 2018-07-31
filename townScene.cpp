@@ -5,6 +5,7 @@
 HRESULT townScene::init()
 {
 	//_testMap = IMAGEMANAGER->addImage("map", "Texture/player/1000x1000_map.bmp", 1000, 1000, true, RGB(255, 0, 255));
+	_backgroundSky = IMAGEMANAGER->findImage("sky");
 	_player = SAVEDATA->getPlayer();
 	_player->init();
 
@@ -93,6 +94,7 @@ void townScene::update()
 
 void townScene::render()
 {
+	_backgroundSky->render(getMemDC(), 0, 0);
 	RENDERMANAGER->backgroundRender(getMemDC());
 
 	//_testMap->render(getMemDC());

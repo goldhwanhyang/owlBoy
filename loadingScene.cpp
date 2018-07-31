@@ -128,6 +128,7 @@ void loadingScene::loadingImage()
 
 
 	// map
+	_loading->loadImage("sky", "Texture/background/sky_1920x1080.bmp", WINSIZEX, WINSIZEY);
 	_loading->loadImage("보스방1", "Texture/Maps/Boss1/Map.bmp", 1920, 1080);
 	_loading->loadImage("보스방1픽셀", "Texture/Maps/Boss1/MapPixel.bmp", 1920, 1080);
 

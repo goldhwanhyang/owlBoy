@@ -21,6 +21,8 @@ namespace MY_UTIL
 	float getDistance(float _x, float _y);
 	// 두 점 사이의 각도
 	float getAngle(float startX, float startY, float endX, float endY);
+
+	float getAnglef(float startX, float startY, float endX, float endY);
 };
 
 namespace utl = MY_UTIL;
