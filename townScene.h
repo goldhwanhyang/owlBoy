@@ -10,6 +10,7 @@ class townScene : public gameNode
 {
 private:
 	//image* _testMap;
+	image * _backgroundSky;
 	image * _TownMap;
 	image* _TownMapPixel;
 	player* _player;
