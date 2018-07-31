@@ -22,7 +22,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 
 	_delayCount = 0;
 
-	_hitBox = RectMakeCenter(_x, _y + 60, 230, 160);
+	_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 	_isAttack = false;
 	_attackCount = 0;
 	_state = FLY;
@@ -97,7 +97,7 @@ void tortoisePhase2::update()
 		else _state = FLY;
 	}
 
-	_hitBox = RectMakeCenter(_x, _y + 60, 220, 160);
+	_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 
 	//실드를 활성하면 보스위치를 따라감
 	if (_isActiveShield)
@@ -221,7 +221,7 @@ void tortoisePhase2::shieldOff()
 
 bool tortoisePhase2::stun()
 {
-	_delayCount = (_delayCount + 1) % 120;
+	_delayCount = (_delayCount + 1) % 90;
 	if (_delayCount != 0) return false;
 
 	return true;

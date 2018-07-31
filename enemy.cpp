@@ -2,7 +2,7 @@
 #include "enemy.h"
 #include "player.h"
 
-HRESULT enemy::init(float x, float y)
+HRESULT enemy::init(float x, float y, int dir)
 {
 	_x = x;
 	_y = y;

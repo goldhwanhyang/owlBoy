@@ -9,6 +9,8 @@ namespace PHASE1_CONST
 	const int MAX_STATE = 10;
 	const float DEFAULT_OFF_SPEED = 2.8f;
 	const float MAX_OFF_SPEED = 8.0f;
+	const int HITBOX_WIDTH = 220;
+	const int HITBOX_HEIGHT = 160;
 }
 
 class tortoisePhase1 : public enemy
