@@ -44,7 +44,7 @@ void dungeonScene::update()
 	_shield->update();
 	for (int i = 0; i < 2; i++)
 	{
-		_gawk[0]->update();
+		_gawk[i]->update();
 	}
 	_player->update();
 
@@ -58,7 +58,7 @@ void dungeonScene::render()
 	_shield->render();
 	for (int i = 0; i < 2; i++)
 	{
-		_gawk[0]->render();
+		_gawk[i]->render();
 	}
 	_player->render();
 }

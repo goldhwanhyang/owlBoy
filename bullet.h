@@ -13,7 +13,7 @@ class bullet : public actor
 public:
 	virtual HRESULT init(float radius, float speed, float range, const char* imageName = "없음");
 	virtual void update();
-	virtual void render();
+	virtual void render(bool rotate = false);
 	virtual void release();
 
 	virtual void collide(string pixelImageName); //벽과의 충돌을 하기위해 픽셀이미지키값을 넘겨주게 했음

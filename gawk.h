@@ -24,6 +24,7 @@ private:
 		RIGHT,
 		LEFT
 	};
+	bool _isFall;
 	int _delayCount;
 	RECT _scanRc;
 	float _shakeAngle;

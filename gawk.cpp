@@ -11,7 +11,7 @@ HRESULT gawk::init(float x, float y, int dir)
 	//=====================================
 	enemy::init(x, y);
 	_angle = 0.0f;
-	_speed = 2.0f;
+	_speed = 4.0f;
 	_dir = dir;
 
 	_gawkImage[IDLE] = IGM->findImage("고크_기본");
@@ -21,7 +21,7 @@ HRESULT gawk::init(float x, float y, int dir)
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
 	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 2);
 
-	_state = IDLE;
+	_state = FLY;
 	_count = _index = 0;
 
 	_delayCount = 0;
@@ -48,10 +48,14 @@ void gawk::update()
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
 	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 10, GAWK_CONST::HITBOX_HEIGHT * 10);
 	
-	bool aniDone = frameMake(_gawkImage[_state]);
-	if (_state == FLY && aniDone)
+	bool aniDone;
+	if (_isFall)
 	{
-		_state = IDLE;
+		_index = _gawkImage[FLY]->getMaxFrameX();
+	}
+	else
+	{
+		aniDone = frameMake(_gawkImage[_state]);
 	}
 
 	switch (_state)
@@ -59,18 +63,13 @@ void gawk::update()
 	case IDLE:
 		search();
 		break;
-	case FLY:				//TODO : 움직임 이상함, 중력도 너무 큼
+	case FLY:
 		move();
-		break;
-	case FALL:
 		break;
 	case DAMAGED:
 		break;
 	}
 	turn();
-
-	//점프하는 느낌으로 fly프레임 돌리고
-	//보통때는 마지막 프레임으로 고정
 }
 
 void gawk::render()
@@ -115,7 +114,6 @@ void gawk::render()
 	}
 	//렌더
 	_gawkImage[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
-	_gawkImage[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
 
 	if (_isDebug)
 	{
@@ -148,46 +146,59 @@ void gawk::damaged(actor* e)
 
 void gawk::move()
 {
+	int jumpDelay = 30;
+	_isFall = false;
+
+	if (_playerY + RND->getInt(40) > _y)
+	{
+		jumpDelay = 800;
+		_isFall = true;
+	}
+	else if (_playerY + RND->getInt(40) < _y)
+	{
+		jumpDelay = 10;
+	}
+	//중력가속도
+	_gravity += RND->getFromFloatTo(0.02f, 0.05f);
 	//딜레이
-	_gravity += 0.1f;
-	_delayCount = (_delayCount + 1) % 40;
+	_delayCount = (_delayCount + 1) % jumpDelay;
 	if (_delayCount == 0)
 	{
 		_gravity = 0;
 	}
 	if (_dir == RIGHT)
 	{
-		_x += _speed * cosf(0);
+		_x += (_speed + RND->getFloat(1.5f)) * cosf(0);
 	}
 	else if (_dir == LEFT)
 	{
-		_x += _speed * cosf(PI);
+		_x += (_speed + RND->getFloat(1.5f)) * cosf(PI);
 	}
-	_y += _speed * -sinf(_angle) +_gravity;
-	//방향에 따라 앵글값 getAngle로 뛴다(FLY)
-	//FLY프레임 끝남(aniDone)
-	//중력값 조금만 줘서 천천히 낙하(IDLE 고정)
-	//반복
+	_y += _speed * -sinf(1.57) + _gravity;
+
+	//플레이어가 높으면 더 빨리점프
+	//플레이어가 낮으면 점프X, fly index를 getMaxFrameX로 고정
+	//플레이어와 높이가 비슷하면 점프하며 다가옴
+
 }
 
 void gawk::search()
 {
-	_angle = utl::getAngle(_x, _y, _playerX, _playerY);
-	POINT temp = { _playerX,_playerY };
-	if (PtInRect(&_scanRc, temp))
-	{
-		_state = FLY;
-	}
-
+	//_angle = utl::getAngle(_x, _y, _playerX, _playerY);
+	//POINT temp = { _playerX,_playerY };
+	//if (PtInRect(&_scanRc, temp))
+	//{
+	//	_state = FLY;
+	//}
 }
 
 void gawk::turn()
 {
-	if (_playerX > _x)
+	if (_playerX >= _x)
 	{
 		_dir = RIGHT;
 	}
-	else if (_playerX < _x)
+	else
 	{
 		_dir = LEFT;
 	}
@@ -196,7 +207,7 @@ void gawk::turn()
 bool gawk::frameMake(image * bmp)
 {
 	++_count;
-	if (_count % 7 == 0)
+	if (_count % RND->getFromIntTo(5,12) == 0)
 	{
 		++_index;
 	}

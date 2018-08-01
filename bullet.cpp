@@ -40,13 +40,13 @@ void bullet::update()
 	}
 }
 
-void bullet::render()
+void bullet::render(bool rotate)
 {
 	if (_isActive)
 	{
 		if (_image == NULL) Ellipse(getMemDC(), _hitBox);
-		else _image->frameRender(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), _index, _dir); //회전렌더로 바꾸자
-		//else _image->rotateframeRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _index, _dir, _angle);
+		else if(!rotate) _image->frameRender(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), _index, _dir); //기본렌더
+		else _image->rotateFrameRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _index, 0, _angle*0.017); //회전렌더
 	}
 }
 
