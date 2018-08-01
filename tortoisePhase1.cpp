@@ -25,7 +25,7 @@ HRESULT tortoisePhase1::init(float x, float y)
 
 	_delayCount = 0;
 
-	_hitBox = RectMakeCenter(_x, _y + 60, 230, 160);
+	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
 	_isAttack = false;
 	_attackCount = 0;
 	_state = WALK;
@@ -114,7 +114,7 @@ void tortoisePhase1::update()
 		_state = WALK;
 	}
 
-	_hitBox = RectMakeCenter(_x, _y + 60, 220, 160);
+	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
 
 	//실드를 활성하면 보스위치를 따라감
 	if (_isActiveShield)
@@ -272,7 +272,10 @@ void tortoisePhase1::turn()
 
 void tortoisePhase1::collide()
 {
+	// 맵과의 픽셀 충돌
+
 	//TODO : 플레이어랑 보스몸체랑 충돌했을때?
+
 }
 
 void tortoisePhase1::shieldOff()
@@ -303,7 +306,7 @@ void tortoisePhase1::shieldOff()
 
 bool tortoisePhase1::stun()
 {
-	_delayCount = (_delayCount + 1) % 120;
+	_delayCount = (_delayCount + 1) % 90;
 	if (_delayCount != 0) return false;
 
 	 return true;

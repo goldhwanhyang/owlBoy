@@ -9,6 +9,7 @@ HRESULT tortoiseShield::init(float x, float y)
 	_isActive = true;
 	_speed = 2.8f;
 	_gravity = 0;
+	_onGround = false;
 	return S_OK;
 }
 
@@ -33,9 +34,10 @@ void tortoiseShield::update()
 
 	if (_isActive)
 	{
-		_hitBox = RectMakeCenter(_x, _y + 20, 220, 240);
+		_hitBox = RectMakeCenter(_x, _y + 20, SHIELD_CONST::HITBOX_WIDTH, SHIELD_CONST::HITBOX_HEIGHT);
 		_index = 0; //실드가 달려있을땐 인덱스를 0으로
 		_gravity = 0;
+		_onGround = false;
 	}
 }
 
@@ -47,8 +49,9 @@ void tortoiseShield::render()
 	}
 	if (_isDebug)
 	{
-		_stprintf_s(_debug, "angle: %f, speed: %f", _angle, _speed);
-		TextOut(getMemDC(), 100, 120, _debug, strlen(_debug));
+		TextOut(getMemDC(), 100, 120, "방패", strlen("방패"));
+		_stprintf_s(_debug, "angle: %f, speed: %f, gravity: %f", _angle, _speed, _gravity);
+		TextOut(getMemDC(), 100, 140, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 }
@@ -64,7 +67,7 @@ void tortoiseShield::damaged(actor * e)
 
 void tortoiseShield::move()
 {
-	_gravity += 0.05f;
+	if(!_onGround) _gravity += 0.05f;
 	if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
 	{
 		_x += _speed * cos(PI - _angle);
@@ -127,16 +130,71 @@ void tortoiseShield::collide()
 	}
 	*/
 
-	//픽셀충돌
-	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
-	int r = GetRValue(color);
-	int g = GetGValue(color);
-	int b = GetBValue(color);
-
-	if (!(r == 255 && g == 0 && b == 255))
+	//_speed값만큼 게임오브젝트가 칸칸히 위치변경(이동)하기 때문에 _speed값 범위(벽을 최대로 뚫고 들어가는)만큼 검사해야함
+	//위쪽
+	for (int i = _hitBox.top + _speed; i >= _hitBox.top; i--) // 스피드만큼 검사해야 오차없이 깔끔하게, 움직이는 방향으로 검사해야 논리적인 오류가 없다.
 	{
-		_y = _hitBox.bottom - 90;
-		_speed = 0;
-		_gravity = 0;
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, i);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_y = i + SHIELD_CONST::HITBOX_HEIGHT/2;
+			_speed = 0;
+			break;
+		}
+	}
+
+	//왼쪽
+	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetRValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_x = i + SHIELD_CONST::HITBOX_WIDTH / 2;
+			_angle = 4.71; //270도
+			break;
+		}
+	}
+
+	//오른쪽
+	for(int i =_hitBox.right-_speed; i <= _hitBox.right; i++)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetRValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_x = i - SHIELD_CONST::HITBOX_WIDTH / 2;
+			_angle = 4.71;
+			break;
+		}
+	}
+
+	//아래쪽
+	for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
+	{
+		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_y = i - SHIELD_CONST::HITBOX_HEIGHT / 2;
+			_speed = 0;
+			_gravity = 0;
+			_onGround = true;
+			CAM->setShakeInfo(10, 20); // 흔들어줄 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
+			break;
+		}
 	}
 }
