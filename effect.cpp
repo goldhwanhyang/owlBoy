@@ -38,7 +38,7 @@ void effect::render(void)
 {
 	if (_isRunning)
 	{
-		_effectImg->aniRender(getMemDC(), _x, _y, _effectAni);
+		_effectImg->aniRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _effectAni);
 	}
 }
 

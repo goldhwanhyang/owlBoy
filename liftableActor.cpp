@@ -76,7 +76,7 @@ void liftableActor::collide()
 	g = GetGValue(color);
 	b = GetBValue(color);
 
-	if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
+	if (!(r == 255 && g == 0 && b == 255) && _state != HANG)	// 마젠타가 아니면 검사
 	{
 		_y = _hitBox.bottom - (_hitBox.bottom - _hitBox.top) / 2;
 		_state = ON_GROUND;

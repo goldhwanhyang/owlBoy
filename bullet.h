@@ -17,6 +17,7 @@ public:
 	virtual void release();
 
 	virtual void collide(string pixelImageName); //벽과의 충돌을 하기위해 픽셀이미지키값을 넘겨주게 했음
+	virtual bool collide(image * pixelImage); //벽과의 충돌을 하기위해 픽셀이미지키값을 넘겨주게 했음
 
 	void setPixelMap(image* pixelMap) { _pixelMap = pixelMap; }
 	float getRange() { return _range; }

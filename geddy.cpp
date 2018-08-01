@@ -4,25 +4,174 @@
 
 HRESULT geddy::init()
 {
+	liftableActor::init();
+	_img[IDLE] = IMAGEMANAGER->findImage("GEDDY_IDLE");
+	_img[ON_AIR] = IMAGEMANAGER->findImage("GEDDY_ON_AIR");
+	_img[ATTACK] = IMAGEMANAGER->findImage("GEDDY_SHOOT");
+	_img[HANG] = _img[ATTACK];
+	_img[WALK] = IMAGEMANAGER->findImage("GEDDY_WALK");
+	_img[PREFARE] = IMAGEMANAGER->findImage("GEDDY_PREPARE_SHOOT");
+	_handImg = IMAGEMANAGER->findImage("GEDDY_HAND");
+
+	_state = HANG;
+
+	_bullet = new bullet[MAX_GEDDY_BULLET];
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		_bullet[i].init(5, 10, 500);
+	}
+
+	_x = 440.f;			// 플레이어 x좌표
+	_y = 810.f;			// 플레이어 y좌표
+	_speed = 6.0f;
+	_angle = 0;	// 플레이어 각도
+	_gravity = 0;		// 플레이어 중력
+	_count = _index = 0;	// 프레임이미지 돌리기 위한 초기화
+	_curFrameX = _curFrameY = 0;
+
+	_handsDir = _shootingDir = 0;
 
 	return S_OK;
 }
 
+void geddy::release()
+{
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		_bullet[i].release();
+		SAFE_DELETE_ARRAY(_bullet);
+	}
+}
+
 void geddy::update()
 {
+	if (KEYMANAGER->isStayKeyDown('A'))
+	{
+		_x -= _speed;
+	}
+	if (KEYMANAGER->isStayKeyDown('D'))
+	{
+		_x += _speed;
+	}
+	if (KEYMANAGER->isStayKeyDown('W'))
+	{
+		_y -= _speed;
+	}
+	if (KEYMANAGER->isStayKeyDown('S'))
+	{
+		_y += _speed;
+	}
+
+	if (KEYMANAGER->isOnceKeyDown('F'))
+	{
+		attack();
+	}
+	if (_state == HANG)
+	{
+		_angle = getAnglef(_x - CAM->getX(), _y - CAM->getY(), _ptMouse.x, _ptMouse.y);
+		convertDir();
+		
+		CAM->videoShooting(_x,
+			_y,
+			0.0f);
+	}
+
+
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		if (!_bullet[i].getIsActive()) continue;
+		_bullet[i].update();
+		if (_bullet[i].collide(_mapPixel))
+		{
+			EFFECTMANAGER->play("총알폭발", _bullet[i].getX(), _bullet[i].getY());
+		}
+	}
 }
 
 void geddy::render()
 {
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		_bullet[i].render();
+	}
+
+	_img[_state]->frameRender(getMemDC(),
+		_x - _img[_state]->getFrameWidth()/2 - CAM->getX(),
+		_y - _img[_state]->getFrameHeight()/2 - CAM->getY(),
+		_curFrameX, _dir);
+
+	if (_state == HANG)
+	{
+		float angle = _angle;
+		int temp;
+		if (PI / 2 < angle && angle < 3 * PI / 2)
+		{
+			angle = angle - PI;
+			temp = 15;
+		}
+		else
+		{
+			temp = -15;
+		}
+		_handImg->rotateFrameRender(getMemDC(),
+			_x - CAM->getX() + temp,
+			_y - CAM->getY(),
+			0, _handsDir, angle);
+	}
+
 }
 
-void geddy::release()
+int geddy::convertDir()
 {
+	if (30 * PI / 180 <= _angle && _angle < PI / 2)	// 
+	{
+		_dir = 1;
+		_handsDir = 1;
+		
+	}
+	else if (PI / 2 <= _angle && _angle < 150 * PI / 180)	//
+	{
+		_dir = 4;
+		_handsDir = 3;
+	}
+	else if (150 * PI / 180 <= _angle && _angle < 210 * PI / 180)	// 
+	{
+		_dir = 3;
+		_handsDir = 2;
+	}
+	else if (210 * PI / 180 <= _angle && _angle < 3 * PI / 2)	//
+	{
+		_dir = 5;
+		_handsDir = 3;
+	}
+	else if (3 * PI / 2 <= _angle && _angle < 330 * PI / 180)	// 
+	{
+		_dir = 2;
+		_handsDir = 1;
+	}
+	else
+	{
+		_dir = 0;
+		_handsDir = 0;
+	}
+
+	return 0;
+	
 }
 
 
 void geddy::attack()
 {
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		if (_bullet[i].getIsActive()) continue;
+
+		_bullet[i].setFireCenter(_x, _y);
+		_bullet[i].setAngle(_angle * 180 / PI);
+		_bullet[i].setIsActive(true);
+		break;
+	}
+
 }
 
 void geddy::damaged(actor * e)

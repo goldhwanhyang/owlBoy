@@ -43,12 +43,16 @@ HRESULT townScene::init()
 		RENDERMANAGER->addBackground(temp1->getZ(), temp1);
 	}
 
+	g = new geddy;
+	g->init();
 	return S_OK;
 }
 
 void townScene::release()
 {
 	RENDERMANAGER->clearBackground();
+
+	SAFE_DELETE(g);
 }
 
 void townScene::update()
@@ -88,8 +92,12 @@ void townScene::update()
 	}
 
 	this->temp.update();
+	g->update();
 
-	CAM->videoShooting(_player->getX(), _player->getY());
+	if (g->getState() != 1)
+	{
+		CAM->videoShooting(_player->getX(), _player->getY());
+	}
 }
 
 void townScene::render()
@@ -107,4 +115,5 @@ void townScene::render()
 	_player->render();
 
 	RENDERMANAGER->addRender(0, &temp);
+	RENDERMANAGER->addRender(1, g);
 }

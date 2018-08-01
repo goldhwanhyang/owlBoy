@@ -25,6 +25,10 @@ void bullet::update()
 	{
 		_x += _speed * cosf(_angle * 0.017);
 		_y += _speed * -sinf(_angle * 0.017) + _gravity;
+		if (getDistance(_fireX, _fireY, _x, _y) >= _range)
+		{
+			_isActive = false;
+		}
 		_hitBox = RectMakeCenter(_x-CAM->getX(), _y-CAM->getY(), _radius * 2, _radius * 2);
 
 		if (_image != NULL)
@@ -70,4 +74,27 @@ void bullet::collide(string pixelImageName)
 	}
 
 	//플레이어랑 충돌도 만들자
+}
+
+bool bullet::collide(image * pixelImage)
+{
+	//벽과 충돌할떄
+	COLORREF color = GetPixel(pixelImage->getMemDC(), _x, _y);
+	int r = GetRValue(color);
+	int g = GetGValue(color);
+	int b = GetBValue(color);
+	if (!(r == 255 && g == 0 && b == 255))
+	{
+		if (_isActive) _isActive = false;
+		return true;
+	}
+
+	//사거리 벗어남
+	float distance = getDistance(_fireX, _fireY, _x, _y);
+	if (_range < distance)
+	{
+		_isActive = false;
+	}
+
+	return false;
 }

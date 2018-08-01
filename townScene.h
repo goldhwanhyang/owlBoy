@@ -5,6 +5,7 @@
 #include "ironWeight.h"
 #include "cloud.h"
 #include "stone.h"
+#include "geddy.h"
 
 class townScene : public gameNode
 {
@@ -17,6 +18,7 @@ private:
 	RECT portal;
 
 	ironWeight temp;
+	geddy * g;
 
 public:
 

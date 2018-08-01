@@ -21,5 +21,8 @@ float MY_UTIL::getAngle(float startX, float startY, float endX, float endY)
 
 float MY_UTIL::getAnglef(float startX, float startY, float endX, float endY)
 {
-	return atan2(startY - endY, endX - startX);
+	float angle = atan2(startY - endY, endX - startX);
+	if (angle < 0)
+		angle += 2 * PI;
+	return angle;
 }
