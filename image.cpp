@@ -1077,8 +1077,8 @@ void image::rotateFrameRender(HDC hdc, float centerX, float centerY, int current
 		DeleteObject(hBrush);
 
 		PlgBlt(_rotateImage->hMemDC, rPoint, _imageInfo->hMemDC,
-			_imageInfo->currentFrameX * _imageInfo->frameWidth,
-			_imageInfo->currentFrameY * _imageInfo->frameHeight,
+			currentFrameX * _imageInfo->frameWidth,
+			currentFrameY * _imageInfo->frameHeight,
 			_imageInfo->frameWidth, _imageInfo->frameHeight, NULL, 0, 0);
 
 		GdiTransparentBlt(hdc,
@@ -1095,7 +1095,7 @@ void image::rotateFrameRender(HDC hdc, float centerX, float centerY, int current
 	}
 	else
 	{
-		PlgBlt(hdc, rPoint, _imageInfo->hMemDC, _imageInfo->currentFrameX, _imageInfo->currentFrameY, _imageInfo->frameWidth, _imageInfo->frameHeight, NULL, 0, 0);
+		PlgBlt(hdc, rPoint, _imageInfo->hMemDC, currentFrameX, currentFrameY, _imageInfo->frameWidth, _imageInfo->frameHeight, NULL, 0, 0);
 	}
 }
 

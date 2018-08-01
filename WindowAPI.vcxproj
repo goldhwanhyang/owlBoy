@@ -152,6 +152,7 @@
     <ClInclude Include="backgroundActor.h" />
     <ClInclude Include="cloud.h" />
     <ClInclude Include="fruit.h" />
+    <ClInclude Include="geddy.h" />
     <ClInclude Include="stone.h" />
     <ClInclude Include="tortoise.h" />
     <ClInclude Include="tortoisePhase1.h" />
@@ -176,7 +177,7 @@
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="stuff.h" />
+    <ClInclude Include="liftableActor.h" />
     <ClInclude Include="tortoisePhase2.h" />
     <ClInclude Include="tortoiseShield.h" />
     <ClInclude Include="townScene.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="backgroundActor.cpp" />
     <ClCompile Include="cloud.cpp" />
     <ClCompile Include="fruit.cpp" />
+    <ClCompile Include="geddy.cpp" />
     <ClCompile Include="stone.cpp" />
     <ClCompile Include="tortoise.cpp" />
     <ClCompile Include="tortoisePhase1.cpp" />
@@ -222,7 +224,7 @@
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="stuff.cpp" />
+    <ClCompile Include="liftableActor.cpp" />
     <ClCompile Include="tortoisePhase2.cpp" />
     <ClCompile Include="tortoiseShield.cpp" />
     <ClCompile Include="townScene.cpp" />

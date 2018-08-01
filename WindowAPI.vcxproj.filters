@@ -182,9 +182,6 @@
     <ClInclude Include="bulletManager.h">
       <Filter>GameFramework2D\애드온\총알</Filter>
     </ClInclude>
-    <ClInclude Include="stuff.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ironWeight.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -220,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="tortoise.h">
       <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClInclude>
+    <ClInclude Include="geddy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="liftableActor.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,9 +319,6 @@
     <ClCompile Include="bulletManager.cpp">
       <Filter>GameFramework2D\애드온\총알</Filter>
     </ClCompile>
-    <ClCompile Include="stuff.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ironWeight.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -351,6 +351,12 @@
     </ClCompile>
     <ClCompile Include="tortoise.cpp">
       <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+    </ClCompile>
+    <ClCompile Include="geddy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="liftableActor.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

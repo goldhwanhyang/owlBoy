@@ -1,7 +1,7 @@
 #pragma once
-#include "stuff.h"
+#include "liftableActor.h"
 class fruit :
-	public stuff
+	public liftableActor
 {
 	image * _img;
 
@@ -13,9 +13,9 @@ public:
 
 	virtual void trampled(float weight) {}
 	//virtual void lifted(player* _player);
-	virtual void used(player* _player);
+	//virtual void used(player* _player);
 
-	fruit() : stuff() {}
+	fruit() : liftableActor() {}
 	~fruit() {}
 };
 

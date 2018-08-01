@@ -118,7 +118,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("거북이_페이즈2_날기방패없이", "Texture/Enemies/Boss1/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
 
 
-	// stuff
+	// liftableActor
 	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
 	_loading->loadFrameImage("무게추공중", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
 	_loading->loadImage("과일1", "Texture/Stuff/fruit_60x95.bmp", 60, 95);

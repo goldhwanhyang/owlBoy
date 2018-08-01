@@ -48,7 +48,3 @@ void fruit::render()
 		_y - _img->getHeight() / 2 - CAM->getY(),
 		0, 0, _img->getFrameWidth(), _height);
 }
-
-void fruit::used(player * _player)
-{
-}

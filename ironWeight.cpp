@@ -4,7 +4,7 @@
 
 HRESULT ironWeight::init()
 {
-	stuff::init();
+	liftableActor::init();
 	//BURIED, ON_GROUND, HANG, FLY
 	_img[BURIED] = IMAGEMANAGER->findImage("무게추");
 	_img[ON_GROUND] = IMAGEMANAGER->findImage("무게추");

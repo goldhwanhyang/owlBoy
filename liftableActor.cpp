@@ -1,28 +1,28 @@
 #include "stdafx.h"
-#include "stuff.h"
+#include "liftableActor.h"
 #include "player.h"
 
-HRESULT stuff::init()
+HRESULT liftableActor::init()
 {
 	_mapPixel = IMAGEMANAGER->findImage("TownPixel");
 	return S_OK;
 }
 
-void stuff::release()
+void liftableActor::release()
 {
 }
 
-void stuff::update()
+void liftableActor::update()
 {
 }
 
-void stuff::render()
+void liftableActor::render()
 {
 }
 
 
 
-void stuff::lifted(player * _player)
+void liftableActor::lifted(player * _player)
 {
 	if (!_isLiftable) return;
 
@@ -53,7 +53,7 @@ void stuff::lifted(player * _player)
 	_y = _player->getY() + _maxHeight / 2;
 }
 
-void stuff::collide()
+void liftableActor::collide()
 {
 	//위에 검사
 	//for (int i = _hitBox.top; i < _hitBox.top + 1; i++)
@@ -111,14 +111,14 @@ void stuff::collide()
 
 }
 
-void stuff::move()
+void liftableActor::move()
 {
 	_gravity += 0.1f;
 	_x += cos(_angle) * _speed;
 	_y += -sin(_angle) * _speed + _gravity;
 }
 
-void stuff::throwed(float speed, float angle)
+void liftableActor::throwed(float speed, float angle)
 {
 	actor::throwed(speed, angle);
 	_state = ON_AIR;
