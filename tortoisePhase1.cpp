@@ -163,6 +163,8 @@ void tortoisePhase1::render()
 	
 	//ºÒ¸´·»´õ
 	Brender();
+
+	//hpBar·»´õ
 	_hpBar->render();
 
 	if (_isDebug)
@@ -419,7 +421,7 @@ void tortoisePhase1::Brender()
 {
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
-		_vBullet[i].render();
+		_vBullet[i].render(true);
 	}
 	
 }

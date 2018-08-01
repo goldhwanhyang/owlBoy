@@ -326,7 +326,7 @@ void tortoisePhase2::Brender()
 {
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
-		_vBullet[i].render();
+		_vBullet[i].render(true);
 	}
 
 }
