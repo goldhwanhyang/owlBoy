@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "geddy.h"
+#include "player.h"
 
 
 HRESULT geddy::init()
@@ -13,7 +14,7 @@ HRESULT geddy::init()
 	_img[PREFARE] = IMAGEMANAGER->findImage("GEDDY_PREPARE_SHOOT");
 	_handImg = IMAGEMANAGER->findImage("GEDDY_HAND");
 
-	_state = HANG;
+	_state = IDLE;
 
 	_bullet = new bullet[MAX_GEDDY_BULLET];
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
@@ -31,6 +32,8 @@ HRESULT geddy::init()
 
 	_handsDir = _shootingDir = 0;
 
+	_maxWidth = 100;
+	_maxHeight = 100;
 	return S_OK;
 }
 
@@ -45,37 +48,24 @@ void geddy::release()
 
 void geddy::update()
 {
-	if (KEYMANAGER->isStayKeyDown('A'))
-	{
-		_x -= _speed;
-	}
-	if (KEYMANAGER->isStayKeyDown('D'))
-	{
-		_x += _speed;
-	}
-	if (KEYMANAGER->isStayKeyDown('W'))
-	{
-		_y -= _speed;
-	}
-	if (KEYMANAGER->isStayKeyDown('S'))
-	{
-		_y += _speed;
-	}
+	_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
 
-	if (KEYMANAGER->isOnceKeyDown('F'))
-	{
-		attack();
-	}
 	if (_state == HANG)
 	{
 		_angle = getAnglef(_x - CAM->getX(), _y - CAM->getY(), _ptMouse.x, _ptMouse.y);
 		convertDir();
-		
-		CAM->videoShooting(_x,
-			_y,
-			0.0f);
-	}
 
+		CAM->videoShooting(_x, 
+			_y,
+			0);
+	}
+	else
+	{
+		if (_angle > PI / 2 && _angle < 3 * PI / 2)
+			_dir = 1;
+		else
+			_dir = 0;
+	}
 
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
 	{
@@ -188,6 +178,9 @@ void geddy::collide()
 
 void geddy::lifted(player * _player)
 {
+	_state = HANG;
+	_x = _player->getX();
+	_y = _player->getY() + _maxHeight / 2;
 }
 
 void geddy::drawUI()

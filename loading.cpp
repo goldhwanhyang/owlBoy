@@ -146,14 +146,17 @@ void loading::render(void)
 	//로딩 퍼센트 이미지 렌더
 	//이미지 currentframeX를 이용해서 0~9까지 표현하면 되겠다.
 	//십의 자리
-	_numbers->frameRender(getMemDC(), _loadingBar->getRect().right - _numbers->getFrameWidth()*2, _loadingBar->getRect().top - _numbers->getFrameHeight(), (_percent % 100 / 10), 0);
+	_numbers->frameRender(getMemDC(), _loadingBar->getRect().right - _numbers->getFrameWidth() * 2, _loadingBar->getRect().top - _numbers->getFrameHeight(), (_percent % 100 / 10), 0);
 	//일의 자리
 	_numbers->frameRender(getMemDC(), _loadingBar->getRect().right - _numbers->getFrameWidth(), _loadingBar->getRect().top - _numbers->getFrameHeight(), (_percent % 100 % 10), 0);
 
 	char fileName[64];
 	if (_currentGauge < _vLoadItem.size())
 	{
-		sprintf_s(fileName, "Image\\%s.bmp", _vLoadItem[_currentGauge]->getImageResource().keyName.c_str()); //c_str 스트링을 const char*형으로
+		if (_vLoadItem[_currentGauge]->getLoadingKind() == LOAD_KIND_SOUND)
+			sprintf_s(fileName, "Sound\\%s.bmp", _vLoadItem[_currentGauge]->getSoundResource().keyName.c_str()); //c_str 스트링을 const char*형으로
+		else
+			sprintf_s(fileName, "Image\\%s.bmp", _vLoadItem[_currentGauge]->getImageResource().keyName.c_str()); //c_str 스트링을 const char*형으로
 		TextOut(getMemDC(), _loadingBar->getRect().left + 10, _loadingBar->getRect().bottom + 20, fileName, strlen(fileName));
 	}
 }

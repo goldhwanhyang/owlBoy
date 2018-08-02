@@ -38,6 +38,21 @@ void loadingScene::render(void)
 {
 	//로딩클래스 렌더
 	_loading->render();
+	/*
+	if (_loading->getCurrnetGauge() < _loading->getLoadItem().size())
+	{
+		char str[128];
+		sprintf_s(str, "%s.bmp", _loading->getLoadItem()[_loading->getCurrnetGauge()]->getImageResource().keyName.c_str());
+		TextOut(getMemDC(), 120, 430, str, strlen(str));
+	}
+
+	float num = _loading->getLoadItem().size();
+	float cur = _loading->getCurrnetGauge();
+	float per = cur / num * 100;
+	char str[128];
+	sprintf_s(str, "%.f %%", per);
+	TextOut(getMemDC(), 660, 430, str, strlen(str));
+	*/
 }
 
 //로딩이미지 함수(이곳에 이미지를 전부 넣어라)

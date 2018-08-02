@@ -2,12 +2,14 @@
 #include "liftableActor.h"
 #include "bullet.h"
 
+class player;
+
 #define MAX_GEDDY_STATE 6
 #define MAX_GEDDY_BULLET 20
 
 class geddy : public liftableActor
 {
-	enum {IDLE, HANG, ON_AIR, ATTACK, WALK, PREFARE};
+	enum {IDLE, ON_AIR, HANG, ATTACK, WALK, PREFARE};
 private:
 	image * _img[MAX_GEDDY_STATE];
 	image * _handImg;

@@ -20,6 +20,8 @@ private:
 	ironWeight temp;
 	geddy * g;
 
+	int tempCount = 0;
+
 public:
 
 	HRESULT init();

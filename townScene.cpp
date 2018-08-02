@@ -67,9 +67,16 @@ void townScene::update()
 			temp.lifted(_player);
 			_player->setState(FLY);
 		}
+		else if (IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
+		{
+			g->lifted(_player);
+			_player->setState(FLY);
+		}
 	}
 	if (temp.getState() == HANG)
 		temp.lifted(_player);
+	else if(g->getState() == HANG)
+		g->lifted(_player);
 
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
@@ -90,6 +97,14 @@ void townScene::update()
 	{
 		EFFECTMANAGER->play("Æø¹ß", _ptMouse.x, _ptMouse.y);
 	}
+
+	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	{
+		tempCount = (tempCount + 1) % 5;
+		if(tempCount == 0)
+			g->attack();
+	}
+
 
 	this->temp.update();
 	g->update();
