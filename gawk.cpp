@@ -5,7 +5,7 @@
 HRESULT gawk::init(float x, float y, int dir)
 {
 	//===============이미지 추가============
-	IGM->addFrameImage("고크_기본", "Texture/Enemies/Gawk/idle_174x288_1x2.bmp", 174, 288, 1, 2);
+	IGM->addFrameImage("고크_기본", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
 	IGM->addFrameImage("고크_날기", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
 	IGM->addFrameImage("고크_아픔", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
 	//=====================================
@@ -14,14 +14,16 @@ HRESULT gawk::init(float x, float y, int dir)
 	_speed = 4.0f;
 	_dir = dir;
 
-	_gawkImage[IDLE] = IGM->findImage("고크_기본");
+	_gawkImage[READY] = IGM->findImage("고크_기본");
 	_gawkImage[FLY] = IGM->findImage("고크_날기");
-	_gawkImage[DAMAGED] = IGM->findImage("고크_아픔");
+	_gawkImage[STUN] = IGM->findImage("고크_아픔");
+	_gawkImage[IDLE] = _gawkImage[READY];
+	_gawkImage[FALL] = _gawkImage[FLY];
 
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
-	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 2);
+	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 10);
 
-	_state = FLY;
+	_state = IDLE;
 	_count = _index = 0;
 
 	_delayCount = 0;
@@ -29,6 +31,8 @@ HRESULT gawk::init(float x, float y, int dir)
 
 	_hp = 3;
 	_maxHp = 3;
+
+	_power = 1;
 
 	return S_OK;
 }
@@ -41,17 +45,21 @@ void gawk::update()
 		damaged(_player);
 	}
 
-	//switch enum 상태처리
 	_playerX = _player->getX();
 	_playerY = _player->getY();
 
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
-	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 10, GAWK_CONST::HITBOX_HEIGHT * 10);
+	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 10);
+	collide();
 	
 	bool aniDone;
-	if (_isFall)
+	if (_state == IDLE)
 	{
-		_index = _gawkImage[FLY]->getMaxFrameX();
+		_index = 0;
+	}
+	else if (_state == FALL)
+	{
+		_index = _gawkImage[_state]->getMaxFrameX();
 	}
 	else
 	{
@@ -62,14 +70,23 @@ void gawk::update()
 	{
 	case IDLE:
 		search();
+		turn();
+		break;
+	case READY:
+		if (aniDone) _state = FLY;
 		break;
 	case FLY:
 		move();
+		turn();
 		break;
-	case DAMAGED:
+	case FALL:
+		move();
+		turn();
+		break;
+	case STUN:
+		stunShake();
 		break;
 	}
-	turn();
 }
 
 void gawk::render()
@@ -81,14 +98,13 @@ void gawk::render()
 		switch (_state)
 		{
 		case IDLE:
+		case READY:
 			tempX = _x - 105;
 			tempY = _y - 90;
 			break;
 		case FLY:
-			tempX = _x - 90;
-			tempY = _y - 90;
-			break;
-		case DAMAGED:
+		case FALL:
+		case STUN:
 			tempX = _x - 90;
 			tempY = _y - 90;
 			break;
@@ -99,14 +115,13 @@ void gawk::render()
 		switch (_state)
 		{
 		case IDLE:
+		case READY:
 			tempX = _x - 70;
 			tempY = _y - 90;
 			break;
 		case FLY:
-			tempX = _x - 80;
-			tempY = _y - 90;
-			break;
-		case DAMAGED:
+		case FALL:
+		case STUN:
 			tempX = _x - 80;
 			tempY = _y - 90;
 			break;
@@ -117,46 +132,72 @@ void gawk::render()
 
 	if (_isDebug)
 	{
-		//Rectangle(getMemDC(), _scanRc.left - CAM->getX(), _scanRc.top - CAM->getY(), _scanRc.right - CAM->getX(), _scanRc.bottom - CAM->getY());
-		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		_stprintf_s(_debug, "%d", _state);
-		TextOut(getMemDC(), 300, 300, _debug, strlen(_debug));
+		Rectangle(getMemDC(), _scanRc.left - CAM->getX(), _scanRc.top - CAM->getY(), _scanRc.right - CAM->getX(), _scanRc.bottom - CAM->getY());
+		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		_stprintf_s(_debug, "방향:%d, idx:%d, x:%f ", _dir, _index, _x );
+		TextOut(getMemDC(), 100, 300, _debug, strlen(_debug));
+		TextOut(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), "X", strlen("X"));
+		_stprintf_s(_debug, "쉐킷cou:%f, 쉐킷:%f", _shakeAngle, 2 * sinf(_shakeAngle));
+		TextOut(getMemDC(), 100, 320, _debug, strlen(_debug));
 	}
 }
 
 void gawk::release()
 {
 }
-
+//TODO : 논리적 결함 _shakeAngle과 oldState
 void gawk::damaged(actor* e)
 {
-	int oldState = _state;
-	_state = DAMAGED;
+	POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
+	if (PtInRect(&_hitBox, t))
+	{
+		//if(dynamic_cast<player*>(e) !=NULL)
+		{
+			_oldState = _state;
+			_state = STUN;
+			//TODO : 임시
+			_hp -= 1;
+		}
+		/*else if (dynamic_cast<geddy*>(e) != NULL)
+		{
+
+		}*/
+	}
+	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법
+}
+
+
+void gawk::stunShake()
+{
+	//TODO : 제대로 작동안함
 	//===데미지 받으면 흔들어줌====
 	++_shakeAngle;
 	_x += 2 * sinf(_shakeAngle);
 	//===========================
 	if (_shakeAngle > 6.28)		//쉐킷이 한바탕 끝나면
 	{
-		//_hp -= e->getPower();	//데미지받고
-		_state = oldState;		//원래 상태로 돌려줌
+		_state = _oldState;		//원래 상태로 돌려줌
 		_shakeAngle = 0;
 	}
 }
 
 void gawk::move()
 {
-	int jumpDelay = 30;
-	_isFall = false;
-
-	if (_playerY + RND->getInt(40) > _y)
+	int jumpDelay;
+	if (_playerY - RND->getInt(40) > _y)
 	{
 		jumpDelay = 800;
-		_isFall = true;
+		_state = FALL;
 	}
-	else if (_playerY + RND->getInt(40) < _y)
+	else if (_playerY < _y)
 	{
 		jumpDelay = 10;
+		_state = FLY;
+	}
+	else
+	{
+		jumpDelay = 30;
+		_state = FLY;
 	}
 	//중력가속도
 	_gravity += RND->getFromFloatTo(0.02f, 0.05f);
@@ -182,19 +223,31 @@ void gawk::move()
 
 }
 
+void gawk::collide()
+{
+	//TODO : 맵과의 픽셀충돌 넣자
+	RECT tempRc;
+	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+	{
+		_player->damaged(this); //this는 자기자신을 가리키는 포인터
+	}
+}
+
 void gawk::search()
 {
-	//_angle = utl::getAngle(_x, _y, _playerX, _playerY);
-	//POINT temp = { _playerX,_playerY };
-	//if (PtInRect(&_scanRc, temp))
-	//{
-	//	_state = FLY;
-	//}
+	POINT temp = { _playerX,_playerY };
+	if (PtInRect(&_scanRc, temp))
+	{
+		_state = FLY;
+	}
 }
 
 void gawk::turn()
 {
-	if (_playerX >= _x)
+	if (_playerX - 200 < _x && _x < _playerX + 200)
+	{
+	}
+	else if (_playerX + 200 >= _x)
 	{
 		_dir = RIGHT;
 	}

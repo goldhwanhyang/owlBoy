@@ -22,13 +22,16 @@ HRESULT dungeonScene::init()
 
 	_shield->init(_tortoise->getX(), _tortoise->getY()); //_tortoise의 x,y를 받아서 init해야하므로 맨 마지막
 
-	_gawk[0] = new gawk;
-	_gawk[0]->setPlayerLink(_player);
-	_gawk[0]->init(1200, 500,1);
-
-	_gawk[1] = new gawk;
-	_gawk[1]->setPlayerLink(_player);
-	_gawk[1]->init(900, 500, 0);
+	enemy* Gawk;
+	for (int i = 0; i < 2; i++)
+	{
+		Gawk = new gawk;
+		Gawk->setPlayerLink(_player);
+		Gawk->init();
+		_vEnemy.push_back(Gawk);
+	}
+	_vEnemy[0]->setPostion(1200, 500, 1);
+	_vEnemy[1]->setPostion(900, 500, 0);
 
 	CAM->init();
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
@@ -42,9 +45,9 @@ void dungeonScene::update()
 {
 	_tortoise->update();
 	_shield->update();
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < _vEnemy.size(); i++)
 	{
-		_gawk[i]->update();
+		_vEnemy[i]->update();
 	}
 	_player->update();
 
@@ -56,10 +59,11 @@ void dungeonScene::render()
 	_stage->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY); //카메라 쉐이크할 이미지에 CAM->getSX(), CAM->getSY()
 	_tortoise->render();
 	_shield->render();
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < _vEnemy.size(); i++)
 	{
-		_gawk[i]->render();
+		//_vEnemy[i]->render();
 	}
+	_vEnemy[0]->render();
 	_player->render();
 }
 
@@ -67,10 +71,10 @@ void dungeonScene::release()
 {
 	_tortoise->release();
 	SAFE_DELETE(_tortoise);
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < _vEnemy.size(); i++)
 	{
-		_gawk[i]->release();
-		SAFE_DELETE(_gawk[i]);
+		_vEnemy[i]->release();
+		SAFE_DELETE(_vEnemy[i]);
 	}
 	_shield->release();
 	SAFE_DELETE(_shield);

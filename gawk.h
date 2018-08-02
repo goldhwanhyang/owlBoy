@@ -3,7 +3,7 @@
 
 namespace GAWK_CONST
 {
-	const int MAX_STATE = 3;
+	const int MAX_STATE = 5;
 	const int HITBOX_WIDTH = 72;
 	const int HITBOX_HEIGHT = 72;
 }
@@ -15,24 +15,28 @@ private:
 	enum STATE
 	{
 		IDLE,
+		READY,
 		FLY,
 		FALL,
-		DAMAGED
+		STUN
 	};
 	enum DIR
 	{
 		RIGHT,
 		LEFT
 	};
-	bool _isFall;
+	//bool _isFall;
 	int _delayCount;
 	RECT _scanRc;
 	float _shakeAngle;
+	int _oldState;
 
 	char _debug[64];
 public:
 	virtual void damaged(actor* e);
+	void stunShake();
 	virtual void move();
+	virtual void collide();
 
 	void search();
 	void turn();

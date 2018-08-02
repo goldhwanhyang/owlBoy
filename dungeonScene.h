@@ -10,7 +10,7 @@ class dungeonScene : public gameNode
 	tortoiseShield* _shield;
 	image* _stage;
 	image* _stagePixel;
-	enemy* _gawk[2];
+	vector<enemy*> _vEnemy;
 	player* _player;
 public:
 	HRESULT init();

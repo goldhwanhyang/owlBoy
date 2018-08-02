@@ -31,6 +31,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 
 	bullet blt;
 	blt.init(10, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
+	blt.setPower(3);
 	for (int i = 0; i < 7; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -191,6 +192,11 @@ void tortoisePhase2::move()
 void tortoisePhase2::collide()
 {
 	//TODO : 플레이어랑 보스몸체랑 충돌했을때?
+	RECT tempRc;
+	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+	{
+		_player->damaged(this); //this는 자기자신을 가리키는 포인터
+	}
 }
 
 void tortoisePhase2::shieldOff()
@@ -272,6 +278,8 @@ void tortoisePhase2::takeShield()
 
 void tortoisePhase2::damaged(actor * e)
 {
+	//TODO : e->getPower() 값에 따라 액션 선택
+	//TODO : 0이면 오터스 회전공격 나머지면 불릿
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
 	//TODO : 임시
@@ -319,6 +327,8 @@ void tortoisePhase2::Bmove()
 	{
 		_vBullet[i].update();
 		_vBullet[i].collide("보스방1픽셀");
+		//TODO : 플레이어 몸체랑 충돌했을때로 조건을 주어야한다. 그냥 이렇게 두면 버그임
+		_player->damaged(&_vBullet[i]);
 	}
 }
 

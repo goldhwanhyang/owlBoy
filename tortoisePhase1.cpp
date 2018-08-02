@@ -33,7 +33,8 @@ HRESULT tortoisePhase1::init(float x, float y)
 	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
-	blt.init(10, 5,IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
+	blt.init(10, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
+	blt.setPower(3);
 	for (int i = 0; i < 7; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -44,6 +45,8 @@ HRESULT tortoisePhase1::init(float x, float y)
 	_hpBar = new progressBar;
 	_hpBar->init("Texture/Loading/hpBarFront", "Texture/Loading/hpBarBack",WINSIZEX*0.6, WINSIZEY*0.1, 300, 30);
 	_hpBar->setGauge(_hp, _maxHp);
+
+	_power = 3;
 
 	return S_OK;
 }
@@ -115,6 +118,7 @@ void tortoisePhase1::update()
 	}
 
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
+	collide();
 
 	//실드를 활성하면 보스위치를 따라감
 	if (_isActiveShield)
@@ -274,9 +278,14 @@ void tortoisePhase1::turn()
 
 void tortoisePhase1::collide()
 {
-	// 맵과의 픽셀 충돌
+	//TODO : 맵과의 픽셀 충돌
 
 	//TODO : 플레이어랑 보스몸체랑 충돌했을때?
+	RECT tempRc;
+	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+	{
+		_player->damaged(this); //this는 자기자신을 가리키는 포인터
+	}
 
 }
 
@@ -367,6 +376,8 @@ void tortoisePhase1::takeShield()
 
 void tortoisePhase1::damaged(actor * e)
 {
+	//TODO : e->getPower() 값에 따라 액션 선택
+	//TODO : 0이면 오터스 회전공격 나머지면 불릿
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
 	//TODO : 임시
@@ -414,6 +425,8 @@ void tortoisePhase1::Bmove()
 	{
 		_vBullet[i].update();
 		_vBullet[i].collide("보스방1픽셀");
+		//TODO : 플레이어 몸체랑 충돌했을때로 조건을 주어야한다. 그냥 이렇게 두면 버그임
+		_player->damaged(&_vBullet[i]);
 	}
 }
 
