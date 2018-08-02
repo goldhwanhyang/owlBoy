@@ -41,7 +41,8 @@ void actor::release()
 
 actor::actor()
 {
-	_x = _y = _weight = _gravity = _speed = _power = _angle = 0;
+	_x = _y = _z = _weight = _gravity = _speed = _power = _angle = 0;
 	_hp = _maxHp = _state = _dir = _count = _index = _curFrameX = _curFrameY = 0;
 	_hitBox = { 0, 0, 0, 0 };
+	_isActive = false;
 }

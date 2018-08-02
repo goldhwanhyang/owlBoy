@@ -37,9 +37,9 @@ void RenderManager::render(HDC hdc)
 void RenderManager::backgroundRender(HDC hdc)
 {
 	multimap<float, backgroundActor *>::iterator iter;
-	int centerX = CAM->getX() + WINSIZEX / 2, centerY = CAM->getY() + WINSIZEY / 2;
-	int x, y, z;
-	int width, height;
+	float centerX = CAM->getX() + WINSIZEX / 2, centerY = CAM->getY() + WINSIZEY / 2;
+	float x, y, z;
+	float width, height;
 	if (!backgroundList.empty())
 	{
 		for (iter = backgroundList.begin(); iter != backgroundList.end(); ++iter)
@@ -48,11 +48,6 @@ void RenderManager::backgroundRender(HDC hdc)
 			width = iter->second->getImage()->getWidth();
 			height = iter->second->getImage()->getHeight();
 			z = iter->second->getZ();
-
-			if (z >= 4)
-			{
-				z = 5;
-			}
 
 			x = WINSIZEX / 2 + (iter->second->getX() - centerX) / (5 - z);
 			y = WINSIZEY / 2 + (iter->second->getY() - centerY) / (5 - z);

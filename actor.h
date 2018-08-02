@@ -3,7 +3,7 @@
 class actor : public gameNode
 {
 protected:
-	float _x, _y;
+	float _x, _y, _z;
 	float _weight;
 	float _gravity;
 	float _speed;
@@ -24,6 +24,7 @@ protected:
 	RECT _hitBox;
 
 	bool _isLiftable;
+	bool _isActive;
 
 public:		// ¸â¹ö ÇÔ¼ö
 	virtual void attack() {}
@@ -34,8 +35,10 @@ public:		// ¸â¹ö ÇÔ¼ö
 	virtual void drawUI() {}
 
 	void setIsLiftable(bool isLiftable) { _isLiftable = isLiftable; }
+	void setIsActive(bool isActive) { _isActive = isActive; }
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
+	void setZ(float z) { _z = z; }
 	void setWeight(float weight) { _weight = weight; }
 	void setGravity(float gravity) { _gravity = gravity; }
 	void setSpeed(float speed) { _speed = speed; }
@@ -53,9 +56,11 @@ public:		// ¸â¹ö ÇÔ¼ö
 	void setCount(int count) { _count = count; }
 	void setIndex(int index) { _index = index; }
 
+	bool getIsActive() { return _isActive; }
 	bool getIsLiftable() { return _isLiftable; }
 	float getX() { return _x; }
 	float getY() { return _y; }
+	float getZ() { return _z; }
 	float getWeight() { return _weight; }
 	float getGravity() { return _gravity; }
 	float getSpeed() { return _speed; }

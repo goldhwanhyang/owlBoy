@@ -159,6 +159,10 @@ void loadingScene::loadingImage()
 	_loading->loadImage("TownPixel", "Texture/Maps/Town/townMapPixelCollision_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
 
 
+	// stuff- Ring
+	_loading->loadFrameImage("FRONT_RING", "Texture/Stuff/stonRingFront_700x1440_2x4.bmp", 700, 1440, 2, 4);
+	_loading->loadFrameImage("BACK_RING", "Texture/Stuff/stonRingBack_700x1440_2x4.bmp", 700, 1440, 2, 4);
+
 }
 
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)

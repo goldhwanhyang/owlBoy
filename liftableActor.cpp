@@ -30,6 +30,7 @@ void liftableActor::lifted(player * _player)
 	{
 		_player->setX(_x);
 		_player->setY(_hitBox.top);
+		_player->setState(FLY);
 
 		_count = (_count + 1);
 		if (_count % LIFT_TIME == 0)
@@ -49,6 +50,7 @@ void liftableActor::lifted(player * _player)
 	}
 
 	_state = HANG;
+	_player->setState(FLY);
 	_x = _player->getX();
 	_y = _player->getY() + _maxHeight / 2;
 }
