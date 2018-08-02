@@ -129,6 +129,7 @@ void tortoisePhase1::update()
 
 	//불릿무브
 	Bmove();
+	//hp바 업데이트
 	_hpBar->update();
 	_hpBar->setGauge(_hp, _maxHp);
 }
@@ -280,7 +281,7 @@ void tortoisePhase1::collide()
 {
 	//TODO : 맵과의 픽셀 충돌
 
-	//TODO : 플레이어랑 보스몸체랑 충돌했을때?
+	//플레이어랑 보스몸체랑 충돌했을때
 	RECT tempRc;
 	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
 	{
@@ -376,26 +377,31 @@ void tortoisePhase1::takeShield()
 
 void tortoisePhase1::damaged(actor * e)
 {
-	//TODO : e->getPower() 값에 따라 액션 선택
-	//TODO : 0이면 오터스 회전공격 나머지면 불릿
+	//e->getPower() 값에 따라 액션 선택
+	//0이면 오터스 회전공격 나머지면 불릿
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
 	//TODO : 임시
 	POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
-	
-	if (_isActiveShield)
+	//실드가 있고 액터 공격판정이랑 충돌했으면
+	if (e->getPower() == 100)
 	{
-		if (PtInRect(&_hitBox, t))
+		_hp -= 100; //무게추공격은 실드관계없이 한방에
+	}
+	else if (_isActiveShield) // &&	e->getPower() == 0)
+	{
+		if (PtInRect(&_hitBox, t)) //TODO : 임시
 		{
 			_state = OFF_SHIELD;
 			_shield->setIsActive(false);
 		}
 	}
-	else
+	else if (!_isActiveShield)
 	{
-		//TODO : 실드가 없으면 데미지 받음
+		//TODO : 임시
+		//실드가 없으면 데미지 받음
 		//_hp -= e->getPower();
-		_hp -= 100;
+		_hp -= 100; //TODO : 임시
 	}
 }
 
@@ -421,12 +427,16 @@ void tortoisePhase1::Bfire(float angle)
 
 void tortoisePhase1::Bmove()
 {
+	RECT tempRc;
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
 		_vBullet[i].collide("보스방1픽셀");
-		//TODO : 플레이어 몸체랑 충돌했을때로 조건을 주어야한다. 그냥 이렇게 두면 버그임
-		_player->damaged(&_vBullet[i]);
+		//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
+		{
+			_player->damaged(&_vBullet[i]);
+		}
 	}
 }
 
