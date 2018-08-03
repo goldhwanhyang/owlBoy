@@ -7,6 +7,7 @@ HRESULT enemy::init(float x, float y, int dir)
 	_x = x;
 	_y = y;
 	_gravity = 0;
+	_z = 10;
 
 	return S_OK;
 }

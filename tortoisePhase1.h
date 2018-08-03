@@ -68,6 +68,7 @@ public:
 
 	virtual void Bfire(float angle);
 	virtual void Bmove();
+	virtual void Bcollide();
 	virtual void Brender();
 
 	virtual HRESULT init(float x, float y);
