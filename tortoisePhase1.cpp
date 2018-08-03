@@ -129,6 +129,7 @@ void tortoisePhase1::update()
 
 	//불릿무브
 	Bmove();
+	Bcollide();
 	//hp바 업데이트
 	_hpBar->update();
 	_hpBar->setGauge(_hp, _maxHp);
@@ -427,15 +428,24 @@ void tortoisePhase1::Bfire(float angle)
 
 void tortoisePhase1::Bmove()
 {
-	RECT tempRc;
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
 		_vBullet[i].collide("보스방1픽셀");
-		//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
+	}
+}
+
+void tortoisePhase1::Bcollide()
+{
+	RECT tempRc;
+	//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
+	for (int i = 0; i < _vBullet.size(); ++i)
+	{
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
 		{
+			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
+			break;
 		}
 	}
 }

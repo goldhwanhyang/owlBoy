@@ -29,7 +29,7 @@ void bullet::update()
 		{
 			_isActive = false;
 		}
-		_hitBox = RectMakeCenter(_x-CAM->getX(), _y-CAM->getY(), _radius * 2, _radius * 2);
+		_hitBox = RectMakeCenter(_x, _y, _radius * 2, _radius * 2);
 
 		if (_image != NULL)
 		{
@@ -44,7 +44,7 @@ void bullet::render(bool rotate)
 {
 	if (_isActive)
 	{
-		if (_image == NULL) Ellipse(getMemDC(), _hitBox);
+		if (_image == NULL) Ellipse(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(),_hitBox.bottom-CAM->getY());
 		else if(!rotate) _image->frameRender(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), _index, _dir); //기본렌더
 		else _image->rotateFrameRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _index, 0, _angle*0.017); //회전렌더
 	}
