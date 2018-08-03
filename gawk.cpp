@@ -73,6 +73,7 @@ void gawk::update()
 		turn();
 		break;
 	case READY:
+		_y += 1.5;
 		if (aniDone) _state = FLY;
 		break;
 	case FLY:
@@ -149,21 +150,15 @@ void gawk::release()
 void gawk::damaged(actor* e)
 {
 	POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
-	if (PtInRect(&_hitBox, t))
+	if (PtInRect(&_hitBox, t)) //TODO : 임시
 	{
-		//if(dynamic_cast<player*>(e) !=NULL)
-		{
-			_oldState = _state;
-			_state = STUN;
-			//TODO : 임시
-			_hp -= 1;
-		}
-		/*else if (dynamic_cast<geddy*>(e) != NULL)
-		{
-
-		}*/
+		if(_state != STUN) _oldState = _state;
+		_state = STUN;
+		//TODO : 임시
+		_hp -= 1;
+		//_hp -= e->getPower();
 	}
-	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법
+	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
 }
 
 
@@ -238,7 +233,7 @@ void gawk::search()
 	POINT temp = { _playerX,_playerY };
 	if (PtInRect(&_scanRc, temp))
 	{
-		_state = FLY;
+		_state = READY;
 	}
 }
 
