@@ -7,6 +7,9 @@ class player;
 #define MAX_GEDDY_STATE 6
 #define MAX_GEDDY_BULLET 20
 
+#define GEDDY_WIDTH 50
+#define GEDDY_HEIGHT 150
+
 class geddy : public liftableActor
 {
 	enum {IDLE, ON_AIR, HANG, ATTACK, WALK, PREFARE};

@@ -65,6 +65,8 @@ void dungeonScene::render()
 	}
 	_vEnemy[0]->render();
 	_player->render();
+
+	RENDERMANAGER->render(getMemDC());
 }
 
 void dungeonScene::release()

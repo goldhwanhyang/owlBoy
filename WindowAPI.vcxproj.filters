@@ -167,9 +167,6 @@
     <ClInclude Include="storeScene.h">
       <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
-    <ClInclude Include="townScene.h">
-      <Filter>GameFramework2D\씬</Filter>
-    </ClInclude>
     <ClInclude Include="animation.h">
       <Filter>GameFramework2D\애니메이션</Filter>
     </ClInclude>
@@ -226,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="ring.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="townScene.h">
+      <Filter>GameFramework2D\애니메이션</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -307,9 +307,6 @@
     <ClCompile Include="storeScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
-    <ClCompile Include="townScene.cpp">
-      <Filter>GameFramework2D\씬</Filter>
-    </ClCompile>
     <ClCompile Include="animation.cpp">
       <Filter>GameFramework2D\애니메이션</Filter>
     </ClCompile>
@@ -363,6 +360,9 @@
     </ClCompile>
     <ClCompile Include="ring.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="townScene.cpp">
+      <Filter>GameFramework2D\애니메이션</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

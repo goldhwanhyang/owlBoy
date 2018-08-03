@@ -6,6 +6,7 @@
 #include "cloud.h"
 #include "stone.h"
 #include "geddy.h"
+#include "ring.h"
 
 class townScene : public gameNode
 {
@@ -19,6 +20,7 @@ private:
 
 	ironWeight temp;
 	geddy * g;
+	ring tR;
 
 	int tempCount = 0;
 

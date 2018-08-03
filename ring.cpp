@@ -20,12 +20,15 @@ void ring::update()
 
 void ring::render()
 {
+
 }
 void ring::renderFront()
 {
+	frontRing->frameRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _curFrameX, _dir);
 }
 void ring::renderBack()
 {
+	backRing->frameRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _curFrameX, _dir);
 }
 void ring::damaged(actor * e)
 {

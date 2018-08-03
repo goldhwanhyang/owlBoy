@@ -48,10 +48,11 @@ void geddy::release()
 
 void geddy::update()
 {
-	_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
+	_hitBox = RectMakeCenter(_x, _y, GEDDY_WIDTH, GEDDY_HEIGHT);
 
 	if (_state == HANG)
 	{
+		_z = 15;
 		_angle = getAnglef(_x - CAM->getX(), _y - CAM->getY(), _ptMouse.x, _ptMouse.y);
 		convertDir();
 
@@ -61,6 +62,7 @@ void geddy::update()
 	}
 	else
 	{
+		_z = 0;
 		if (_angle > PI / 2 && _angle < 3 * PI / 2)
 			_dir = 1;
 		else
@@ -83,6 +85,12 @@ void geddy::render()
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
 	{
 		_bullet[i].render();
+	}
+
+
+	if (KEYMANAGER->isToggleKey(VK_F1))
+	{
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 
 	_img[_state]->frameRender(getMemDC(),
@@ -108,7 +116,11 @@ void geddy::render()
 			_y - CAM->getY(),
 			0, _handsDir, angle);
 	}
-
+	else if (_state != IDLE)
+	{
+		move();
+		collide();
+	}
 }
 
 int geddy::convertDir()
@@ -170,10 +182,62 @@ void geddy::damaged(actor * e)
 
 void geddy::move()
 {
+	liftableActor::move();
 }
 
 void geddy::collide()
 {
+
+	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
+	int r = GetRValue(color);
+	int g = GetGValue(color);
+	int b = GetBValue(color);
+
+	if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
+	{
+		_y = _hitBox.top + (_hitBox.bottom - _hitBox.top) / 2;
+		_angle = 3 * PI / 2;
+		//break;
+	}
+
+	//아래 검사
+	color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
+	r = GetRValue(color);
+	g = GetGValue(color);
+	b = GetBValue(color);
+
+	if (!(r == 255 && g == 0 && b == 255) && _state != HANG)	// 마젠타가 아니면 검사
+	{
+		_y = _hitBox.bottom - (_hitBox.bottom - _hitBox.top) / 2;
+		_state = IDLE;
+	}
+
+	//왼쪽 검사
+	color = GetPixel(_mapPixel->getMemDC(), _hitBox.left, _y);
+	r = GetRValue(color);
+	g = GetGValue(color);
+	b = GetBValue(color);
+
+	if ((r == 0 && g == 0 && b == 0)) // 마젠타가 아니면 검사 였다가 검은색이면 검사
+	{
+		_x = _hitBox.left + (_hitBox.right - _hitBox.left) / 2;
+		_angle = 3 * PI / 2;
+		//break;
+	}
+
+	//오른쪽 검사
+	color = GetPixel(_mapPixel->getMemDC(), _hitBox.right, _y);
+	r = GetRValue(color);
+	g = GetGValue(color);
+	b = GetBValue(color);
+
+	if ((r == 0 && g == 0 && b == 0))	// 마젠타가 아니면 검사 마젠타를 무시
+										//검은색은 안지나가고 초록색은 지나치게 할려면 
+	{
+		_x = _hitBox.right - (_hitBox.right - _hitBox.left) / 2;
+		_angle = 3 * PI / 2;
+		//break;
+	}
 }
 
 void geddy::lifted(player * _player)

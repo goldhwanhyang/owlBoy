@@ -68,7 +68,6 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	}
 
 	SCENEMANAGER->render();
-	RENDERMANAGER->render(getMemDC());
 	EFFECTMANAGER->render();
 	//EFFECT->render(getMemDC());
 
