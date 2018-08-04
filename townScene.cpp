@@ -25,8 +25,11 @@ HRESULT townScene::init()
 	portal = RectMakeCenter(4000, 7500, 100, 100);
 
 	temp.init();
+	tR.init();
 	temp.setX(_player->getX());
 	temp.setY(_player->getY());
+	tR.setX(_player->getX() + 500);
+	tR.setY(_player->getY() - 300);
 
 	cloud *temp;
 	for (int i = 0; i < 100; ++i)
@@ -84,6 +87,10 @@ void townScene::update()
 		{
 			temp.throwed(10, getAngle(temp.getX() - CAM->getX(), temp.getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
 		}
+		else if (g->getState() == HANG)
+		{
+			g->throwed(10, getAngle(g->getX() - CAM->getX(), g->getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
+		}
 	}
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
@@ -127,8 +134,11 @@ void townScene::render()
 		_TownMapPixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 		Rectangle(getMemDC(), portal.left - CAM->getX(), portal.top - CAM->getY(), portal.right - CAM->getX(), portal.bottom - CAM->getY());
 	}
-	_player->render();
+	RENDERMANAGER->addRender(temp.getZ(), &temp);
+	RENDERMANAGER->addRender(g->getZ(), g);
+	RENDERMANAGER->addRender(_player->getZ(), _player);
 
-	RENDERMANAGER->addRender(0, &temp);
-	RENDERMANAGER->addRender(1, g);
+	tR.renderBack();
+	RENDERMANAGER->render(getMemDC());
+	tR.renderFront();
 }

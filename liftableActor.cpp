@@ -27,7 +27,8 @@ void liftableActor::lifted(player * _player)
 	if (!_isLiftable) return;
 
 	if (_state == BURIED)
-	{
+	{ 
+		_z = 15;
 		_player->setX(_x);
 		_player->setY(_hitBox.top);
 		_player->setState(FLY);
