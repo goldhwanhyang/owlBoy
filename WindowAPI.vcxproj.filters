@@ -225,7 +225,7 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="townScene.h">
-      <Filter>GameFramework2D\애니메이션</Filter>
+      <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -362,7 +362,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="townScene.cpp">
-      <Filter>GameFramework2D\애니메이션</Filter>
+      <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
