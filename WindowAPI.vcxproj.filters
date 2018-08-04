@@ -227,6 +227,9 @@
     <ClInclude Include="townScene.h">
       <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
+    <ClInclude Include="startScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -362,6 +365,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="townScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="startScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
   </ItemGroup>

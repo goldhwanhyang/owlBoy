@@ -7,6 +7,14 @@ HRESULT loadingScene::init(void)
 	_loading = new loading;
 	_loading->init(); //로딩화면 이미지와 로딩 프로그래스바
 
+	_line = IMAGEMANAGER->addImage("LOADING_BAR", "Texture/Loading/loadingBar_72x800.bmp", 72, 800, true, RGB(255, 0, 255));
+	_lineBottom = IMAGEMANAGER->addImage("LOADING_BAR_BOTTOM", "Texture/Loading/loadingBarBottom_72x28.bmp", 72, 28, true, RGB(255, 0, 255));
+	_otus = IMAGEMANAGER->addFrameImage("LIFT", "Texture/player/otusLift_1890x460_7x2.bmp", 1890, 460, 7, 2);
+	_otusOver = IMAGEMANAGER->addFrameImage("LIFT2", "Texture/player/otusLiftOver_1890x460_7x2.bmp", 1890, 460, 7, 2);
+
+	_count = _index = _height = 0;
+
+
 	//이미지 및 사운드 로딩
 	this->loadingImage();
 	this->loadingSound();
@@ -23,14 +31,19 @@ void loadingScene::release(void)
 
 void loadingScene::update(void)
 {
+	_count = (_count + 1) % 10;
+	if (_count == 0)
+	{
+		_index = (_index + 1) % (_otus->getMaxFrameX() + 1);
+	}
 	//로딩클래스 업데이트
 	_loading->update(); //로딩바 업데이트
 
 	//로딩완료후 씬변경
-	if (_loading->loadingDone()) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
+	if (_loading->loadingDone() && KEYMANAGER->isOnceKeyDown(VK_SPACE)) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
 	{
 		loadingEffect();
-		SCENEMANAGER->loadScene("townScene"); //게임씬으로 전환
+		SCENEMANAGER->loadScene("startScene"); //게임씬으로 전환
 	}
 }
 
@@ -53,6 +66,34 @@ void loadingScene::render(void)
 	sprintf_s(str, "%.f %%", per);
 	TextOut(getMemDC(), 660, 430, str, strlen(str));
 	*/
+	float num = _loading->getLoadItem().size();
+	float cur = _loading->getCurrnetGauge();
+	float per = cur / num;
+	_height = _line->getHeight() * per;
+
+	_otus->frameRender(getMemDC(),
+		WINSIZEX / 2 - _otus->getFrameWidth() / 2,
+		WINSIZEY - _height - _otus->getFrameHeight() / 2, _index, 0);
+
+	_line->render(getMemDC(),
+		WINSIZEX / 2 - _lineBottom->getWidth() / 2,
+		WINSIZEY - _height - 10, 0, 0, _line->getWidth(), _height);
+
+	_otusOver->frameRender(getMemDC(),
+		WINSIZEX / 2 - _otus->getFrameWidth() / 2,
+		WINSIZEY - _height - _otus->getFrameHeight() / 2, _index, 0);
+
+
+	_lineBottom->render(getMemDC(),
+		WINSIZEX / 2 - _lineBottom->getWidth() / 2,
+		WINSIZEY - _lineBottom->getHeight() - 10);
+
+	if (per >= 1)
+	{
+		char str[128];
+		sprintf_s(str, "press space");
+		TextOut(getMemDC(), WINSIZEX/2 - 50, WINSIZEY/2, str, strlen(str));
+	}
 }
 
 //로딩이미지 함수(이곳에 이미지를 전부 넣어라)
@@ -71,6 +112,34 @@ void loadingScene::loadingImage()
 	//백그라운드 이미지
 	//_loading->loadImage("mountain", "mountain.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	
+	//Text
+	_loading->loadImage("BACK", "Texture/Text/back_135x39.bmp", 135, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("BACK_TO_GAME", "Texture/Text/backtoGame_285x39.bmp", 285, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("BACK_TO_MENU", "Texture/Text/backtoMenu_456x63.bmp", 456, 63, true, RGB(255, 0, 255));
+	_loading->loadImage("COIN", "Texture/Text/coin_66x39.bmp", 66, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("CONTINUE", "Texture/Text/continue_135x39.bmp", 135, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("GAME_EXIT", "Texture/Text/gameExit_150x39.bmp", 150, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("GO_TO_TITLE", "Texture/Text/gotoStart_408x39.bmp", 408, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("ITEM", "Texture/Text/item_99x39.bmp", 99, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("OPTION", "Texture/Text/option_69x39.bmp", 69, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("SYSTEM", "Texture/Text/system_99x39.bmp", 99, 39, true, RGB(255, 0, 255));
+	_loading->loadImage("TITLE", "Texture/Text/title_597x303.bmp", 597, 303, true, RGB(255, 0, 255));
+
+	//UI
+	_loading->loadImage("CURSOR", "Texture/UI/cursor_30x42.bmp", 30, 42, true, RGB(255, 0, 255));
+	_loading->loadImage("ATTACK_CURSOR", "Texture/UI/attackCursor_81x81.bmp", 81, 81, true, RGB(255, 0, 255));
+	_loading->loadImage("EXIT_MENU", "Texture/UI/exitMenu_1110x90.bmp", 1110, 90, true, RGB(255, 0, 255));
+	_loading->loadImage("FRIEND_UI", "Texture/UI/friendGeddyUI_75x69.bmp", 75, 69, true, RGB(255, 0, 255));
+	_loading->loadImage("HP_BACK", "Texture/UI/hpBarBack_223x36.bmp", 223, 36, true, RGB(255, 0, 255));
+	_loading->loadImage("HP_FRONT", "Texture/UI/hpBarFront_220x27.bmp", 220, 27, true, RGB(255, 0, 255));
+	_loading->loadImage("MOUSE_LEFT", "Texture/UI/leftClickUI_54x60.bmp", 54, 60, true, RGB(255, 0, 255));
+	_loading->loadImage("MOUSE_RIGHT", "Texture/UI/rightClickUI_54x60.bmp", 54, 60, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_BACK", "Texture/UI/volumeProgressBack_673x81.bmp", 673, 81, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_FRONT", "Texture/UI/volumeProgressFront_641x66.bmp", 641, 66, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_RIGHT", "Texture/UI/volumeProgressFrontRight_19x66.bmp", 19, 66, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_1473x495.bmp", 1473, 495, true, RGB(255, 0, 255));
+
+
 	// background
 	_loading->loadImage("구름1", "Texture/background/cloud_462x174.bmp", 462, 174, true, RGB(255, 0, 255));
 	_loading->loadImage("구름2", "Texture/background/cloud2_789x478.bmp", 789, 478, true, RGB(255, 0, 255));
@@ -81,6 +150,15 @@ void loadingScene::loadingImage()
 	_loading->loadImage("구름7", "Texture/background/cloud7_510x255.bmp", 510, 255, true, RGB(255, 0, 255));
 	_loading->loadImage("돌1", "Texture/background/ston1_167x192.bmp", 167, 192, true, RGB(255, 0, 255));
 	_loading->loadImage("돌2", "Texture/background/ston2_189x171.bmp", 189, 171, true, RGB(255, 0, 255));
+
+	// background - 시작메뉴
+	_loading->loadImage("START_SCENE_BACKGROUND", "Texture/background/startBackground_50x50.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("START_SCENE_BACKGROUND_CLOUD", "Texture/background/startBackgroundCloud_1335x1162.bmp", 800, 800);
+	_loading->loadFrameImage("START_SCENE_OTUS", "Texture/background/startSceneBack2_2154x791_3x1.bmp", 1500, 551, 3, 1);
+	_loading->loadImage("START_SCENE_STONE", "Texture/background/startSceneBack3_654x648.bmp", 500, 500, true, RGB(255, 0, 255));
+	
+
+
 
 	// effect
 	_loading->loadFrameImage("친구들기이펙트", "Texture/Effect/takeFriendsEffect_1260x90_6x1.bmp", 1260, 90, 6, 1);
@@ -106,6 +184,8 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("DAMAGED", "Texture/player/otusHit_1320x440_6x2.bmp", 1320, 440, 6, 2);
 	_loading->loadFrameImage("THROWED", "Texture/player/otusThrowed_560x280_4x2.bmp", 560, 280, 4, 2);
 	_loading->loadFrameImage("DEAD", "Texture/player/otusDead_5670x260_21x2.bmp", 5670, 260, 21, 2);
+
+	_loading->loadImage("SHADOW", "Texture/player/shadow_54x6.bmp", 54, 6, true, RGB(255, 0, 255));
 
 	// friends::geddy
 	_loading->loadFrameImage("GEDDY_IDLE", "Texture/friends/geddyIdle_80x300_1x2.bmp", 80, 300, 1, 2);
@@ -143,7 +223,7 @@ void loadingScene::loadingImage()
 
 	// liftableActor
 	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
-	_loading->loadFrameImage("무게추공중", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
+	_loading->loadImage("무게추공중", "Texture/Stuff/weightOnAir_140x170.bmp", 140, 170, true, RGB(255, 0, 255));
 	_loading->loadImage("과일1", "Texture/Stuff/fruit_60x95.bmp", 60, 95);
 	_loading->loadImage("과일2", "Texture/Stuff/fruit2_70x110.bmp", 70, 110);
 	_loading->loadImage("버튼", "Texture/Stuff/button_114x44.bmp", 114, 44);
