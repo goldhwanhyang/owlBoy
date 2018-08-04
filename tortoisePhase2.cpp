@@ -45,8 +45,6 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 
 void tortoisePhase2::update()
 {
-
-	
 	//TODO : 임시
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
@@ -109,6 +107,7 @@ void tortoisePhase2::update()
 
 	//불릿무브
 	Bmove();
+	Bcollide();
 }
 
 void tortoisePhase2::render()
@@ -337,6 +336,21 @@ void tortoisePhase2::Bmove()
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
 		{
 			_player->damaged(&_vBullet[i]);
+		}
+	}
+}
+
+void tortoisePhase2::Bcollide()
+{
+	RECT tempRc;
+	//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
+	for (int i = 0; i < _vBullet.size(); ++i)
+	{
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
+		{
+			_vBullet[i].setIsActive(false);
+			_player->damaged(&_vBullet[i]);
+			break;
 		}
 	}
 }

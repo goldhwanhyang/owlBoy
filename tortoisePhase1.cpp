@@ -6,11 +6,16 @@
 
 HRESULT tortoisePhase1::init(float x, float y)
 {	
+	//==========추가 이미지
+	IGM->addFrameImage("거북이_페이즈1_레디", "Texture/Enemies/Boss1/bossReady_975x246_5x1.bmp", 975, 246, 5, 1);
+	//====================
+
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = LEFT;
 	_angle = 180;
 	_speed = 2.0f;
+	_tortoiseImage[READY] = IGM->findImage("거북이_페이즈1_레디");
 	_tortoiseImage[TURN] = IGM->findImage("거북이_페이즈1_꺽기");
 	_tortoiseImage[WALK] = IGM->findImage("거북이_페이즈1_걷기");
 	_tortoiseImage[WALK_SHINING] = IGM->findImage("거북이_페이즈1_걷기빛");
@@ -28,7 +33,7 @@ HRESULT tortoisePhase1::init(float x, float y)
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
 	_isAttack = false;
 	_attackCount = 0;
-	_state = WALK;
+	_state = READY;
 
 	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 
@@ -64,13 +69,19 @@ void tortoisePhase1::update()
 	_isActiveShield = _shield->getIsActive();
 
 	//프레임 돌려줌
-	bool aniDone;
-	if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 7, _dir);
-	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 12, _dir);
+	bool aniDone = false;
+	if (READY == _state)
+	{
+		if(_playerX < 850) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
+		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
+	}
+	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
 
 	switch (_state)
 	{
 	case READY:
+		if (aniDone) _state = WALK;
 		break;
 	case TURN:					//꺽기
 		if (aniDone) turn();	//TURN상태가 되면 이미지프레임이 돌고 다돌고나면(aniDone==true) 방향바꿈
@@ -144,7 +155,12 @@ void tortoisePhase1::render()
 	{
 		IMAGEMANAGER->findImage("보스방1픽셀")->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	}
-	if (_state != TAKE_SHIELD)
+
+	if (_state == READY)
+	{
+		_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, 0);
+	}
+	else if (_state != TAKE_SHIELD)
 	{
 		if (_dir == 0)
 		{
@@ -459,7 +475,7 @@ void tortoisePhase1::Brender()
 	
 }
 
-bool tortoisePhase1::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
+bool tortoisePhase1::frameMake(image * bmp, int & count, int & index, int cooltime)
 {
 	//if (renderDir)
 	{

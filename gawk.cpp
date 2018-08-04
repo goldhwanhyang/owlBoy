@@ -40,7 +40,7 @@ HRESULT gawk::init(float x, float y, int dir)
 void gawk::update()
 {
 	//TODO : 임시
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
 	{
 		damaged(_player);
 	}
@@ -100,14 +100,14 @@ void gawk::render()
 		{
 		case IDLE:
 		case READY:
-			tempX = _x - 105;
+			tempX = _x - 95;
 			tempY = _y - 90;
 			break;
 		case FLY:
 		case FALL:
 		case STUN:
-			tempX = _x - 90;
-			tempY = _y - 90;
+			tempX = _x - 95;
+			tempY = _y - 70;
 			break;
 		}		
 	}
@@ -124,7 +124,7 @@ void gawk::render()
 		case FALL:
 		case STUN:
 			tempX = _x - 80;
-			tempY = _y - 90;
+			tempY = _y - 70;
 			break;
 		}
 	}
@@ -133,12 +133,12 @@ void gawk::render()
 
 	if (_isDebug)
 	{
-		Rectangle(getMemDC(), _scanRc.left - CAM->getX(), _scanRc.top - CAM->getY(), _scanRc.right - CAM->getX(), _scanRc.bottom - CAM->getY());
-		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		//Rectangle(getMemDC(), _scanRc.left - CAM->getX(), _scanRc.top - CAM->getY(), _scanRc.right - CAM->getX(), _scanRc.bottom - CAM->getY());
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 		_stprintf_s(_debug, "방향:%d, idx:%d, x:%f ", _dir, _index, _x );
 		TextOut(getMemDC(), 100, 300, _debug, strlen(_debug));
 		TextOut(getMemDC(), _x-CAM->getX(), _y-CAM->getY(), "X", strlen("X"));
-		_stprintf_s(_debug, "쉐킷cou:%f, 쉐킷:%f", _shakeAngle, 2 * sinf(_shakeAngle));
+		_stprintf_s(_debug, "쉐킷cou:%f, 쉐킷:%f", _shakeAngle, sinf(_shakeAngle));
 		TextOut(getMemDC(), 100, 320, _debug, strlen(_debug));
 	}
 }
@@ -146,7 +146,8 @@ void gawk::render()
 void gawk::release()
 {
 }
-//TODO : 논리적 결함 _shakeAngle과 oldState
+//논리적 결함 _shakeAngle과 oldState => count로 사용하는 shakeAngle과 지역변수인 oldState를 같이 써서 논리적인 오류가 생겼다.
+//shakeAngle +1마다 oldState가 생성,삭제되어 제대로 값을 저장할 수 없었음
 void gawk::damaged(actor* e)
 {
 	POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
@@ -164,14 +165,26 @@ void gawk::damaged(actor* e)
 
 void gawk::stunShake()
 {
-	//TODO : 제대로 작동안함
+	//update의 조건이 보스쪽으로 먼저 들어가버려서 그랬다.
+
 	//===데미지 받으면 흔들어줌====
-	++_shakeAngle;
-	_x += 2 * sinf(_shakeAngle);
+	_shakeAngle += 0.25;
+	_x += 5 * sinf(_shakeAngle); // sin값을 x에 누적하고 있어서 한쪽으로만 진동함
 	//===========================
-	if (_shakeAngle > 6.28)		//쉐킷이 한바탕 끝나면
+	if (_shakeAngle > PI*5)		//쉐킷이 한바탕 끝나면
 	{
-		_state = _oldState;		//원래 상태로 돌려줌
+		switch (_oldState)
+		{
+			case IDLE:
+				_state = READY;
+				break;
+			case READY:
+				_state = FLY;
+				break;
+			default:
+				_state = _oldState;		//원래 상태로 돌려줌
+			break;
+		}
 		_shakeAngle = 0;
 	}
 }
@@ -215,7 +228,6 @@ void gawk::move()
 	//플레이어가 높으면 더 빨리점프
 	//플레이어가 낮으면 점프X, fly index를 getMaxFrameX로 고정
 	//플레이어와 높이가 비슷하면 점프하며 다가옴
-
 }
 
 void gawk::collide()
