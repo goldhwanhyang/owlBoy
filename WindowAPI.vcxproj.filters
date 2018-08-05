@@ -84,6 +84,9 @@
     <Filter Include="GameFramework2D\액터\애너미\거북이보스">
       <UniqueIdentifier>{0944fced-b1cc-4af0-b5e4-29ef9dcb99d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework2D\액터\애너미\에너미매니저">
+      <UniqueIdentifier>{6c40d1b2-bb15-4762-8667-1c0c72166a67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonMacroFunction.h">
@@ -227,6 +230,12 @@
     <ClInclude Include="townScene.h">
       <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
+    <ClInclude Include="startScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyManager.h">
+      <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -363,6 +372,12 @@
     </ClCompile>
     <ClCompile Include="townScene.cpp">
       <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="startScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyManager.cpp">
+      <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

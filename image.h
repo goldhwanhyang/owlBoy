@@ -62,7 +62,7 @@ private:
 	BLENDFUNCTION	_blendFunc;		// 알파블랜드 기능 		memDC의 이미지를 blendDC로 옮기고 그걸 hdc로 옮김
 
 	LPIMAGE_INFO	_stretchImage;	//스트레치이미지
-	LPIMAGE_INFO		_rotateImage;	//로테이트이미지
+	LPIMAGE_INFO	_rotateImage;	//로테이트이미지
 
 public:
 	image();

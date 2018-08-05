@@ -6,6 +6,7 @@ class enemy : public actor
 protected:
 	player* _player;
 	float _playerX, _playerY;
+	image* _mapPixel;
 public:
 	virtual HRESULT init(float x = WINSIZEX / 2, float y = WINSIZEY / 2, int dir = 1);
 	virtual void update();

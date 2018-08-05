@@ -7,7 +7,7 @@ HRESULT stone::init()
 	_x = RND->getInt(CAM->getMaxWidth());
 	_y = RND->getInt(CAM->getMaxHeight());
 	_z = RND->getInt(4) + 1;
-	_speed = 2;
+	_speed = 1;
 	_dirY = RND->getInt(300)/10.0f;
 
 	int c = RND->getInt(2);

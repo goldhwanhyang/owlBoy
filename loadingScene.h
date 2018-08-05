@@ -7,6 +7,13 @@ class loadingScene : public gameNode
 private:
 	loading * _loading;
 
+	image * _otus, *_otusOver;
+	image * _line;
+	image * _lineBottom;
+
+	int _count, _index;
+	float _height;
+
 public:
 	HRESULT init(void);
 	void release(void);

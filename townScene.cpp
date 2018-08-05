@@ -25,11 +25,9 @@ HRESULT townScene::init()
 	portal = RectMakeCenter(4000, 7500, 100, 100);
 
 	temp.init();
-	tR.init();
+	tR.init(_player->getX() + 500, _player->getY() - 300, 1);
 	temp.setX(_player->getX());
 	temp.setY(_player->getY());
-	tR.setX(_player->getX() + 500);
-	tR.setY(_player->getY() - 300);
 
 	cloud *temp;
 	for (int i = 0; i < 100; ++i)

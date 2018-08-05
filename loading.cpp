@@ -103,12 +103,14 @@ HRESULT loadItem::init(string keyName, string soundName, bool bgm, bool loop)
 HRESULT loading::init(void)
 {
 	//로딩화면 백그라운드 이미지 초기화
-	_background = IMAGEMANAGER->addImage("bgLoadingScene", "Texture/Loading/bgLoadingScene.bmp", WINSIZEX, WINSIZEY);
+	_background = IMAGEMANAGER->addImage("bgLoadingScene", "Texture/Loading/loadingBackground_1000x1000.bmp", WINSIZEX, WINSIZEY);
 
 	//로딩바 클래스 초기화
+	/*
 	_loadingBar = new progressBar;
 	_loadingBar->init("Texture/Loading/loadingBarFront", "Texture/Loading/loadingBarBack", 100, 430, 600, 20);
 	_loadingBar->setGauge(0, 0);
+	*/
 	//현재 게이지 초기화
 	_currentGauge = 0;
 
@@ -124,15 +126,16 @@ HRESULT loading::init(void)
 void loading::release(void)
 {
 	//로딩바 클래스 해제
-	
+	/*
 	_loadingBar->release();
 	SAFE_DELETE(_loadingBar);
+	*/
 }
 
 void loading::update(void)
 {
 	//로딩바 클래스 업데이트
-	_loadingBar->update();
+	//_loadingBar->update();
 
 }
 
@@ -141,6 +144,7 @@ void loading::render(void)
 	//백그라운드 렌더
 	_background->render(getMemDC());
 	//로딩바 클래스 렌더
+	/*
 	_loadingBar->render();
 
 	//로딩 퍼센트 이미지 렌더
@@ -159,6 +163,9 @@ void loading::render(void)
 			sprintf_s(fileName, "Image\\%s.bmp", _vLoadItem[_currentGauge]->getImageResource().keyName.c_str()); //c_str 스트링을 const char*형으로
 		TextOut(getMemDC(), _loadingBar->getRect().left + 10, _loadingBar->getRect().bottom + 20, fileName, strlen(fileName));
 	}
+	*/
+
+
 }
 
 void loading::loadImage(string keyName, int width, int height)
@@ -260,7 +267,9 @@ BOOL loading::loadingDone()
 	_percent = ((float)_currentGauge / _vLoadItem.size() * 100); //int형 게이지 / int형 사이즈 연산하면 소숫점을 버려버린다. -> 실수형으로 형변환 하여 *100 연산 이전의 소수점을 남겨준다.
 
 	//로딩바 이미지 변경
+	/*
 	_loadingBar->setGauge(_currentGauge, _vLoadItem.size());
+	*/
 
 	return 0;
 }

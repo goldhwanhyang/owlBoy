@@ -6,7 +6,7 @@ HRESULT cloud::init()
 	_x = RND->getInt(CAM->getMaxWidth());
 	_y = RND->getInt(CAM->getMaxHeight());
 	_z = RND->getInt(4) + 1;
-	_speed = 1;
+	_speed = 0.5f;
 	
 	changeImage();
 

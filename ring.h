@@ -13,6 +13,7 @@ public:
 	virtual void drawUI() {}
 	
 
+	virtual HRESULT init(float x, float y, int dir);
 	virtual HRESULT init();
 	virtual void update();
 	virtual void render();
