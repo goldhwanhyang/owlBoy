@@ -18,46 +18,60 @@ HRESULT tortoise::init(float x, float y)
 	_currentPhase = _phase1;
 	_isPhase2 = false;
 
+	_isDead = false;
+	_deadCount = 0;
+
 	return S_OK;
 }
 
 void tortoise::update()
 {
-	if (_currentPhase->getHp() > 0)
+	if (!_isDead)
 	{
-		_currentPhase->update();
-	}
-	else
-	{
-		if (!_isPhase2)
+		if (_currentPhase->getHp() > 0)
 		{
-			//1페이즈가 끝나면 컷씬으로 방패까지 보스가 걸어간뒤에 방패를 줍고 그뒤에 2페이즈 레디(점프하고) 2페이즈 시작
-			_shield->setIsActive(true);
-			_phase2->init(_phase1->getX(), _phase1->getY(), _phase1->getDir());
-			_phase2->setPlayerLink(_player);
-			_phase2->setShieldLink(_shield);
-			_currentPhase = _phase2;
-			_currentPhase->setHp(100);
-			_isPhase2 = true;
+			_currentPhase->update();
 		}
 		else
 		{
-			//TODO : 클리어 - 죽음이펙트 업데이트하자
-			//TODO : 죽음이펙트 렌더가 끝나면 업데이트와 렌더 둘다 꺼야함 (혹시 릴리즈를 해버릴수 있을까?)
+			if (!_isPhase2)
+			{
+				//1페이즈가 끝나면 컷씬으로 방패까지 보스가 걸어간뒤에 방패를 줍고 그뒤에 2페이즈 레디(점프하고) 2페이즈 시작
+				_shield->setIsActive(true);
+				_phase2->init(_phase1->getX(), _phase1->getY(), _phase1->getDir());
+				_phase2->setPlayerLink(_player);
+				_phase2->setShieldLink(_shield);
+				_currentPhase = _phase2;
+				_currentPhase->setHp(100);
+				_isPhase2 = true;
+			}
+			else
+			{
+				//TODO : 클리어 - 죽음이펙트 플레이
+				//EFFECTMANAGER->play("거북이_죽음폭발", _phase2->getX(), _phase2->getY());
+				//TODO : 보스가 죽으면 혹시 tortoise를 릴리즈를 해버릴수 있을까?
+				++_deadCount;
+			}
 		}
 	}
 }
 
 void tortoise::render()
 {
-	if (_currentPhase->getHp() > 0)
+	if (!_isDead)
 	{
-		_currentPhase->render();
-	}
-	else if (_isPhase2) //체력이 0이고 페이즈2이면
-	{
-		IMAGEMANAGER->frameRender("거북이_죽음", getMemDC(), _phase2->getX() - 135 - CAM->getX(), _phase2->getY() - 110 - CAM->getY(), 0, _phase2->getDir());
-		//TODO : 죽음이펙트 렌더
+		if (_currentPhase->getHp() > 0)
+		{
+			_currentPhase->render();
+		}
+		else if (_isPhase2) //체력이 0이고 페이즈2이면
+		{
+			IMAGEMANAGER->frameRender("거북이_죽음", getMemDC(), _phase2->getX() - 135 - CAM->getX(), _phase2->getY() - 110 - CAM->getY(), 0, _phase2->getDir());
+			if (_deadCount > 50)
+			{
+				_isDead = true;
+			}
+		}
 	}
 }
 
