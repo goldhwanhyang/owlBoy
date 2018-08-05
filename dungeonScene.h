@@ -1,17 +1,15 @@
 #pragma once
 #include "gameNode.h"
-#include "tortoise.h"
-#include "gawk.h"
 #include "player.h"
+#include "enemyManager.h"
 
 class dungeonScene : public gameNode
 {
-	tortoise* _tortoise;
-	tortoiseShield* _shield;
 	image* _stage;
 	image* _stagePixel;
-	vector<enemy*> _vEnemy;
 	player* _player;
+	enemyManager* _enemyManager;
+
 public:
 	HRESULT init();
 	void update();

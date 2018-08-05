@@ -6,6 +6,8 @@
 
 HRESULT tortoisePhase2::init(float x, float y, int dir)
 {
+	_mapPixel = IMAGEMANAGER->findImage("보스방1픽셀");
+
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = dir;
@@ -40,6 +42,8 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	_maxHp = 100;
 	_hp = 100;
 
+	_power = 3;
+
 	return S_OK;
 }
 
@@ -57,8 +61,8 @@ void tortoisePhase2::update()
 
 	//프레임 돌려줌
 	bool aniDone;
-	if (OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 7, _dir);
-	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 1, 0, 12, _dir);
+	if (OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
 
 	switch (_state)
 	{
@@ -331,7 +335,10 @@ void tortoisePhase2::Bmove()
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
-		_vBullet[i].collide("보스방1픽셀");
+		if (_vBullet[i].collide(_mapPixel))
+		{
+			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+		}
 		//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
 		{
@@ -364,7 +371,7 @@ void tortoisePhase2::Brender()
 
 }
 
-bool tortoisePhase2::frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir)
+bool tortoisePhase2::frameMake(image * bmp, int & count, int & index, int cooltime)
 {
 	//if (renderDir)
 	{

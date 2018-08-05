@@ -69,7 +69,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual bool frameMake(image * bmp, int & count, int & index, int frameY1, int frameY2, int cooltime, bool renderDir);
+	virtual bool frameMake(image * bmp, int & count, int & index, int cooltime);
 
 	virtual void setShieldLink(tortoiseShield* shield) { _shield = shield; }
 

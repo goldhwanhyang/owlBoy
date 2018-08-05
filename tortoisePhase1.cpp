@@ -5,28 +5,25 @@
 //hit박스의 크기, 이미지 좌표 보정값등을 숫자가 아니라 WINSIZEX, _image->getWidth() 등을 사용해서 표현할수 있게 해주자.
 
 HRESULT tortoisePhase1::init(float x, float y)
-{	
-	//==========추가 이미지
-	IGM->addFrameImage("거북이_페이즈1_레디", "Texture/Enemies/Boss1/bossReady_975x246_5x1.bmp", 975, 246, 5, 1);
-	//====================
-
+{
+	_mapPixel = IMAGEMANAGER->findImage("보스방1픽셀");
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = LEFT;
 	_angle = 180;
 	_speed = 2.0f;
-	_tortoiseImage[READY] = IGM->findImage("거북이_페이즈1_레디");
-	_tortoiseImage[TURN] = IGM->findImage("거북이_페이즈1_꺽기");
-	_tortoiseImage[WALK] = IGM->findImage("거북이_페이즈1_걷기");
-	_tortoiseImage[WALK_SHINING] = IGM->findImage("거북이_페이즈1_걷기빛");
-	_tortoiseImage[ATTACK] = IGM->findImage("거북이_페이즈1_쏘기");
+	_tortoiseImage[READY] = IMAGEMANAGER->findImage("거북이_페이즈1_레디");
+	_tortoiseImage[TURN] = IMAGEMANAGER->findImage("거북이_페이즈1_꺽기");
+	_tortoiseImage[WALK] = IMAGEMANAGER->findImage("거북이_페이즈1_걷기");
+	_tortoiseImage[WALK_SHINING] = IMAGEMANAGER->findImage("거북이_페이즈1_걷기빛");
+	_tortoiseImage[ATTACK] = IMAGEMANAGER->findImage("거북이_페이즈1_쏘기");
 
-	_tortoiseImage[TAKE_SHIELD] = IGM->findImage("거북이_페이즈1_방패줍기");
+	_tortoiseImage[TAKE_SHIELD] = IMAGEMANAGER->findImage("거북이_페이즈1_방패줍기");
 
-	_tortoiseImage[OFF_SHIELD] = IGM->findImage("거북이_페이즈1_방패떨어뜨리기");
-	_tortoiseImage[OFF_STUN] = IGM->findImage("거북이_페이즈1_스턴");
-	_tortoiseImage[OFF_TURN] = IGM->findImage("거북이_페이즈1_꺽기방패없이");
-	_tortoiseImage[OFF_WALK] = IGM->findImage("거북이_페이즈1_걷기방패없이");
+	_tortoiseImage[OFF_SHIELD] = IMAGEMANAGER->findImage("거북이_페이즈1_방패떨어뜨리기");
+	_tortoiseImage[OFF_STUN] = IMAGEMANAGER->findImage("거북이_페이즈1_스턴");
+	_tortoiseImage[OFF_TURN] = IMAGEMANAGER->findImage("거북이_페이즈1_꺽기방패없이");
+	_tortoiseImage[OFF_WALK] = IMAGEMANAGER->findImage("거북이_페이즈1_걷기방패없이");
 
 	_delayCount = 0;
 
@@ -447,7 +444,10 @@ void tortoisePhase1::Bmove()
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
-		_vBullet[i].collide("보스방1픽셀");
+		if (_vBullet[i].collide(_mapPixel))
+		{
+			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+		}
 	}
 }
 
