@@ -9,6 +9,8 @@ HRESULT startScene::init()
 	_stone1 = IMAGEMANAGER->findImage("START_SCENE_OTUS");
 	_stone2 = IMAGEMANAGER->findImage("START_SCENE_STONE");
 
+	_selectedAlpha = 255;
+	_nonAlpha = 180;
 	_count = _index = 0;
 	_angle = 0;
 

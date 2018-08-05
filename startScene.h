@@ -5,6 +5,7 @@ class startScene :
 {
 	image *_bgImage, *_bgCloud, *_stone1, *_stone2;
 	
+	int _selectedAlpha, _nonAlpha;
 	int _count, _index;
 
 	float _angle;
