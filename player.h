@@ -21,9 +21,13 @@ private:
 	image* _map;
 
 	bool _isLeft;
-	int _jumpSpeed;	// 점프 스피드 중력
+	bool _isFly;	// 날고있는 상태인지 아닌지
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수
-	int _flySpeed;	// 날고있을 때 속도
+
+
+	float _jumpSpeed;	// 점프 스피드 중력
+	float _flySpeed;	// 날고있을 때 속도
+	float _rollSpeed;	// 구르기 속도
 
 	int _oldY;	// 이전 위치
 public:

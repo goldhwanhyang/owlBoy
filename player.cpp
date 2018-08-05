@@ -7,10 +7,7 @@
 	걸어준 조건이 잘못되지 않았는지 잘 살펴보기
 */
 
-
-//FLYDOWN도 JUMPFALL했던것처럼 현재위치 이전위치 확인해서 아래로 내려갈때만 FLYDOWN되게
 //내려가는 상태인데 허공에서 날라다니는 문제
-//FLY중에 위로갈때 바닥 지나가게
 
 HRESULT player::init()
 {
@@ -24,14 +21,15 @@ HRESULT player::init()
 	img[ROLL] = IMAGEMANAGER->findImage("ROLL");
 	img[ATK] = IMAGEMANAGER->findImage("ATTACK");
 
-	_isLeft = false;	// true = 왼쪽 , false = 오른쪽
-
+	_isLeft = false;			// true = 왼쪽 , false = 오른쪽
+	_isFly = false;				// 날고있는지 아닌지
 	_x = 440.f;					// 플레이어 x좌표
 	_y = 810.f;					// 플레이어 y좌표
 	_speed = 7.0f;				// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )
 	_jumpSpeed = 15.f;			// 플레이어 점프 속도
 	_jumpCount = 0;
 	_flySpeed = 10.f;
+	_rollSpeed = 9.f;
 	_angle = PI / 2;			// 플레이어 각도
 	_gravity = 0;				// 플레이어 중력
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH); 
@@ -59,8 +57,11 @@ void player::update()
 	// 날고 있을 때
 	//if (_state == FLY || _state == FLYDOWN)	// 날고있거나 아래로 내려가는 상태일 때
 	//if(_jumpCount == 2)		// jumpCount 2가 되면 날고있는 상태로 본다
-	if(_state == FLY || _state == FLYDOWN)
+
+	//if(_state == FLY || _state == FLYDOWN || _state == ATK)	// FLY상태거나 FLYDOWN일때 날고있는 상태가 된다.
+	if(_isFly == true)
 	{
+		_axisY = NONE;
 		_speed = 10.f;	
 		_gravity = 0;
 		flyInputKey();
@@ -68,13 +69,14 @@ void player::update()
 		flyMove();
 	}
 	// 땅에 있을 때
+	//else if (_state != FLY && _state != FLYDOWN)
 	else
 	{
 		_speed = 7.0f;													// 땅에 있을 때 스피드 7.0f
 		groundInputKey();												// 땅에 있을 때 입력하는 키
 		groundAxis(_axisX, _axisY);
-		//groundMove();
 	}
+
 	// 아래 상하좌우 검사하기전에 히트박스를 먼저 갱신 해주고 검사를한다.
 	// 오투스의 렉트 
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
@@ -104,6 +106,14 @@ void player::groundInputKey()
 	_axisX = NONE;										// 키 입력이 없으면 _axisX 는 NONE이 된다.
 	if (_state == JUMPFALL)								// 떨어지고 있을 때 W를 누르면 바로 날고있는 상태가 될 수 있게 _jumpCount를 1로 해주고
 		_jumpCount = 1;
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
+	{
+		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+	{
+		changeState(ROLL);
+	}
 	if (KEYMANAGER->isStayKeyDown('A'))		
 	{
 		_dir = LEFT;
@@ -111,7 +121,7 @@ void player::groundInputKey()
 		_axisX = LEFT;									// LEFT 왼쪽으로 이동
 		if (_state == ATK)
 			changeState(ATK);
-		else if (_state != JUMP && _state != JUMPFALL)		// 점프나 떨어지는 상태일 때 뛰는모션 안나오게 조건울 걸어준다.
+		else if (_state != JUMP && _state != JUMPFALL && _state != ROLL)		// 점프나 떨어지는 상태일 때 뛰는모션 안나오게 조건울 걸어준다.
 			changeState(WALK);							// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
 	else if (KEYMANAGER->isStayKeyDown('D'))
@@ -121,13 +131,8 @@ void player::groundInputKey()
 		_axisX = RIGHT;									// RIGHT면 오른쪽으로 이동
 		if (_state == ATK)
 			changeState(ATK);
-		else if (_state != JUMP && _state != JUMPFALL)		// 점프나 떨어지는 상태일 때 뛰는모션이 안나오게 조건을 걸어준다.
+		else if (_state != JUMP && _state != JUMPFALL && _state != ROLL)		// 점프나 떨어지는 상태일 때 뛰는모션이 안나오게 조건을 걸어준다.
 			changeState(WALK);							// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
-		
-	}
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
-	{
-		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.
 		
 	}
 	if (_state != JUMP )	// 키를 안누르면 바로 NONE이 돼서 점프가 안됨
@@ -140,6 +145,7 @@ void player::groundInputKey()
 		if (_jumpCount > 1)
 		{
 			_jumpCount = 2;
+			_isFly = true;
 			_state = FLY;
 			_index = 0;
 			_count = 0;
@@ -156,7 +162,7 @@ void player::groundInputKey()
 void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값을 따라서 움직여주기
 {
 	_oldY = _y;									// 이전 위치(_oldY)에 현재위치(_y)를 저장한다.
-	if (_axisX == NONE && _axisY == NONE && _state != ATK)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
+	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
 		_state = IDLE;
 
 	/*
@@ -167,16 +173,13 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	_y += _gravity;		// y에 중력값을 계속 더해준다. 
 	_gravity += 0.5f;	// 아래로 내려갈 수 있게 점프가 아니어도 계속 중력값을 더해준다.
 
-	if (_axisY == UP)	// _axisY == UP일 때 위로 점프를 시켜준다.
-	{
+	if (_axisY == UP)	// _axisY == UP일 때 위로 점프를 시켜준다.	
 		_y += -sinf(PI / 2) * _jumpSpeed;
-	}
-
+	
 	/* 
 	-sinf(angle) * speed << 음수값
 	_gravity += -sinf(angle) * speed; << 이거를 계속 더하면 아래로 떨어지는게 아니라 오히려 점프를 함
-	그래서 한번만 실행하게 조건을 걸어줘야 하는데 . 
-
+	그래서 한번만 실행하게 조건을 걸어줘야 함
 	*/
 
 	//떨어지는 상황 : 중력이 속도보다 커지기, 현재위치가 이전위치보다 클때
@@ -190,13 +193,28 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 
 		changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
-
+	if (_state == ROLL)
+	{
+		_speed = _rollSpeed;
+		if (_isLeft)
+			_x -= _speed;
+		else if (!_isLeft)
+			_x += _speed;
+	}
+	else
+		_speed = 7.0f;
 	if (_axisX == LEFT)		//  _axisX == LEFT일 때 왼쪽으로 움직여준다.
 	{
+		if (_state == ROLL)			// 상태가 ROLL이 되면 스피드는 rollSpeed로
+			_speed = _rollSpeed;
+
 		_x -= _speed;
 	}
 	else if (_axisX == RIGHT)	//_axisX == RIGHT일 때 오른쪽으로 움직여준다.
 	{
+		if (_state == ROLL)			// 상태가 ROLL이 되면 스피드는 rollSpeed로
+			_speed = _rollSpeed;
+
 		_x += _speed;
 	}
 
@@ -206,6 +224,17 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 void player::flyInputKey()
 {
 	_FX = FLY_N;
+
+	if (_FX == NONE && _FY == NONE && _state != ATK)	// _FX,_FY가 NONE이고 _state가 ATK아닐때만 FLY상태 
+		changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		changeState(ATK);
+	}
+	else if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	{
+		// 마우스를 누르고있으면 오터스가 빙글빙글 돌면서 내려옴 이미지없어서 나중에 추가하면 넣기
+	}
 	if (KEYMANAGER->isOnceKeyDown('A'))	// 키를 처음 누르면 앞으로 대쉬
 	{
 		_isLeft = true;
@@ -213,7 +242,10 @@ void player::flyInputKey()
 	else if (KEYMANAGER->isStayKeyDown('A'))	// 대쉬 한 후에 느려지고 날라가는거 유지
 	{
 		_FX = FLY_L;
-		changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+		if (_state == ATK)
+			changeState(ATK);
+		else
+			changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
 	if (KEYMANAGER->isOnceKeyDown('D'))	// 키를 처음 누르면 앞으로 대쉬
 	{
@@ -222,20 +254,28 @@ void player::flyInputKey()
 	else if (KEYMANAGER->isStayKeyDown('D'))	// 대쉬 한 후에 날라가는거 유지
 	{
 		_FX = FLY_R;
-		changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+		if (_state == ATK)
+			changeState(ATK);
+		else
+			changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
 	_FY = FLY_N;
 	if (KEYMANAGER->isStayKeyDown('W'))
 	{
 		_FY = FLY_U;
+		if (_state == ATK)
+			changeState(ATK);
+		else
+			changeState(FLY);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
 	if (KEYMANAGER->isStayKeyDown('S'))
 	{
 		_FY = FLY_D;
+		if(_state == ATK)
+			changeState(ATK);
+		else
+			changeState(FLYDOWN);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
-	if (_FX == NONE && _FY == NONE)
-		changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
-
 }
 
 float player::flyAngle(FLYING FX, FLYING FY)	
@@ -264,13 +304,11 @@ float player::flyAngle(FLYING FX, FLYING FY)
 	{
 		if (_FY == FLY_U)
 		{
-			fAngle = 90.f;
-			changeState(FLY);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+			fAngle = 90.f;			
 		}
 		if (_FY == FLY_D)
 		{
-			fAngle = 270.f;
-			changeState(FLYDOWN);		// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+			fAngle = 270.f;		
 		}
 	}
 
@@ -290,7 +328,7 @@ void player::flyMove()
 //상태가 바뀔때마다 인덱스를 0으로 초기화 
 void player::changeState(int state)
 {
-	if (_state = state) return;	// 매개변수는 함수가 끝나면 없어진다.
+	if (_state == state) return;	// 매개변수는 함수가 끝나면 없어진다.
 
 	_state = state;
 	_index = 0;
@@ -329,31 +367,26 @@ void player::collide()
 		g = GetGValue(color);
 		b = GetBValue(color);
 
-		if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
+		if (!_isFly || _state == FLYDOWN)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이고 아래로 내려올때만 검사 한다.
 		{
-			_y = i - (OTUS_HEIGTH /2) ;	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
-			_gravity = 0.f;
-			
-			_axisY = NONE;	// 계속 점프하는것을 방지
-			_FY = FLY_N;
-			_jumpCount = 0;
-			
-
-			//if(_state == JUMPFALL)
-			//_state >  IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL
-			if (_state != WALK && _state != ATK )
+			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
-				_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
+
+				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
+				_gravity = 0.f;				// 중력을 0으로 바꿔주고		
+				_axisY = NONE;	// 계속 점프하는것을 방지
+				_FY = FLY_N;	//
+				_jumpCount = 0;	// 땅에 있으니까 점프카운트 0으로 바꿔준다.
+				_isFly = false;	// 날지 않는 상태라는걸 바꿔주기
+				_speed = 7;
+				if (_state != WALK && _state != ATK && _state != ROLL)	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
+				{
+					_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
+				}
+				break;
 			}
-
-			//if (_state == FLY)
-			//{
-			//	_jumpCount = 0;
-			//	//_state = IDLE;
-			//}
-
-			break;
 		}
+		
 	}	
 	//왼쪽 검사
 	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
@@ -400,7 +433,7 @@ void player::frameSetting()
 		_index++;
 		if (_index > img[_state]->getMaxFrameX())
 		{
-			if (_state == ATK)
+			if (_state == ATK || _state == ROLL)
 			{
 				_state = _beforeState;
 			}
