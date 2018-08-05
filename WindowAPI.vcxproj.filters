@@ -228,7 +228,10 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="townScene.h">
-      <Filter>GameFramework2D\애니메이션</Filter>
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="startScene.h">
+      <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
       <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>
@@ -368,7 +371,10 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="townScene.cpp">
-      <Filter>GameFramework2D\애니메이션</Filter>
+      <Filter>GameFramework2D\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="startScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
     <ClCompile Include="enemyManager.cpp">
       <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>

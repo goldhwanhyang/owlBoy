@@ -88,6 +88,7 @@ private:
 	image* _numbers;
 	int _percent;
 
+
 public:
 	HRESULT init(void);
 	void release(void);

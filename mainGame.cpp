@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "mainGame.h"
 
+image * cursor;
+
 //=============================================================
 //	## 초기화 ## init()
 //=============================================================
@@ -13,9 +15,11 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("널", new nullScene);
 	SCENEMANAGER->addScene("townScene", new townScene);
 	SCENEMANAGER->addScene("dungeonScene", new dungeonScene);
+	SCENEMANAGER->addScene("startScene", new startScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
 
+	cursor = IMAGEMANAGER->addImage("CURSOR", "Texture/UI/cursor_30x42.bmp", 30, 42, true, RGB(255, 0, 255));
 
 	_player = new player;
 	SAVEDATA->setPlayer(_player);
@@ -52,6 +56,7 @@ void mainGame::update()
 		SCENEMANAGER->loadScene("dungeonScene");
 	}
 
+	ShowCursor(false);
 }
 
 //=============================================================
@@ -60,7 +65,7 @@ void mainGame::update()
 void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매개변수 가져올 필요가 없다.
 {
 	//흰색 빈 비트맵(이것도 렌더에 그냥 둘것!!)
-	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, WHITENESS);
+	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
 //=============================================================
 	if (KEYM->isToggleKey(VK_F1))
 	{
@@ -79,6 +84,8 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 	}
 	_isDebug = FALSE; //모든 클래스 디버그모드 끄기
 	TIMEMANAGER->render(getMemDC());
+
+	cursor->render(getMemDC(), _ptMouse.x, _ptMouse.y);
 
 //=============================================================	
 	//백버퍼의 내용을 HDC에 그린다 (이것도 렌더에 그냥 둘것!!)

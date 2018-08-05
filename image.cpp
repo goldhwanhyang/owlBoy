@@ -997,6 +997,11 @@ void image::rotateRender(HDC hdc, float centerX, float centerY, float angle)
 	}
 	else
 	{
+		for (int i = 0; i < 3; ++i)
+		{
+			rPoint[i].x += centerX / 2;
+			rPoint[i].y += centerY / 2;
+		}
 		PlgBlt(hdc, rPoint, _imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, NULL, 0, 0);
 	}
 }

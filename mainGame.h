@@ -4,6 +4,7 @@
 #include "nullScene.h"
 #include "townScene.h"
 #include "dungeonScene.h"
+#include "startScene.h"
 #include "player.h"
 
 //#include "enemyManager.h"
