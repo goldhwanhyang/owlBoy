@@ -4,6 +4,7 @@
 
 HRESULT torque::init(float x, float y, int dir)
 {
+	//TODO : 레디,조준 상태에서 불릿 띄워두기
 	//CHECK 추가 이미지
 	IGM->addFrameImage("토크_기본", "Texture/Enemies/Torque/idle_882x258_6x2.bmp", 882, 258, 6, 2);
 	IGM->addFrameImage("토크_레디", "Texture/Enemies/Torque/ready_165x258_1x2.bmp", 165, 258, 1, 2);
@@ -11,8 +12,9 @@ HRESULT torque::init(float x, float y, int dir)
 	IGM->addFrameImage("토크_조준", "Texture/Enemies/Torque/aiming_390x282_2x2.bmp", 390, 282, 2, 2);
 	IGM->addFrameImage("토크_조준손", "Texture/Enemies/Torque/aimingOver_390x282_2x2.bmp", 390, 282, 2, 2);
 	IGM->addFrameImage("토크_쏘기", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
-	IGM->addFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2); //작다
-	//TODO : 불릿이미지(돌덩이) 넣어야함
+	IGM->addFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
+
+	IGM->addFrameImage("토크_불릿", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);
 	
 	enemy::init(x, y);
 
@@ -37,7 +39,7 @@ HRESULT torque::init(float x, float y, int dir)
 
 	_aimingCount = _stunCount = _attackCount = 0;
 	bullet blt;
-	blt.init(20, 8, IGM->findImage("보스방1")->getWidth()); //TODO: 사거리 제대로 수정하기, 불릿이미지넣기
+	blt.init(20, 8, IGM->findImage("보스방1")->getWidth(),"토크_불릿"); //TODO: 사거리 제대로 수정하기
 	blt.setPower(3);
 	for (int i = 0; i < 1; i++)
 	{

@@ -1,7 +1,67 @@
 #include "stdafx.h"
 #include "enemyManager.h"
+#include "player.h"
 
 HRESULT enemyManager::init()
+{
+	initTortoise();
+
+	_factory = new enemyFactory;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		enemy* _enemy = _factory->createEnemy(GAWK);
+		_enemy->setPlayerLink(_player);
+		_vEnemy.push_back(_enemy);
+	}
+	_vEnemy[2]->setPostion(1200, 130, 1);
+	_vEnemy[3]->setPostion(900, 130, 0);
+	_vEnemy[4]->setPostion(400, 130, 0);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		enemy* _enemy = _factory->createEnemy(TORQUE);
+		_enemy->setPlayerLink(_player);
+		_vEnemy.push_back(_enemy);
+	}
+	_vEnemy[5]->setPostion(800, 940, 0);
+	_vEnemy[6]->setPostion(400, 940, 1);
+
+	return S_OK;
+}
+
+void enemyManager::update()
+{
+	for (int i = 0; i < _vEnemy.size(); i++)
+	{
+		if (!_vEnemy[i]->getIsActive()) continue;
+
+		_vEnemy[i]->update();
+	}
+}
+
+void enemyManager::render()
+{
+	for (int i = 0; i < _vEnemy.size(); i++)
+	{
+		if (!_vEnemy[i]->getIsActive()) continue;
+
+		_vEnemy[i]->render();
+	}
+}
+
+void enemyManager::release()
+{
+	SAFE_DELETE(_factory);
+
+	for (int i = 0; i < _vEnemy.size(); i++)
+	{
+		_vEnemy[i]->release();
+		SAFE_DELETE(_vEnemy[i]);
+	}
+}
+
+void enemyManager::initTortoise()
 {
 	tortoise * _tortoise;
 	_tortoise = new tortoise;
@@ -15,55 +75,22 @@ HRESULT enemyManager::init()
 
 	_vEnemy.push_back(_tortoise);
 	_vEnemy.push_back(_shield);
-
-	enemy* _gawk;
-	for (int i = 0; i < 2; i++)
-	{
-		_gawk = new gawk;
-		_gawk->setPlayerLink(_player);
-		_gawk->init();
-		_vEnemy.push_back(_gawk);
-	}
-	_vEnemy[2]->setPostion(1200, 500, 1);
-	_vEnemy[3]->setPostion(900, 500, 0);
-
-	enemy* _torque = new torque;
-	_torque->setPlayerLink(_player);
-	_torque->init(800,800);
-	_vEnemy.push_back(_torque);
-
-	return S_OK;
 }
 
-void enemyManager::update()
+enemy * enemyFactory::createEnemy(int type)
 {
-	//_tortoise->update();
-	//_shield->update();
-	for (int i = 0; i < _vEnemy.size(); i++)
+	enemy* _enemy;
+	switch (type)
 	{
-		_vEnemy[i]->update();
+	case GAWK:
+		_enemy = new gawk;
+		break;
+	case TORQUE:
+		_enemy = new torque;
+		break;
 	}
-}
 
-void enemyManager::render()
-{
-	//_tortoise->render();
-	//_shield->render();
-	for (int i = 0; i < _vEnemy.size(); i++)
-	{
-		_vEnemy[i]->render();
-	}
-}
+	_enemy->init();
 
-void enemyManager::release()
-{
-	//_tortoise->release();
-	//SAFE_DELETE(_tortoise);
-	for (int i = 0; i < _vEnemy.size(); i++)
-	{
-		_vEnemy[i]->release();
-		SAFE_DELETE(_vEnemy[i]);
-	}
-	//_shield->release();
-	//SAFE_DELETE(_shield);
+	return _enemy;
 }
