@@ -70,7 +70,8 @@ void liftableActor::collide()
 	if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
 	{
 		_y = _hitBox.top + (_hitBox.bottom - _hitBox.top) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 
@@ -95,7 +96,8 @@ void liftableActor::collide()
 	if ((r == 0 && g == 0 && b == 0)) // 마젠타가 아니면 검사 였다가 검은색이면 검사
 	{
 		_x = _hitBox.left + (_hitBox.right - _hitBox.left) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 
@@ -109,7 +111,8 @@ void liftableActor::collide()
 										//검은색은 안지나가고 초록색은 지나치게 할려면 
 	{
 		_x = _hitBox.right - (_hitBox.right - _hitBox.left) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 
