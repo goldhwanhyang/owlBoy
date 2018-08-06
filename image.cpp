@@ -473,7 +473,7 @@ void image::alphaRender(HDC hdc, BYTE alpha)
 	{
 		//1. 출력해야 될 화면DC에 그려져 있는 내용을 블렌드이미지에 그린다
 		BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height,
-			hdc, 0, 0, SRCCOPY);
+			hdc, _imageInfo->x, _imageInfo->y, SRCCOPY);
 
 		//2. 메모리DC 이미지의 배경을 없앤후 다시 블렌드이미지에 그린다
 		//GdiTransparentBlt : 비트맵의 특정색상을 제외하고 고속복사 해주는 함수
@@ -491,13 +491,13 @@ void image::alphaRender(HDC hdc, BYTE alpha)
 
 		//3. 블렌드이미지를 화면에 그린다
 		//알파블렌드
-		AlphaBlend(hdc, 0, 0, _imageInfo->width, _imageInfo->height,
+		AlphaBlend(hdc, _imageInfo->x, _imageInfo->y, _imageInfo->width, _imageInfo->height,
 			_blendImage->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, _blendFunc);
 	}
 	else //원본 이미지 그대로 알파블렌딩 할래?
 	{
 		//BitBlt : DC간의 영역끼리 서로 고속복사를 해주는 함수
-		AlphaBlend(hdc, 0, 0, _imageInfo->width, _imageInfo->height, //메모리DC destX,destY위치의 이미지를 hdc의 0,0위치에 이미지 가로세로 길이만큼 고속복사
+		AlphaBlend(hdc, _imageInfo->x, _imageInfo->y, _imageInfo->width, _imageInfo->height, //메모리DC destX,destY위치의 이미지를 hdc의 0,0위치에 이미지 가로세로 길이만큼 고속복사
 			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, _blendFunc);
 	}
 }

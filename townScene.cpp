@@ -90,18 +90,13 @@ void townScene::update()
 			g->throwed(10, getAngle(g->getX() - CAM->getX(), g->getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
 		}
 	}
+
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
 	{
 		SCENEMANAGER->loadScene("dungeonScene");
 	}
 	
-
-	/*이펙트 매니져 사용시*/
-	if (KEYMANAGER->isStayKeyDown(VK_RBUTTON))
-	{
-		EFFECTMANAGER->play("폭발", _ptMouse.x, _ptMouse.y);
-	}
 
 	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
@@ -118,6 +113,8 @@ void townScene::update()
 	{
 		CAM->videoShooting(_player->getX(), _player->getY());
 	}
+
+	tR.update();
 }
 
 void townScene::render()
