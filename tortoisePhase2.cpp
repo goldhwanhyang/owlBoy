@@ -6,8 +6,6 @@
 
 HRESULT tortoisePhase2::init(float x, float y, int dir)
 {
-	_mapPixel = IMAGEMANAGER->findImage("º¸½º¹æ1ÇÈ¼¿");
-
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = dir;

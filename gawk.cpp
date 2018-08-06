@@ -12,8 +12,6 @@ HRESULT gawk::init(float x, float y, int dir)
 	//=====================================
 	enemy::init(x, y);
 
-	_mapPixel = IMAGEMANAGER->findImage("º¸½º¹æ1ÇÈ¼¿");
-
 	_angle = 0.0f;
 	_speed = 4.0f;
 	_dir = dir;

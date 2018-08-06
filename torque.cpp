@@ -18,8 +18,6 @@ HRESULT torque::init(float x, float y, int dir)
 	
 	enemy::init(x, y);
 
-	_mapPixel = IMAGEMANAGER->findImage("보스방1픽셀");
-
 	_torqueImage[IDLE] = IMAGEMANAGER->findImage("토크_기본");
 	_torqueImage[READY] = IMAGEMANAGER->findImage("토크_레디");
 	_torqueImage[AIMING] = IMAGEMANAGER->findImage("토크_조준");

@@ -6,7 +6,6 @@
 
 HRESULT tortoisePhase1::init(float x, float y)
 {
-	_mapPixel = IMAGEMANAGER->findImage("º¸½º¹æ1ÇÈ¼¿");
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = LEFT;
@@ -150,7 +149,7 @@ void tortoisePhase1::render()
 
 	if (_isDebug)
 	{
-		IMAGEMANAGER->findImage("º¸½º¹æ1ÇÈ¼¿")->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
+		_mapPixel->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	}
 
 	if (_state == READY)

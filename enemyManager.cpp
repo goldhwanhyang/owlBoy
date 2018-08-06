@@ -5,13 +5,14 @@
 HRESULT enemyManager::init()
 {
 	initTortoise();
-
+	
 	_factory = new enemyFactory;
 
 	for (int i = 0; i < 3; ++i)
 	{
 		enemy* _enemy = _factory->createEnemy(GAWK);
 		_enemy->setPlayerLink(_player);
+		_enemy->setMapPixel(_mapPixel);
 		_vEnemy.push_back(_enemy);
 	}
 	_vEnemy[2]->setPostion(1200, 130, 1);
@@ -22,6 +23,7 @@ HRESULT enemyManager::init()
 	{
 		enemy* _enemy = _factory->createEnemy(TORQUE);
 		_enemy->setPlayerLink(_player);
+		_enemy->setMapPixel(_mapPixel);
 		_vEnemy.push_back(_enemy);
 	}
 	_vEnemy[5]->setPostion(800, 940, 0);
@@ -68,6 +70,7 @@ void enemyManager::initTortoise()
 	_shield = new tortoiseShield; //_tortoise->setShieldLink를 써야하므로 이 위치에서 동적할당
 
 	_tortoise->setPlayerLink(_player);
+	_tortoise->setMapPixel(_mapPixel);
 	_tortoise->setShieldLink(_shield);
 	_tortoise->init(1400, 850); //init함수 안에 setLink들이 있으므로 위의 2줄 _tortoise->setLink부터 해야함
 

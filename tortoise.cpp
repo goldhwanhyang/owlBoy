@@ -13,6 +13,7 @@ HRESULT tortoise::init(float x, float y)
 	_phase1 = new tortoisePhase1;
 	_phase1->init(x, y);
 	_phase1->setPlayerLink(_player);
+	_phase1->setMapPixel(_mapPixel);
 	_phase1->setShieldLink(_shield);
 	
 	_phase2 = new tortoisePhase2;
@@ -42,6 +43,7 @@ void tortoise::update()
 				_shield->setIsActive(true);
 				_phase2->init(_phase1->getX(), _phase1->getY(), _phase1->getDir());
 				_phase2->setPlayerLink(_player);
+				_phase2->setMapPixel(_mapPixel);
 				_phase2->setShieldLink(_shield);
 				_currentPhase = _phase2;
 				_currentPhase->setHp(100);
@@ -51,7 +53,6 @@ void tortoise::update()
 			{
 				//TODO : 클리어 - 죽음이펙트 플레이
 				//EFFECTMANAGER->play("거북이_죽음폭발", _phase2->getX(), _phase2->getY());
-				//TODO : 보스가 죽으면 혹시 tortoise를 릴리즈를 해버릴수 있을까?
 				++_deadCount;
 			}
 		}

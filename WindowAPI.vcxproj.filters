@@ -240,7 +240,7 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="torque.h">
-      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -389,7 +389,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="torque.cpp">
-      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

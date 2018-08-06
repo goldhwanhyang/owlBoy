@@ -24,6 +24,7 @@ class enemyManager : public gameNode
 {
 private:
 	player* _player;
+	image* _mapPixel;
 
 	enemyFactory* _factory;
 	vector<enemy*> _vEnemy;
@@ -36,6 +37,7 @@ public:
 
 	void initTortoise();
 	void setPlayer(player *p) { _player = p; }
+	void setMapPixel(image* map) { _mapPixel = map; }
 	vector<enemy*> getVEnemy() { return _vEnemy; }
 	tortoiseShield* getTortoiseShield() { return _shield; }
 
