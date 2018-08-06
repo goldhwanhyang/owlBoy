@@ -38,6 +38,7 @@ public:
 	void playBgm(float volume = 1.0f);
 	//사운드 재생
 	void play(string keyName, float volume = 1.0f);//볼륨은 0.0f ~ 1.0f
+	void setVolume(float volume = 1.0f);//볼륨은 0.0f ~ 1.0f
 	//사운드 정지
 	void stop(string keyName);
 	//사운드 일시정지

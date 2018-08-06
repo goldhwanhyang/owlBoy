@@ -159,7 +159,8 @@ void startScene::updateOption()
 		{
 			_soundVolume = (_ptMouse.x - temp.left) / (float)(temp.right - temp.left);
 			_volume->setGauge(_soundVolume * 100, 100);
-			SOUNDMANAGER->playBgm(_soundVolume);
+			//SOUNDMANAGER->playBgm(_soundVolume);
+			SOUNDMANAGER->setVolume(_soundVolume);
 		}
 
 		if (PtInRect(&_backToMenu->boundingBox(), _ptMouse))
