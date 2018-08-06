@@ -7,7 +7,7 @@ HRESULT loadingScene::init(void)
 	_loading = new loading;
 	_loading->init(); //로딩화면 이미지와 로딩 프로그래스바
 
-	_line = IMAGEMANAGER->addImage("LOADING_BAR", "Texture/Loading/loadingBar_72x800.bmp", 72, 800, true, RGB(255, 0, 255));
+	_line = IMAGEMANAGER->addImage("LOADING_BAR", "Texture/Loading/loadingBar_72x454.bmp", 72, 454, true, RGB(255, 0, 255));
 	_lineBottom = IMAGEMANAGER->addImage("LOADING_BAR_BOTTOM", "Texture/Loading/loadingBarBottom_72x28.bmp", 72, 28, true, RGB(255, 0, 255));
 	_otus = IMAGEMANAGER->addFrameImage("LIFT", "Texture/player/otusLift_1890x460_7x2.bmp", 1890, 460, 7, 2);
 	_otusOver = IMAGEMANAGER->addFrameImage("LIFT2", "Texture/player/otusLiftOver_1890x460_7x2.bmp", 1890, 460, 7, 2);
@@ -40,7 +40,7 @@ void loadingScene::update(void)
 	_loading->update(); //로딩바 업데이트
 
 	//로딩완료후 씬변경
-	if (_loading->loadingDone() && KEYMANAGER->isOnceKeyDown(VK_SPACE)) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
+	if (_loading->loadingDone() && (KEYMANAGER->isOnceKeyDown(VK_SPACE) || KEYMANAGER->isOnceKeyDown(VK_LBUTTON))) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
 	{
 		loadingEffect();
 		SCENEMANAGER->loadScene("startScene"); //게임씬으로 전환
@@ -136,8 +136,9 @@ void loadingScene::loadingImage()
 	_loading->loadImage("MOUSE_RIGHT", "Texture/UI/rightClickUI_54x60.bmp", 54, 60, true, RGB(255, 0, 255));
 	_loading->loadImage("VOLUME_BACK", "Texture/UI/volumeProgressBack_673x81.bmp", 673, 81, true, RGB(255, 0, 255));
 	_loading->loadImage("VOLUME_FRONT", "Texture/UI/volumeProgressFront_641x66.bmp", 641, 66, true, RGB(255, 0, 255));
-	_loading->loadImage("VOLUME_RIGHT", "Texture/UI/volumeProgressFrontRight_19x66.bmp", 19, 66, true, RGB(255, 0, 255));
-	_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_1473x495.bmp", 1473, 495, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_RIGHT", "Texture/UI/volumeProgressFrontRight_19x66.bmp", 19, 50, true, RGB(255, 0, 255));
+	//_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_1473x495.bmp", 1473, 495, true, RGB(255, 0, 255));
+	_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_800x269.bmp", 800, 269, true, RGB(255, 0, 255));
 
 
 	// background
@@ -153,9 +154,9 @@ void loadingScene::loadingImage()
 
 	// background - 시작메뉴
 	_loading->loadImage("START_SCENE_BACKGROUND", "Texture/background/startBackground_50x50.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadImage("START_SCENE_BACKGROUND_CLOUD", "Texture/background/startBackgroundCloud_1335x1162.bmp", 800, 800);
-	_loading->loadFrameImage("START_SCENE_OTUS", "Texture/background/startSceneBack2_2154x791_3x1.bmp", 1500, 551, 3, 1);
-	_loading->loadImage("START_SCENE_STONE", "Texture/background/startSceneBack3_654x648.bmp", 500, 500, true, RGB(255, 0, 255));
+	_loading->loadImage("START_SCENE_BACKGROUND_CLOUD", "Texture/background/startBackgroundCloud_800x800.bmp", 600, 600);
+	_loading->loadFrameImage("START_SCENE_OTUS", "Texture/background/startSceneBack2_1500x551_3x1.bmp", 1500, 551, 3, 1);
+	_loading->loadImage("START_SCENE_STONE", "Texture/background/startSceneBack3_500x500.bmp", 500, 500, true, RGB(255, 0, 255));
 	
 
 
@@ -212,7 +213,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("거북이_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈1_방패줍기", "Texture/Enemies/Boss1/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
 								   
-	_loading->loadFrameImage("거북이_페이즈2_준비", "Texture/Enemies/Boss1/phase2Ready_2496x684_8x2", 2496, 684, 8, 2);
+	_loading->loadFrameImage("거북이_페이즈2_준비", "Texture/Enemies/Boss1/phase2Ready_2496x684_8x2.bmp", 2496, 684, 8, 2);
 	_loading->loadFrameImage("거북이_페이즈2_날기", "Texture/Enemies/Boss1/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
 	_loading->loadFrameImage("거북이_페이즈2_쏘기", "Texture/Enemies/Boss1/phase2Shoot_2352x594_8x2.bmp", 2352, 594, 8, 2);
 	_loading->loadFrameImage("거북이_페이즈2_방패줍기", "Texture/Enemies/Boss1/phase2TakeShield_2448x684_8x2.bmp", 2448, 684, 8, 2);
@@ -248,8 +249,12 @@ void loadingScene::loadingImage()
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)
 void loadingScene::loadingSound()
 {
-	_loading->loadSound("사운드1", "브금.mp3");
-	_loading->loadSound("사운드2", "브금1.mp3");
+	_loading->loadSound("시작", "SOUND/OST/Owlboy_Main_Title.mp3", true, true);
+	_loading->loadSound("던전", "SOUND/OST/OwlTemple.mp3", true, true);
+	_loading->loadSound("상점", "SOUND/OST/shop.mp3", true, true);
+	_loading->loadSound("보스_페이즈1", "SOUND/OST/Turtle_Guardian_Phase_1.mp3", true, true);
+	_loading->loadSound("보스_페이즈2", "SOUND/OST/Turtle_Guardian_Phase_2.mp3", true, true);
+	_loading->loadSound("마을", "SOUND/OST/Vellie.mp3", true, true);
 }
 
 void loadingScene::loadingEffect()

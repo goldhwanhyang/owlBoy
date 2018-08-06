@@ -11,6 +11,7 @@ private:
 	image * _line;
 	image * _lineBottom;
 
+
 	int _count, _index;
 	float _height;
 

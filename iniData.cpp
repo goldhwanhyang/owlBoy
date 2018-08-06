@@ -8,6 +8,10 @@ HRESULT iniData::init()
 
 void iniData::release(void)
 {
+	for (int i = 0; i < _vIniData.size(); ++i)
+	{
+		delete[] _vIniData[i].value;
+	}
 }
 //ini저장할 데이터들을 벡터에 추가 섹션,키,값
 void iniData::addData(const char * section, const char * key, const char * value)
@@ -16,7 +20,16 @@ void iniData::addData(const char * section, const char * key, const char * value
 	tagIniData data;
 	data.section = (char*)section;
 	data.key = (char*)key;
-	data.value = (char*)value;
+	//data.value = (char*)value;
+
+	int len = strlen(value);
+	char * temp = new char[len + 1];
+	for (int i = 0; i < len; ++i)
+	{
+		temp[i] = value[i];
+	}
+	temp[len] = '\0';
+	data.value = temp;
 
 	//벡터에 ini데이터 구조체 담기
 	_vIniData.push_back(data);
