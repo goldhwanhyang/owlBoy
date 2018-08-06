@@ -30,6 +30,7 @@ public:
 	//virtual void used(player* _player) {}
 	virtual void lifted(player* _player);
 	virtual void collide();
+	virtual bool collide(player * _player);
 	virtual void move();
 	virtual void throwed(float speed, float angle);
 

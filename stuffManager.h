@@ -19,6 +19,7 @@ public:
 	void release();
 	void update();
 	void render();
+	liftableActor* collide(player * _player);
 
 	vector<liftableActor *>& getVStuff() { return _vStuff; }
 
@@ -30,7 +31,7 @@ public:
 	
 	void removeFruit(int index);
 
-	stuffManager();
-	~stuffManager();
+	stuffManager() {}
+	~stuffManager() {}
 };
 

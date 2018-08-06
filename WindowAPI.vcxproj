@@ -157,6 +157,7 @@
     <ClInclude Include="ring.h" />
     <ClInclude Include="startScene.h" />
     <ClInclude Include="stone.h" />
+    <ClInclude Include="stuffManager.h" />
     <ClInclude Include="torque.h" />
     <ClInclude Include="tortoise.h" />
     <ClInclude Include="tortoisePhase1.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="ring.cpp" />
     <ClCompile Include="startScene.cpp" />
     <ClCompile Include="stone.cpp" />
+    <ClCompile Include="stuffManager.cpp" />
     <ClCompile Include="torque.cpp" />
     <ClCompile Include="tortoise.cpp" />
     <ClCompile Include="tortoisePhase1.cpp" />

@@ -7,6 +7,8 @@ HRESULT ring::init(float x, float y, int dir)
 	frontRing = IMAGEMANAGER->findImage("FRONT_RING");
 	backRing = IMAGEMANAGER->findImage("BACK_RING");
 
+	_isActive = true;
+
 	_x = x;
 	_y = y;
 	_z = 5;

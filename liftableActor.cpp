@@ -5,6 +5,7 @@
 HRESULT liftableActor::init()
 {
 	_mapPixel = IMAGEMANAGER->findImage("TownPixel");
+	_isActive = true;
 	return S_OK;
 }
 
@@ -112,6 +113,16 @@ void liftableActor::collide()
 		//break;
 	}
 
+}
+
+bool liftableActor::collide(player * _player)
+{
+	RECT temp;
+	if (IntersectRect(&temp, &_player->getHitbox(), &_hitBox))
+	{
+		return true;
+	}
+	return false;
 }
 
 void liftableActor::move()
