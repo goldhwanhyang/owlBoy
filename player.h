@@ -4,8 +4,8 @@
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
 #define PI 3.14
-#define STATE_MAX 8
-enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK };
+#define STATE_MAX 10	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
+enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT, LIFT2 };
 enum WAY { RIGHT , LEFT, UP, DOWN, NONE};	// 왼쪽, 오른쪽 , 위 , 아래 , 아무것도 누르지 않았을 때
 enum FLYING { FLY_L, FLY_R, FLY_U, FLY_D, FLY_N };
 
