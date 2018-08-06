@@ -27,6 +27,11 @@ HRESULT enemyManager::init()
 	_vEnemy[2]->setPostion(1200, 500, 1);
 	_vEnemy[3]->setPostion(900, 500, 0);
 
+	enemy* _torque = new torque;
+	_torque->setPlayerLink(_player);
+	_torque->init(800,800);
+	_vEnemy.push_back(_torque);
+
 	return S_OK;
 }
 

@@ -26,12 +26,11 @@ private:
 		LEFT
 	};
 	//bool _isFall;
+	int _jumpDelay;
 	int _delayCount;
 	RECT _scanRc;
 	float _shakeAngle;
 	int _oldState;
-
-	char _debug[64];
 public:
 	virtual void damaged(actor* e);
 	void stunShake();

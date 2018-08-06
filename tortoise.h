@@ -15,7 +15,6 @@ class tortoise : public enemy
 	bool _isActiveShield;
 
 	int _deadCount;
-	bool _isDead;
 public:
 
 	virtual HRESULT init(float x, float y);
