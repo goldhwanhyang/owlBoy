@@ -51,8 +51,6 @@ private:
 	progressBar* _hpBar;
 
 	vector<bullet> _vBullet;			//ºÒ¸´
-
-	char _debug[64];
 public:
 	virtual void attack();
 	virtual void move();

@@ -188,10 +188,11 @@ void tortoisePhase1::render()
 
 	if (_isDebug)
 	{
+		char debug[64];
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		_stprintf_s(_debug, "angle: %f, hp: %d", _angle, _hp);
-		TextOut(getMemDC(), 100, 100, _debug, strlen(_debug));
-		TextOut(getMemDC(), _x, _y, "X", strlen("X"));
+		_stprintf_s(debug, "angle: %f, hp: %d", _angle, _hp);
+		TextOut(getMemDC(), 100, 100, debug, strlen(debug));
+		//TextOut(getMemDC(), _x, _y, "X", strlen("X"));
 	}
 }
 
@@ -293,8 +294,6 @@ void tortoisePhase1::turn()
 
 void tortoisePhase1::collide()
 {
-	//TODO : 맵과의 픽셀 충돌
-
 	//플레이어랑 보스몸체랑 충돌했을때
 	RECT tempRc;
 	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
@@ -314,10 +313,10 @@ void tortoisePhase1::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(6, temp); //TODO : 진동, 통통 버그
+	_shield->throwed(6, temp);
 
 	//보스몸체 픽셀충돌
-	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
 	int r = GetRValue(color);
 	int g = GetGValue(color);
 	int b = GetBValue(color);
@@ -376,17 +375,24 @@ void tortoisePhase1::takeShield()
 {
 	//실드 주울때 방향에 따라 앵글값 다시지정
 	//가속도 초기화
-	if (_dir == RIGHT)
+	if (_hp <= 0)
 	{
-		_angle = 0;
-		_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
+		_isActive = false;
 	}
-	else if (_dir == LEFT)
+	else
 	{
-		_angle = 180;
-		_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
+		if (_dir == RIGHT)
+		{
+			_angle = 0;
+			_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
+		}
+		else if (_dir == LEFT)
+		{
+			_angle = 180;
+			_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
+		}
+		_state = WALK;
 	}
-	_state = WALK;
 }
 
 void tortoisePhase1::damaged(actor * e)
@@ -444,9 +450,12 @@ void tortoisePhase1::Bmove()
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
-		if (_vBullet[i].collide(_mapPixel))
+		if (_vBullet[i].getIsActive()) // isActive조건검사 없이 충돌검사해서 계속 벽에다 충돌하는 상태가 되있었다.
 		{
-			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+			if (_vBullet[i].collide(_mapPixel))
+			{
+				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+			}
 		}
 	}
 }
@@ -457,7 +466,7 @@ void tortoisePhase1::Bcollide()
 	//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
-		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
@@ -472,7 +481,6 @@ void tortoisePhase1::Brender()
 	{
 		_vBullet[i].render(true);
 	}
-	
 }
 
 bool tortoisePhase1::frameMake(image * bmp, int & count, int & index, int cooltime)

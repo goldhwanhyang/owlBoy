@@ -87,9 +87,25 @@ void soundManager::addSound(string keyName, string soundName, bool bgm, bool loo
 	_mTotalSound.insert(make_pair(keyName, &_sound[_mTotalSound.size()]));
 }
 
+void soundManager::playBgm(string keyName, float volume)
+{
+	if(_currentSound != "" && isPlaySound(_currentSound))
+		stop(_currentSound);
+
+	_currentSound = keyName;
+
+	play(keyName, volume);
+}
+
+void soundManager::playBgm(float volume)
+{
+	playBgm(_currentSound, volume);
+}
+
 void soundManager::play(string keyName, float volume)
 {
 	int count = 0;
+
 	arrSoundIter iter = _mTotalSound.begin();
 	for (iter; iter != _mTotalSound.end(); ++iter, count++)
 	{

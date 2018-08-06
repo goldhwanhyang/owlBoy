@@ -24,6 +24,8 @@ private:
 
 	arrSound _mTotalSound;	//맵에 담아둘 사운드들
 
+	string _currentSound;
+
 public:
 	HRESULT init(void);
 	void release(void);
@@ -32,6 +34,8 @@ public:
 	//사운드 추가(키값, 파일이름, BGM?, 루프시킬꺼냐?)
 	void addSound(string keyName, string soundName, bool bgm = false, bool loop = false);
 
+	void playBgm(string keyName, float volume = 1.0f);
+	void playBgm(float volume = 1.0f);
 	//사운드 재생
 	void play(string keyName, float volume = 1.0f);//볼륨은 0.0f ~ 1.0f
 	//사운드 정지

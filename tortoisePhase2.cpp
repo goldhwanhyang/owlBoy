@@ -27,7 +27,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 	_isAttack = false;
 	_attackCount = 0;
-	_state = FLY;
+	_state = READY;
 
 	_offSpeed = PHASE2_CONST::DEFAULT_OFF_SPEED;
 
@@ -44,11 +44,17 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 
 	_power = 3;
 
+	_gravity = 0;
+
 	return S_OK;
 }
 
 void tortoisePhase2::update()
 {
+	if (_hp <= 0)
+	{
+		_isActive = false;
+	}
 	//TODO : 임시
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
@@ -61,12 +67,24 @@ void tortoisePhase2::update()
 
 	//프레임 돌려줌
 	bool aniDone;
-	if (OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	if (READY != _state || OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
 	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
 
 	switch (_state)
 	{
 	case READY:
+	{
+		if (aniDone)
+		{
+			_state = FLY;
+			_gravity = 0;
+		}
+		else
+		{
+			_y -= 6 - _gravity;
+			_gravity += 0.03;
+		}
+	}
 		break;
 	case FLY:						//날기
 		move();
@@ -212,10 +230,10 @@ void tortoisePhase2::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(6, temp); //TODO : 진동, 통통 버그
+	_shield->throwed(6, temp);
 
 	//보스몸체 픽셀충돌
-	COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
 	int r = GetRValue(color);
 	int g = GetGValue(color);
 	int b = GetBValue(color);
@@ -331,18 +349,15 @@ void tortoisePhase2::Bfire(float angle)
 
 void tortoisePhase2::Bmove()
 {
-	RECT tempRc;
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].update();
-		if (_vBullet[i].collide(_mapPixel))
+		if (_vBullet[i].getIsActive()) // isActive조건검사 없이 충돌검사해서 계속 벽에다 충돌하는 상태가 되있었다.
 		{
-			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
-		}
-		//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
-		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
-		{
-			_player->damaged(&_vBullet[i]);
+			if (_vBullet[i].collide(_mapPixel))
+			{
+				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+			}
 		}
 	}
 }
@@ -353,7 +368,7 @@ void tortoisePhase2::Bcollide()
 	//플레이어 몸체랑 충돌했을때로 조건을 주어야한다.
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
-		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()))
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
@@ -368,7 +383,6 @@ void tortoisePhase2::Brender()
 	{
 		_vBullet[i].render(true);
 	}
-
 }
 
 bool tortoisePhase2::frameMake(image * bmp, int & count, int & index, int cooltime)

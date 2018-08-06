@@ -7,7 +7,6 @@ HRESULT tortoiseShield::init(float x, float y)
 
 	_image = IGM->findImage("거북이_떨어진방패");
 	_isActive = true;
-	_speed = 2.8f;
 	_gravity = 0;
 	_onGround = false;
 	return S_OK;
@@ -29,11 +28,6 @@ void tortoiseShield::update()
 				_index++;
 			}
 		}
-	}
-
-	if (_onGround)
-	{
-		//TODO : 플레이어에게 공격받으면 프레임 다시 돌림
 	}
 
 	if (_isActive)
@@ -66,6 +60,11 @@ void tortoiseShield::release()
 
 void tortoiseShield::damaged(actor * e)
 {
+	if (_onGround)
+	{
+		//TODO : 플레이어에게 공격받으면 프레임 다시 돌림
+		_index = 0;
+	}
 	//떨어진 실드를 때렸을때의 반응
 }
 
@@ -95,7 +94,7 @@ void tortoiseShield::collide()
 		if (!(r == 255 && g == 0 && b == 255))
 		{
 			_y = i + SHIELD_CONST::HITBOX_HEIGHT/2;
-			_speed = 0;
+			_speed = 0; //속도는 방패가 떨어질때 tortoise가 넘겨줌
 			break;
 		}
 	}

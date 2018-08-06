@@ -78,13 +78,13 @@
     <Filter Include="GameFramework2D\이펙트">
       <UniqueIdentifier>{aa84c84e-6e3f-43e4-9923-f67a664100ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework2D\액터\애너미">
+    <Filter Include="GameFramework2D\액터\에너미">
       <UniqueIdentifier>{de2b913d-2638-496f-89d3-b45ef7bf61dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework2D\액터\애너미\거북이보스">
+    <Filter Include="GameFramework2D\액터\에너미\거북이보스">
       <UniqueIdentifier>{0944fced-b1cc-4af0-b5e4-29ef9dcb99d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework2D\액터\애너미\에너미매니저">
+    <Filter Include="GameFramework2D\액터\에너미\에너미매니저">
       <UniqueIdentifier>{6c40d1b2-bb15-4762-8667-1c0c72166a67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -186,10 +186,10 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
-      <Filter>GameFramework2D\액터\애너미</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClInclude>
     <ClInclude Include="gawk.h">
-      <Filter>GameFramework2D\액터\애너미</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClInclude>
     <ClInclude Include="mainGame.h">
       <Filter>MainGame</Filter>
@@ -207,16 +207,16 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="tortoiseShield.h">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClInclude>
     <ClInclude Include="tortoisePhase1.h">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClInclude>
     <ClInclude Include="tortoisePhase2.h">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClInclude>
     <ClInclude Include="tortoise.h">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClInclude>
     <ClInclude Include="geddy.h">
       <Filter>헤더 파일</Filter>
@@ -234,7 +234,10 @@
       <Filter>GameFramework2D\씬</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
-      <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>
+      <Filter>GameFramework2D\액터\에너미\에너미매니저</Filter>
+    </ClInclude>
+    <ClInclude Include="torque.h">
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,10 +335,10 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
-      <Filter>GameFramework2D\액터\애너미</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClCompile>
     <ClCompile Include="gawk.cpp">
-      <Filter>GameFramework2D\액터\애너미</Filter>
+      <Filter>GameFramework2D\액터\에너미</Filter>
     </ClCompile>
     <ClCompile Include="backgroundActor.cpp">
       <Filter>소스 파일</Filter>
@@ -350,16 +353,13 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="tortoiseShield.cpp">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClCompile>
     <ClCompile Include="tortoisePhase1.cpp">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClCompile>
     <ClCompile Include="tortoisePhase2.cpp">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
-    </ClCompile>
-    <ClCompile Include="tortoise.cpp">
-      <Filter>GameFramework2D\액터\애너미\거북이보스</Filter>
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClCompile>
     <ClCompile Include="geddy.cpp">
       <Filter>소스 파일</Filter>
@@ -377,7 +377,13 @@
       <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
     <ClCompile Include="enemyManager.cpp">
-      <Filter>GameFramework2D\액터\애너미\에너미매니저</Filter>
+      <Filter>GameFramework2D\액터\에너미\에너미매니저</Filter>
+    </ClCompile>
+    <ClCompile Include="torque.cpp">
+      <Filter>GameFramework2D\액터\에너미</Filter>
+    </ClCompile>
+    <ClCompile Include="tortoise.cpp">
+      <Filter>GameFramework2D\액터\에너미\거북이보스</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
