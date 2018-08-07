@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "enemyManager.h"
-#include "player.h"
+#include "player.h"	// 전방선언한 player클래스는 여기서 가져다 사용해라. include안해주면 플레이어에있는 멤버를 전혀 사용할 수 없다.
+
 
 HRESULT enemyManager::init()
 {
@@ -11,7 +12,7 @@ HRESULT enemyManager::init()
 	for (int i = 0; i < 4; ++i)
 	{
 		enemy* _enemy = _factory->createEnemy(GAWK);
-		_enemy->setPlayerLink(_player);
+		_enemy->setPlayerLink(_player);	// 플레이어의 정보를 가져감(히트박스나 좌표 등등)
 		_enemy->setMapPixel(_mapPixel);
 		_vEnemy.push_back(_enemy);
 	}

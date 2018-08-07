@@ -5,7 +5,7 @@
 #include "gawk.h"
 #include "torque.h"
 
-class player;
+class player;	// player라는 클래스가 있다는걸 알리기 위해 전방선언을 해주었다.
 
 enum ENEMY_TYPE
 {

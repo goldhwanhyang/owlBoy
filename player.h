@@ -1,6 +1,7 @@
 #pragma once
 #include "actor.h"				// 상속의 부모클래스
-#include "enemyManager.h"		// 상호참조할 클래스
+
+class enemyManager;	// enemyManager라는 클래스가 있다는것을 알리기 위해 전방선언을 해주었다.
 
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
@@ -14,6 +15,13 @@ enum FLYING { FLY_L, FLY_R, FLY_U, FLY_D, FLY_N };
 class player : public actor
 {
 private:
+	enemyManager * _enemyManager;
+	/*
+		포인터 : 틀을 통해서 다른곳에 만들어져 있는 에너미매니져를 사용하겠다. ( 에너미매니져가 setPlayer(_player) 등의 정보를 가져와서 틀에 담는다 )
+		번거롭게 mainGame이나 Scene을 거치지 않고 간단하게 서로 직접 접근 가능하게 해준다.	
+	*/
+
+
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
 	FLYING _FX, _FY;	//
@@ -59,15 +67,23 @@ public:
 	void changeState(int state);
 
 
-
 	void collide();
 	void collideMap();
 	void collideActor();
+
+	// 플레이어가 대미지를 입으면 자기 자신의 피를 깎는다
+	virtual void damaged(actor *e) {}	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
+
+
 	void frameSetting();
 
 
 	void setMap(image *map) { _map = map; }
 	void setMapPixel(image *mapPixel) { _mapPixel = mapPixel; }
+	void setEnemyManager(enemyManager *e) { _enemyManager = e; }	// 틀만 있던 _enemyManager에 다른곳에있는 에너미매니져의정보를 가져기위한 함수.
+
+	// 예시 ) 컵에 물을 따르려면 가만히두면 물이 안따라지니까 손이라는 도구를 사용해서 물을 따른다
+	// 컵 = 틀 , 물 = 알맹이, 손 = set함수
 	player(){}
 	~player(){}
 };

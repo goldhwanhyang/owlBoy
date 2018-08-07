@@ -19,14 +19,16 @@ HRESULT dungeonScene::init()
 
 	_stage = IGM->findImage("던전맵");
 	_stagePixel = IMAGEMANAGER->findImage("던전맵픽셀");
+	_enemyManager = new enemyManager;
 
 	_player->setMap(_stage);
 	_player->setMapPixel(_stagePixel);
 
-	_enemyManager = new enemyManager;
-	_enemyManager->setPlayer(_player);
 	_enemyManager->setMapPixel(_stagePixel);
+	_enemyManager->setPlayer(_player);
 	_enemyManager->init();
+	
+	_player->setEnemyManager(_enemyManager);	// 에너미매니저가 플레이어의 정보를 가져간것처럼 플레이어도 에너미매니져의 정보를 가져간다.
 
 	CAM->init();
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());

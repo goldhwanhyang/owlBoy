@@ -54,10 +54,10 @@ void tortoisePhase2::update()
 		_isActive = false;
 	}
 	//TODO : юс╫ц
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	{
-		damaged(_player);
-	}
+	//if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	//{
+	//	damaged(_player);
+	//}
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();

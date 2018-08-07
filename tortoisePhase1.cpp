@@ -52,10 +52,10 @@ HRESULT tortoisePhase1::init(float x, float y)
 void tortoisePhase1::update()
 {
 	//TODO : юс╫ц
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	{
-		damaged(_player);
-	}
+	//if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	//{
+	//	damaged(_player);
+	//}
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
