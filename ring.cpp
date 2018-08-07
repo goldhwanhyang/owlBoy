@@ -16,6 +16,9 @@ HRESULT ring::init(float x, float y, int dir)
 	_dirY = RND->getInt(300) / 10.0f;
 
 	_hitBox = RectMakeCenter(x, y, 20, 20);
+	_count = 0;
+
+	_alpha = 255;
 
 	return S_OK;
 }
@@ -41,6 +44,28 @@ void ring::update()
 		_dirY -= 2 * PI;
 	}
 	_y += -sin(_dirY) * 0.1;
+
+	if (_curFrameX != 0)
+	{
+		_count = (_count + 1) % 10;
+		if (_count == 0)
+		{
+			_curFrameX++;
+			if (_curFrameX > frontRing->getMaxFrameX())
+			{
+				_curFrameX = frontRing->getMaxFrameX();
+			}
+		}
+		if (_curFrameX == frontRing->getMaxFrameX())
+		{
+			_alpha -= 5;
+			if (_alpha <= 0)
+			{
+				_alpha = 0;
+				_isActive = false;
+			}
+		}
+	}
 }
 
 void ring::render()
@@ -49,12 +74,17 @@ void ring::render()
 }
 void ring::renderFront()
 {
-	frontRing->frameRender(getMemDC(), _x -frontRing->getFrameWidth()/2 - CAM->getX(), _y - frontRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir);
+	if (_curFrameX == 0)
+		frontRing->frameRender(getMemDC(), _x - frontRing->getFrameWidth() / 2 - CAM->getX(), _y - frontRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir);
+	else
+		frontRing->alphaFrameRender(getMemDC(), _x - frontRing->getFrameWidth() / 2 - CAM->getX(), _y - frontRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir, _alpha);
 }
 void ring::renderBack()
 {
-	backRing->frameRender(getMemDC(), _x - backRing->getFrameWidth() / 2 - CAM->getX(), _y - backRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir);
-
+	if (_curFrameX == 0)
+		backRing->frameRender(getMemDC(), _x - backRing->getFrameWidth() / 2 - CAM->getX(), _y - backRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir);
+	else
+		backRing->alphaFrameRender(getMemDC(), _x - frontRing->getFrameWidth() / 2 - CAM->getX(), _y - frontRing->getFrameHeight() / 2 - CAM->getY(), _curFrameX, _dir, _alpha);
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
@@ -73,6 +103,8 @@ bool ring::collide(player * a)
 	RECT temp;
 	if (IntersectRect(&temp, &a->getHitbox(), &_hitBox))
 	{
+		if (_curFrameX == 0)
+			_curFrameX = 1;
 		return true;
 	}
 	return false;
