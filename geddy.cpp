@@ -75,7 +75,12 @@ void geddy::update()
 		_bullet[i].update();
 		if (_bullet[i].collide(_mapPixel))
 		{
-			EFFECTMANAGER->play("ÃÑ¾ËÆø¹ß", _bullet[i].getX(), _bullet[i].getY());
+			float angle = _bullet[i].getEffectAngle() - PI / 2;
+			if (angle < 0)
+			{
+				angle += 2 * PI;
+			}
+			EFFECTMANAGER->play("ÃÑ¾ËÆø¹ß", _bullet[i].getX(), _bullet[i].getY(), angle);
 		}
 	}
 }

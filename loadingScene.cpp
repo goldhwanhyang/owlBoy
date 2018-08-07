@@ -154,7 +154,7 @@ void loadingScene::loadingImage()
 
 	// background - 시작메뉴
 	_loading->loadImage("START_SCENE_BACKGROUND", "Texture/background/startBackground_50x50.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadImage("START_SCENE_BACKGROUND_CLOUD", "Texture/background/startBackgroundCloud_800x800.bmp", 600, 600);
+	_loading->loadImage("START_SCENE_BACKGROUND_CLOUD", "Texture/background/startBackgroundCloud_800x800.bmp", 800, 800);
 	_loading->loadFrameImage("START_SCENE_OTUS", "Texture/background/startSceneBack2_1500x551_3x1.bmp", 1500, 551, 3, 1);
 	_loading->loadImage("START_SCENE_STONE", "Texture/background/startSceneBack3_500x500.bmp", 500, 500, true, RGB(255, 0, 255));
 	
@@ -259,7 +259,7 @@ void loadingScene::loadingSound()
 void loadingScene::loadingEffect()
 {
 	EFFECTMANAGER->addEffect("들기", "친구들기이펙트", 0.5, 5);
-	EFFECTMANAGER->addEffect("총알폭발", "총알폭발이펙트", 0.5, 20);
+	EFFECTMANAGER->addEffect("총알폭발", "총알폭발이펙트", 0.2, 20);
 	EFFECTMANAGER->addEffect("소환", "친구소환이펙트", 0.5, 5);
 	EFFECTMANAGER->addEffect("구르기먼지", "구르기먼지이펙트", 0.5, 10);
 	EFFECTMANAGER->addEffect("구르기왼쪽", "구르기먼지왼쪽이펙트", 0.2, 10);

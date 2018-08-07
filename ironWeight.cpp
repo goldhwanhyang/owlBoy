@@ -76,3 +76,5 @@ void ironWeight::render()
 			_y - _img[_state]->getHeight() / 2 - CAM->getY());
 	}
 }
+
+

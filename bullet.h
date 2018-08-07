@@ -23,6 +23,8 @@ public:
 	float getRange() { return _range; }
 	bool getIsActive() { return _isActive; }
 
+	float getEffectAngle() { return getAnglef(_x, _y, _fireX, _fireY); }
+
 	void setIsActive(bool isActive) { _isActive = isActive; }
 	void setFireCenter(float fireX, float fireY) { _fireX = fireX; _fireY = fireY; _x = fireX; _y = fireY; }
 

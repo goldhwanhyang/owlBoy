@@ -52,7 +52,6 @@ void liftableActor::lifted(player * _player)
 	}
 
 	_state = HANG;
-	_player->setState(FLY);
 	_x = _player->getX();
 	_y = _player->getY() + _maxHeight / 2;
 }
@@ -85,6 +84,10 @@ void liftableActor::collide()
 	{
 		_y = _hitBox.bottom - (_hitBox.bottom - _hitBox.top) / 2;
 		_state = ON_GROUND;
+		if (_weight >= 50)
+		{
+			CAM->setShakeInfo(10, 10);
+		}
 	}
 
 	//¿ÞÂÊ °Ë»ç
