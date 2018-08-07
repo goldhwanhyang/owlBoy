@@ -62,7 +62,6 @@ void tortoiseShield::damaged(actor * e)
 {
 	if (_onGround)
 	{
-		//TODO : 플레이어에게 공격받으면 프레임 다시 돌림
 		_index = 0;
 	}
 	//떨어진 실드를 때렸을때의 반응

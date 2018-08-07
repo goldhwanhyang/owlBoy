@@ -23,6 +23,7 @@ public:
 	virtual void update();
 	virtual void render();
 	virtual void release();
+	virtual void damaged(actor *e);
 
 	virtual void setShieldLink(tortoiseShield* shield) { _shield = shield; }
 

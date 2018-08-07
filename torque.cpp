@@ -35,9 +35,14 @@ HRESULT torque::init(float x, float y, int dir)
 	_maxHp = 3;
 	_hp = 3;
 
+	_speed = 2;
+
 	_readyCount = _aimingCount = _stunCount = _attackCount = 0;
+	_isKnockBack = false;
+	_knockBackDistance = 5;
+
 	bullet blt;
-	blt.init(20, 8, IGM->findImage("보스방1")->getWidth(),"토크_불릿"); //TODO: 사거리 제대로 수정하기
+	blt.init(20, 8, IGM->findImage("던전맵")->getWidth(),"토크_불릿");
 	blt.setPower(3);
 	for (int i = 0; i < 1; i++)
 	{
@@ -49,6 +54,8 @@ HRESULT torque::init(float x, float y, int dir)
 
 void torque::update()
 {
+	if (_hp <= 0) _isActive = false;
+
 	_playerX = _player->getX();
 	_playerY = _player->getY();
 
@@ -99,6 +106,10 @@ void torque::update()
 		}
 		if (aniDone) ++_stunCount;
 		break;
+	}
+	if (_isKnockBack && _state == STUN)
+	{
+		knockBack();
 	}
 
 	Bmove();
@@ -217,8 +228,21 @@ void torque::release()
 void torque::damaged(actor * e)
 {
 	_state = STUN;
-	//TODO : 플레이어데미지만큼
-	//_hp -= e->getPower();
+	_hp -= e->getPower();
+	if(e->getPower() == 0) _isKnockBack = true;
+}
+void torque::knockBack()
+{
+	_knockBackDistance -= 0.1;
+
+	if(_playerX < _x) _x += _knockBackDistance;
+	else _x -= _knockBackDistance;
+
+	if (_knockBackDistance < 0)
+	{
+		_knockBackDistance = 5;
+		_isKnockBack = false;
+	}
 }
 
 void torque::collide()

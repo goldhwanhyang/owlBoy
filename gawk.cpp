@@ -41,11 +41,7 @@ HRESULT gawk::init(float x, float y, int dir)
 
 void gawk::update()
 {
-	//TODO : 임시
-	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
-	{
-		damaged(_player);
-	}
+	if (_hp <= 0) _isActive = false;
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
@@ -151,19 +147,15 @@ void gawk::render()
 void gawk::release()
 {
 }
+
 //논리적 결함 _shakeAngle과 oldState => count로 사용하는 shakeAngle과 지역변수인 oldState를 같이 써서 논리적인 오류가 생겼다.
 //shakeAngle +1마다 oldState가 생성,삭제되어 제대로 값을 저장할 수 없었음
 void gawk::damaged(actor* e)
 {
 	//POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
-	//if (PtInRect(&_hitBox, t)) //TODO : 임시
-	{
-		if(_state != STUN) _oldState = _state;
-		_state = STUN;
-		//TODO : 플레이어데미지만큼
-		//_hp -= e->getPower();// _hp를 매개변수 actor의 getPower만큼 hp를 깎는다.
-	}
-	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
+	if (_state != STUN) _oldState = _state;
+	_state = STUN;
+	_hp -= e->getPower();// _hp를 매개변수 actor의 getPower만큼 hp를 깎는다.
 }
 
 

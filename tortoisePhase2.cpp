@@ -53,11 +53,6 @@ void tortoisePhase2::update()
 	{
 		_isActive = false;
 	}
-	//TODO : 임시
-	//if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	//{
-	//	damaged(_player);
-	//}
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
@@ -228,7 +223,7 @@ void tortoisePhase2::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(6, temp);
+	_shield->throwed(8, temp);
 
 	//보스몸체 픽셀충돌
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
@@ -269,7 +264,7 @@ void tortoisePhase2::moveOff()
 		_dir = LEFT;
 	}
 	//실드의 폭보다 가까워지면 실드를 줍줍
-	if (utl::getDistance(_x, _y, _shield->getX(), _shield->getY()) < _shield->getWidth() && _state == OFF_FLY)
+	if (utl::getDistance(_x, _y, _shield->getX(), _shield->getY()) < _shield->getWidth()/2 && _state == OFF_FLY)
 	{
 		_shield->setIsActive(true);
 		_state = TAKE_SHIELD;
