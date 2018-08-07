@@ -142,6 +142,8 @@ void loadingScene::loadingImage()
 
 
 	// background
+	_loading->loadImage("검정", "Texture/background/black_50x50.bmp", 50, 50);
+	_loading->loadImage("빨강", "Texture/background/red_50x50.bmp", 50, 50);
 	_loading->loadImage("구름1", "Texture/background/cloud_462x174.bmp", 462, 174, true, RGB(255, 0, 255));
 	_loading->loadImage("구름2", "Texture/background/cloud2_789x478.bmp", 789, 478, true, RGB(255, 0, 255));
 	_loading->loadImage("구름3", "Texture/background/cloud3_484x201.bmp", 484, 201, true, RGB(255, 0, 255));
@@ -151,6 +153,17 @@ void loadingScene::loadingImage()
 	_loading->loadImage("구름7", "Texture/background/cloud7_510x255.bmp", 510, 255, true, RGB(255, 0, 255));
 	_loading->loadImage("돌1", "Texture/background/ston1_167x192.bmp", 167, 192, true, RGB(255, 0, 255));
 	_loading->loadImage("돌2", "Texture/background/ston2_189x171.bmp", 189, 171, true, RGB(255, 0, 255));
+	_loading->loadImage("마을_바닥", "Texture/background/townBottom_5000x406.bmp", 5000, 406, true, RGB(255, 0, 255));
+	_loading->loadImage("마을_천장", "Texture/background/dungeonEnter_5000x392.bmp", 5000, 392, true, RGB(255, 0, 255));
+	_loading->loadFrameImage("풀_난", "Texture/background/bush_1360x126_10x1.bmp", 1360, 126, 10, 1);
+	_loading->loadFrameImage("풀_바닥1", "Texture/background/bush1_1881x66_3x1.bmp", 1881, 66, 3, 1);
+	_loading->loadFrameImage("풀_바닥2", "Texture/background/bush2_1431x102_3x1.bmp", 1431, 102, 3, 1);
+	_loading->loadFrameImage("풀_바닥3", "Texture/background/bush3_879x43_3x1.bmp", 879, 43, 3, 1);
+	_loading->loadFrameImage("나무1", "Texture/background/tree1_420x140_3x1.bmp", 420, 140, 3, 1);
+	_loading->loadFrameImage("나무2", "Texture/background/tree2_1200x400_3x1.bmp", 1200, 400, 3, 1);
+	_loading->loadFrameImage("나무3", "Texture/background/tree3_1020x300_3x1.bmp", 1020, 300, 3, 1);
+
+
 
 	// background - 시작메뉴
 	_loading->loadImage("START_SCENE_BACKGROUND", "Texture/background/startBackground_50x50.bmp", WINSIZEX, WINSIZEY);
@@ -160,7 +173,6 @@ void loadingScene::loadingImage()
 	
 
 
-
 	// effect
 	_loading->loadFrameImage("친구들기이펙트", "Texture/Effect/takeFriendsEffect_1260x90_6x1.bmp", 1260, 90, 6, 1);
 	_loading->loadFrameImage("총알폭발이펙트", "Texture/Effect/bulletExplodeEffect_1116x128_9x1.bmp", 1116, 128, 9, 1);
@@ -168,6 +180,8 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("구르기먼지이펙트", "Texture/Effect/rollDustEffect_912x320_8x2.bmp", 912, 320, 8, 2);
 	_loading->loadFrameImage("구르기먼지왼쪽이펙트", "Texture/Effect/rollDustLeftEffect_912x160_8x1.bmp", 912, 160, 8, 1);
 	_loading->loadFrameImage("구르기먼지오른쪽이펙트", "Texture/Effect/rollDustRightEffect_912x160_8x1.bmp", 912, 160, 8, 1);
+	_loading->loadFrameImage("적폭발", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
+	_loading->loadFrameImage("돌폭발", "Texture/Effect/stonExplode_1344x214_8x1.bmp", 1344, 214, 8, 1);
 
 
 	// player
@@ -239,6 +253,13 @@ void loadingScene::loadingImage()
 	_loading->loadImage("TownPixel", "Texture/Maps/Town/townMapPixelCollision_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
 
 
+	// map - store
+	_loading->loadImage("COUNTER", "Texture/Maps/Store/counter_597x192.bmp", 597, 192, true, RGB(255, 0, 255));
+	_loading->loadFrameImage("NPC", "Texture/Maps/Store/npc_1100x180_11x1.bmp", 1100, 180, 11, 1);
+	_loading->loadImage("STORE_MAP", "Texture/Maps/Store/storeMap_1971x1170.bmp", 1971, 1170, true, RGB(255, 0, 255));
+	_loading->loadImage("STORE_MAP_PIXEL", "Texture/Maps/Store/storePixel_1971x1170.bmp", 1971, 1170, true, RGB(255, 0, 255));
+	_loading->loadImage("STORE_BUILDING", "Texture/Maps/Store/storeBuilding_1080x735.bmp", 1080, 735, true, RGB(255, 0, 255));
+
 	// stuff- Ring
 	_loading->loadFrameImage("FRONT_RING", "Texture/Stuff/stonRingFront_700x1440_2x4.bmp", 700, 1440, 2, 4);
 	_loading->loadFrameImage("BACK_RING", "Texture/Stuff/stonRingBack_700x1440_2x4.bmp", 700, 1440, 2, 4);
@@ -264,4 +285,7 @@ void loadingScene::loadingEffect()
 	EFFECTMANAGER->addEffect("구르기먼지", "구르기먼지이펙트", 0.5, 10);
 	EFFECTMANAGER->addEffect("구르기왼쪽", "구르기먼지왼쪽이펙트", 0.2, 10);
 	EFFECTMANAGER->addEffect("구르기오른쪽", "구르기먼지오른쪽이펙트", 0.2, 10);
+	EFFECTMANAGER->addEffect("적폭발", "적폭발", 0.2, 10);
+	EFFECTMANAGER->addEffect("돌폭발", "돌폭발", 0.2, 10);
+
 }
