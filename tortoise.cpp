@@ -9,6 +9,7 @@ HRESULT tortoise::init(float x, float y)
 	IGM->addFrameImage("∞≈∫œ¿Ã_¡◊¿Ω", "Texture/Enemies/Boss1/bossDead_309X504_1x2.bmp", 309, 504, 1, 2);
 	IGM->addFrameImage("∞≈∫œ¿Ã_∫“∏¥∆¯πﬂ¿Ã∆Â∆Æ", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
 	EFFECTMANAGER->addEffect("∞≈∫œ¿Ã_∫“∏¥∆¯πﬂ", "∞≈∫œ¿Ã_∫“∏¥∆¯πﬂ¿Ã∆Â∆Æ", 0.2, 40);
+	IGM->addImage("∞≈∫œ¿Ã_√º∑¬πŸ∏”∏Æ", "Texture/Enemies/Boss1/bossHpBarHead.bmp", 54, 69, true, MAGENTA);
 	//====================
 	_phase1 = new tortoisePhase1;
 	_phase1->init(x, y);
@@ -23,8 +24,9 @@ HRESULT tortoise::init(float x, float y)
 	_isActive = true;
 	_deadCount = 0;
 
+	_hpBarHead = IMAGEMANAGER->findImage("∞≈∫œ¿Ã_√º∑¬πŸ∏”∏Æ");
 	_hpBar = new progressBar;
-	_hpBar->init("Texture/Loading/hpBarFront", "Texture/Loading/hpBarBack", WINSIZEX*0.6, WINSIZEY*0.1, 300, 30);
+	_hpBar->init("Texture/Enemies/Boss1/hpBarFront", "Texture/Enemies/Boss1/hpBarBack", WINSIZEX*0.68, WINSIZEY*0.05, 300, 51);
 	_hpBar->setGauge(_currentPhase->getHp(), _currentPhase->getMaxHp());
 
 	return S_OK;
@@ -74,7 +76,11 @@ void tortoise::render()
 		{
 			_currentPhase->render();
 			//hpBar∑ª¥ı
-			_hpBar->render();
+			if (_player->getX() < 2000)
+			{
+				_hpBarHead->render(getMemDC(), _hpBar->getRect().left - _hpBarHead->getWidth(),_hpBar->getRect().top-7);
+				_hpBar->render();
+			}
 		}
 		else if (_isPhase2) //»∞º∫»≠ false¿Ã∞Ì ∆‰¿Ã¡Ó2¿Ã∏È
 		{

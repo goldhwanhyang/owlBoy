@@ -65,7 +65,7 @@ void tortoisePhase1::update()
 	bool aniDone = false;
 	if (READY == _state)
 	{
-		if(_playerX < 850) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
+		if(_playerX < 900) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
 		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
 	}
 	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
