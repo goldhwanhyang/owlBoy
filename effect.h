@@ -8,6 +8,7 @@ private:
 	animation* _effectAni;	//이펙트 애니메이션
 
 	int _x, _y;				//이펙트 터트릴 위치좌표
+	float _angle;
 	float _effectFPS;		//이펙트 속도
 	bool _isRunning;		//이펙트 재생중이냐?
 
@@ -19,6 +20,8 @@ public:
 
 	//내가 원하는 좌표에 이펙트 시작하기
 	void startEffect(int x, int y);
+	//내가 원하는 좌표에 이펙트 시작하기
+	void startEffect(int x, int y, float angle);
 	//이펙트 멈추기
 	void stopEffect();
 
