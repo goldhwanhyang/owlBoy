@@ -20,6 +20,10 @@ private:
 	image* _mapPixel;
 	image* _map;
 
+	image* friendsFace;
+	image* hpBarBack;
+	image* hpBarFront;
+
 	bool _isLeft;
 	bool _isFly;	// 날고있는 상태인지 아닌지
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수

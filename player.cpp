@@ -11,7 +11,7 @@
 
 HRESULT player::init()
 {
-	//로딩씬에 이미지 들어가있음
+	//플레이어 상태 (로딩씬에 이미지 들어가있음)
 	img[IDLE] = IMAGEMANAGER->findImage("IDLE");
 	img[WALK] = IMAGEMANAGER->findImage("Walk");
 	img[JUMP] = IMAGEMANAGER->findImage("Jump");
@@ -23,6 +23,10 @@ HRESULT player::init()
 	img[LIFT] = IMAGEMANAGER->findImage("LIFT");	// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
 	img[LIFT2] = IMAGEMANAGER->findImage("LIFT2");	//	(물체 앞에서 잡고있는 프레임)
 
+	//플레이어 체력 바
+	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
+	hpBarBack = IMAGEMANAGER->findImage("HP_BACK");
+	hpBarFront = IMAGEMANAGER->findImage("HP_FRONT");
 
 	_isLeft = false;			// true = 왼쪽 , false = 오른쪽
 	_isFly = false;				// 날고있는지 아닌지
@@ -97,6 +101,12 @@ void player::render()
 	}
 	//img[_state]->setFrameY(_dir);
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
+
+	//체력 바
+	hpBarBack->render(getMemDC(), 120, 63);
+	hpBarFront->render(getMemDC(), 120, 66);
+	friendsFace->render(getMemDC(), 50, 50);
+
 	char str[128];
 	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
@@ -110,8 +120,6 @@ void player::groundInputKey()
 		_jumpCount = 1;
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
 	{
-		EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
-
 		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
@@ -121,7 +129,11 @@ void player::groundInputKey()
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL && _state != JUMP)
 	{
+		if (_isLeft)
 		EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
+		else 
+		EFFECTMANAGER->play("구르기오른쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
+
 		changeState(ROLL);
 	}
 	if (KEYMANAGER->isStayKeyDown('A'))	
@@ -213,9 +225,13 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	{
 		_speed = _rollSpeed;		// 스피드는 구르는스피드
 		if (_isLeft)				// 왼쪽일 때
+		{
 			_x -= _speed;			// 왼쪽으로 스피드만큼
+		}
 		else if (!_isLeft)			// 오른쪽으로 스피드만큼
+		{
 			_x += _speed;
+		}
 	}
 	else		// 구르는 상태가 아니라면 스피드는 7이고 구르는속도랑 걷기속도가 누적되지않게 해준다.
 	{
@@ -247,10 +263,6 @@ void player::flyInputKey()
 	{
 		changeState(ATK);
 	}
-	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
-	{
-		changeState(ROLL);
-	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
 	{
 		changeState(LIFT);
@@ -259,12 +271,9 @@ void player::flyInputKey()
 	{
 		// 마우스를 누르고있으면 오터스가 빙글빙글 돌면서 내려옴 이미지없어서 나중에 추가하면 넣기
 	}
-	if (KEYMANAGER->isOnceKeyDown('A'))	// 키를 처음 누르면 앞으로 대쉬
+	if (KEYMANAGER->isStayKeyDown('A'))	// 대쉬 한 후에 느려지고 날라가는거 유지
 	{
 		_isLeft = true;
-	}
-	else if (KEYMANAGER->isStayKeyDown('A'))	// 대쉬 한 후에 느려지고 날라가는거 유지
-	{
 		_FX = FLY_L;
 		if (_state == ATK)
 			changeState(ATK);
@@ -275,12 +284,9 @@ void player::flyInputKey()
 		else
 			changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 	}
-	if (KEYMANAGER->isOnceKeyDown('D'))	// 키를 처음 누르면 앞으로 대쉬
+	if (KEYMANAGER->isStayKeyDown('D'))	// 대쉬 한 후에 날라가는거 유지
 	{
 		_isLeft = false;
-	}
-	else if (KEYMANAGER->isStayKeyDown('D'))	// 대쉬 한 후에 날라가는거 유지
-	{
 		_FX = FLY_R;
 		if (_state == ATK)
 			changeState(ATK);
@@ -316,6 +322,17 @@ void player::flyInputKey()
 			changeState(LIFT);
 		else
 			changeState(FLYDOWN);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL)
+	{
+		changeState(ROLL);
+		if (_FX != FLY_N )
+		{
+			if (_isLeft)
+				EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
+			else
+				EFFECTMANAGER->play("구르기오른쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
+		}
 	}
 }
 
@@ -406,8 +423,6 @@ void player::collide()
 	int g;
 	int b;
 	//위에 검사
-
-	//for (int i = _speed - 10 ; i < _speed + 10; i++)
 	for(int i = _hitBox.top + _speed; i >= _hitBox.top; i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);
@@ -415,7 +430,6 @@ void player::collide()
 		g = GetGValue(color);
 		b = GetBValue(color);
 	
-		//isFly일때 isFlyDown이 아닐 때 충돌 검사
 		if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
 		{
 			_y = i + (OTUS_HEIGTH / 2);
@@ -430,7 +444,7 @@ void player::collide()
 		g = GetGValue(color);
 		b = GetBValue(color);
 
-		if (!_isFly || _state == FLYDOWN)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
+		if (_state == JUMPFALL || _state == FLYDOWN || _state == WALK || _state == ROLL || _state == ATK)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
 		{
 			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
@@ -452,6 +466,7 @@ void player::collide()
 		
 	}	
 	//왼쪽 검사
+	//
 	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), i, _y);	// for문을 돌면서 _x를 i로 검사 
