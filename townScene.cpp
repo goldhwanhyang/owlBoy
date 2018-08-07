@@ -106,7 +106,7 @@ void townScene::update()
 		}
 
 		
-		if (_liftingActor != NULL && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
+		if (_liftingActor == NULL && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
 		{
 			g->lifted(_player);
 			_player->setState(FLY);

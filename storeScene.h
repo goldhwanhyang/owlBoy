@@ -6,7 +6,7 @@ class storeScene :
 	public gameNode
 {
 	player * _player;
-	
+	image *_storeMap, *_storeMapPixel;
 public:
 	virtual HRESULT init();	
 	virtual void release();
