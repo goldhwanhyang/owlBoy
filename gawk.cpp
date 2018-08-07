@@ -155,13 +155,13 @@ void gawk::release()
 //shakeAngle +1마다 oldState가 생성,삭제되어 제대로 값을 저장할 수 없었음
 void gawk::damaged(actor* e)
 {
-	POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
-	if (PtInRect(&_hitBox, t)) //TODO : 임시
+	//POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
+	//if (PtInRect(&_hitBox, t)) //TODO : 임시
 	{
 		if(_state != STUN) _oldState = _state;
 		_state = STUN;
 		//TODO : 플레이어데미지만큼
-		//_hp -= e->getPower();
+		//_hp -= e->getPower();// _hp를 매개변수 actor의 getPower만큼 hp를 깎는다.
 	}
 	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
 }
@@ -298,6 +298,7 @@ void gawk::collide()
 	RECT tempRc;
 	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
 	{
+		//예시 ) gawk가 플레이어에게 대미지를 주면 플레이어는 자기자신의 hp를 깎는다.
 		_player->damaged(this); //this는 자기자신을 가리키는 포인터
 	}
 }

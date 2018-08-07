@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "player.h"
+#include "enemyManager.h"		/*
+									 전방선언한 enemyManager클래스는 여기서 가져다 사용해라. include안해주면 enemyMagager에 있는 멤버를 전혀 사용할 수 없다.
+									 상호참조할 클래스
+								*/
 
 /*
 	코딩할 때 실행 순서 잘 보기
@@ -32,6 +36,7 @@ HRESULT player::init()
 	_isFly = false;				// 날고있는지 아닌지
 	_x = 440.f;					// 플레이어 x좌표
 	_y = 810.f;					// 플레이어 y좌표
+	_power = 0;					// 오터스의 파워 초기화
 	_speed = 7.0f;				// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )
 	_jumpSpeed = 15.f;			// 플레이어 점프 속도
 	_jumpCount = 0;
@@ -50,6 +55,8 @@ HRESULT player::init()
 	_beforeState = _state;
 	_oldX = 0;
 	_oldY = 0;					// 이전 위치
+
+	_enemyManager = NULL;		// townScene에 들어갔을 땐 0으로 만들어준다. 초기화해준다. (안해주면 쓰레기값을 가져와서 터짐)
 
 	return S_OK;
 }
@@ -90,8 +97,7 @@ void player::update()
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
 	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
 	//_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
-	//충돌처리함수 ( 맵 , 몬스터랑 플레이어 )
-	this->collideMap();
+	this->collide();
 	//아울보이 프레임 돌리기
 	this->frameSetting();
 }
@@ -430,6 +436,9 @@ void player::changeState(int state)
 //충돌함수
 void player::collide()
 {
+	//충돌처리함수 ( 맵 , 몬스터랑 플레이어 )
+	this->collideMap();
+	this->collideActor();
 }
 
 void player::collideMap()
@@ -523,9 +532,27 @@ void player::collideMap()
 	}
 }
 
+// 플레이어와 몬스터의 충돌 처리
 void player::collideActor()
 {
-
+	//플레이어가 몬스터에게 대미지를 줄것
+	//_enemyManager->getVEnemy()[0]->getHitbox(); // 에너미매니져에 있는 0번 에너미의 히트박스 , 또는 에너미의 여러가지 정보를 불러올 수 있다.
+	//1. 에너미매니져가 에너미를 못가져온다.
+	//2. 계속 죽을때까지 가져와서 터진다.
+	if (_enemyManager != NULL)
+	{
+		for (int i = 0; i < _enemyManager->getVEnemy().size(); i++)
+		{
+			RECT temp;
+			if (IntersectRect(&temp, &_spinHitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))	// 플레이어의 공격 렉트와 에너미의 히트박스를 검사한다.
+			{
+				if (_state == ATK)
+				{
+					_enemyManager->getVEnemy()[i]->damaged(this);	// 에너미매니져야 i번째의 에너미에게 플레이어의 정보를 넘겨줘라.
+				}
+			}
+		}
+	}
 }
 
 //이미지프레임셋팅
