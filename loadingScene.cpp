@@ -225,8 +225,8 @@ void loadingScene::loadingImage()
 	// liftableActor
 	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
 	_loading->loadImage("무게추공중", "Texture/Stuff/weightOnAir_140x170.bmp", 140, 170, true, RGB(255, 0, 255));
-	_loading->loadImage("과일1", "Texture/Stuff/fruit_60x95.bmp", 60, 95);
-	_loading->loadImage("과일2", "Texture/Stuff/fruit2_70x110.bmp", 70, 110);
+	_loading->loadImage("과일1", "Texture/Stuff/fruit_60x95.bmp", 60, 95, true, RGB(255, 0, 255));
+	_loading->loadImage("과일2", "Texture/Stuff/fruit2_70x110.bmp", 70, 110, true, RGB(255, 0, 255));
 	_loading->loadImage("버튼", "Texture/Stuff/button_114x44.bmp", 114, 44);
 	_loading->loadImage("버튼받침", "Texture/Stuff/buttonBottom_145x30.bmp", 145, 30);
 

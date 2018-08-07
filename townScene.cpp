@@ -61,14 +61,16 @@ HRESULT townScene::init()
 
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
-
-
-	_stuffManager->addStuff(0, _player->getX(), _player->getY());
 	
 	for (int i = 0; i < 20; ++i)
 	{
 		_stuffManager->addStuff(0, RND->getFromIntTo(200, _TownMap->getWidth() - 200),
 									RND->getFromIntTo(200,_TownMap->getHeight() - 200));
+	}
+	for (int i = 0; i < 20; ++i)
+	{
+		_stuffManager->addFruit(0, RND->getFromIntTo(200, _TownMap->getWidth() - 200),
+			RND->getFromIntTo(200, _TownMap->getHeight() - 200));
 	}
 
 	_liftingActor = nullptr;
@@ -96,20 +98,15 @@ void townScene::update()
 	{
 		RECT temp1;
 
-
-		int i;
-		for (i = 0; i < 20; ++i)
+		_liftingActor = _stuffManager->collide(_player);
+		if (_liftingActor != NULL)
 		{
-			_liftingActor = _stuffManager->collide(_player);
-			if (_liftingActor != NULL)
-			{
-				_player->changeState(FLY);
-				_liftingActor->lifted(_player);
-				break;
-			}
+			_player->changeState(FLY);
+			_liftingActor->lifted(_player);
 		}
+
 		
-		if (i == 20 && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
+		if (_liftingActor != NULL && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
 		{
 			g->lifted(_player);
 			_player->setState(FLY);
@@ -158,6 +155,7 @@ void townScene::update()
 	for (int i = 0; i < 20; ++i)
 	{
 		_vRing[i]->update();
+		_vRing[i]->collide(_player);
 	}
 }
 
