@@ -15,6 +15,7 @@ public:
 
 	void setPostion(float x, float y, int dir = 1) { _x = x; _y = y; _dir = dir; }
 	void setPlayerLink(player* player) { _player = player; }
+	void setMapPixel(image* map) { _mapPixel = map; }
 	
 	enemy() {}
 	~enemy() {}

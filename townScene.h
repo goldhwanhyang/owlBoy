@@ -7,6 +7,7 @@
 #include "stone.h"
 #include "geddy.h"
 #include "ring.h"
+#include "stuffManager.h"
 
 class townScene : public gameNode
 {
@@ -18,11 +19,14 @@ private:
 	player* _player;
 	RECT portal;
 
-	ironWeight temp;
+	liftableActor * _liftingActor;
+
 	geddy * g;
-	ring tR;
 
 	int tempCount = 0;
+
+	stuffManager * _stuffManager;
+	vector<ring *> _vRing;
 
 public:
 

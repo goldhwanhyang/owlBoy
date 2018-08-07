@@ -10,7 +10,7 @@ class ring :
 	image * backRing;
 
 	float _dirY;
-
+	int _alpha;
 
 public:
 	void damaged(player *e);	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)

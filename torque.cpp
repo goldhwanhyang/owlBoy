@@ -4,6 +4,7 @@
 
 HRESULT torque::init(float x, float y, int dir)
 {
+	//TODO : 레디,조준 상태에서 불릿 띄워두기
 	//CHECK 추가 이미지
 	IGM->addFrameImage("토크_기본", "Texture/Enemies/Torque/idle_882x258_6x2.bmp", 882, 258, 6, 2);
 	IGM->addFrameImage("토크_레디", "Texture/Enemies/Torque/ready_165x258_1x2.bmp", 165, 258, 1, 2);
@@ -11,12 +12,11 @@ HRESULT torque::init(float x, float y, int dir)
 	IGM->addFrameImage("토크_조준", "Texture/Enemies/Torque/aiming_390x282_2x2.bmp", 390, 282, 2, 2);
 	IGM->addFrameImage("토크_조준손", "Texture/Enemies/Torque/aimingOver_390x282_2x2.bmp", 390, 282, 2, 2);
 	IGM->addFrameImage("토크_쏘기", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
-	IGM->addFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2); //작다
-	//TODO : 불릿이미지(돌덩이) 넣어야함
+	IGM->addFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
+
+	IGM->addFrameImage("토크_불릿", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);
 	
 	enemy::init(x, y);
-
-	_mapPixel = IMAGEMANAGER->findImage("보스방1픽셀");
 
 	_torqueImage[IDLE] = IMAGEMANAGER->findImage("토크_기본");
 	_torqueImage[READY] = IMAGEMANAGER->findImage("토크_레디");
@@ -35,9 +35,9 @@ HRESULT torque::init(float x, float y, int dir)
 	_maxHp = 3;
 	_hp = 3;
 
-	_aimingCount = _stunCount = _attackCount = 0;
+	_readyCount = _aimingCount = _stunCount = _attackCount = 0;
 	bullet blt;
-	blt.init(20, 8, IGM->findImage("보스방1")->getWidth()); //TODO: 사거리 제대로 수정하기, 불릿이미지넣기
+	blt.init(20, 8, IGM->findImage("보스방1")->getWidth(),"토크_불릿"); //TODO: 사거리 제대로 수정하기
 	blt.setPower(3);
 	for (int i = 0; i < 1; i++)
 	{
@@ -65,7 +65,12 @@ void torque::update()
 		turn();
 		break;
 	case READY:
-		readyStone();
+		if (_readyCount >= 2)
+		{
+			_state = AIMING;
+			_readyCount = 0;
+		}
+		if (aniDone) ++_readyCount;
 		turn();
 		break;
 	case AIMING:
@@ -161,6 +166,38 @@ void torque::render()
 
 	_torqueImage[_state]->frameRender(getMemDC(), tempX- CAM->getX(), tempY - CAM->getY(), _index, _dir);
 
+	if (_state == READY)
+	{
+		switch (_dir)
+		{
+		case RIGHT:
+			IMAGEMANAGER->findImage("토크_불릿")->frameRender(getMemDC(), tempX+25 - CAM->getX(), tempY+33 - CAM->getY(), 0, _dir);
+			//돌덩이 렌더
+			break;
+		case LEFT:
+			IMAGEMANAGER->findImage("토크_불릿")->frameRender(getMemDC(), tempX+70 - CAM->getX(), tempY+33 - CAM->getY(), 0, _dir);
+			//돌덩이 렌더
+			break;
+		}
+		_torqueHand[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
+	}
+
+	if (_state == AIMING)
+	{
+		switch (_dir)
+		{
+		case RIGHT:
+			IMAGEMANAGER->findImage("토크_불릿")->frameRender(getMemDC(), tempX+10 - CAM->getX(), tempY+30 - CAM->getY(), 0, _dir);
+			//돌덩이 렌더
+			break;
+		case LEFT:
+			IMAGEMANAGER->findImage("토크_불릿")->frameRender(getMemDC(), tempX+110 - CAM->getX(), tempY+30 - CAM->getY(), 0, _dir);
+			//돌덩이 렌더
+			break;
+		}
+		_torqueHand[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
+	}
+
 	if (_isDebug)
 	{
 		char debug[128];
@@ -212,13 +249,6 @@ void torque::turn()
 	{
 		_dir = RIGHT;
 	}
-}
-
-void torque::readyStone()
-{
-	//TODO : z오더로 돌(불릿)을 그려주고 그 위에 레디손을 그린다.
-	//그뒤에 조준
-	_state = AIMING;
 }
 
 void torque::Bfire(float angle)

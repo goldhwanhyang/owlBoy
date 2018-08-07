@@ -24,30 +24,59 @@ HRESULT townScene::init()
 	//SOUNDMANAGER->play("사운드1");
 	portal = RectMakeCenter(4000, 7500, 100, 100);
 
-	temp.init();
-	tR.init(_player->getX() + 500, _player->getY() - 300, 1);
-	temp.setX(_player->getX());
-	temp.setY(_player->getY());
+	
 
-	cloud *temp;
+	cloud *temp_cloud;
 	for (int i = 0; i < 100; ++i)
 	{
-		temp = new cloud;
-		temp->init();
-		RENDERMANAGER->addBackground(temp->getZ(), temp);
+		temp_cloud = new cloud;
+		temp_cloud->init();
+		RENDERMANAGER->addBackground(temp_cloud->getZ(), temp_cloud);
 	}
-	stone *temp1;
+	stone *temp_stone;
 	for (int i = 0; i < 20; ++i)
 	{
-		temp1 = new stone;
-		temp1->init();
-		RENDERMANAGER->addBackground(temp1->getZ(), temp1);
+		temp_stone = new stone;
+		temp_stone->init();
+		RENDERMANAGER->addBackground(temp_stone->getZ(), temp_stone);
 	}
 	
 	SOUNDMANAGER->playBgm("마을",_soundVolume);
 
 	g = new geddy;
 	g->init();
+
+/*
+	tR.init(_player->getX() + 500, _player->getY() - 300, 1);
+	*/
+
+	ring *temp_ring;
+	for (int i = 0; i < 20; ++i)
+	{
+		temp_ring = new ring;
+		temp_ring->init(RND->getFromIntTo(200, _TownMap->getWidth() - 200),
+						RND->getFromIntTo(200, _TownMap->getHeight() - 200),
+						RND->getInt(4));
+		_vRing.push_back(temp_ring);
+	}
+
+
+	_stuffManager = new stuffManager;
+	_stuffManager->init();
+	
+	for (int i = 0; i < 20; ++i)
+	{
+		_stuffManager->addStuff(0, RND->getFromIntTo(200, _TownMap->getWidth() - 200),
+									RND->getFromIntTo(200,_TownMap->getHeight() - 200));
+	}
+	for (int i = 0; i < 20; ++i)
+	{
+		_stuffManager->addFruit(0, RND->getFromIntTo(200, _TownMap->getWidth() - 200),
+			RND->getFromIntTo(200, _TownMap->getHeight() - 200));
+	}
+
+	_liftingActor = nullptr;
+
 	return S_OK;
 }
 
@@ -55,37 +84,46 @@ void townScene::release()
 {
 	RENDERMANAGER->clearBackground();
 
+	_stuffManager->release();
+	SAFE_DELETE(_stuffManager);
+
 	SAFE_DELETE(g);
 }
 
 void townScene::update()
 {
+	_stuffManager->update();
+
 	_player->update();
 
 	if (KEYMANAGER->isStayKeyDown('1'))
 	{
 		RECT temp1;
-		if (IntersectRect(&temp1, &temp.getHitbox(), &_player->getHitbox()))
+
+		_liftingActor = _stuffManager->collide(_player);
+		if (_liftingActor != NULL)
 		{
-			temp.lifted(_player);
-			_player->setState(FLY);
+			_player->changeState(FLY);
+			_liftingActor->lifted(_player);
 		}
-		else if (IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
+
+		
+		if (_liftingActor != NULL && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
 		{
 			g->lifted(_player);
 			_player->setState(FLY);
 		}
 	}
-	if (temp.getState() == HANG)
-		temp.lifted(_player);
+	if (_liftingActor != nullptr && _liftingActor->getState() == HANG)
+		_liftingActor->lifted(_player);
 	else if(g->getState() == HANG)
 		g->lifted(_player);
 
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
-		if (temp.getState() == HANG)
+		if (_liftingActor != nullptr && _liftingActor->getState() == HANG)
 		{
-			temp.throwed(10, getAngle(temp.getX() - CAM->getX(), temp.getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
+			_liftingActor->throwed(10, getAngle(_liftingActor->getX() - CAM->getX(), _liftingActor->getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
 		}
 		else if (g->getState() == HANG)
 		{
@@ -108,7 +146,7 @@ void townScene::update()
 	}
 
 
-	this->temp.update();
+
 	g->update();
 
 	if (g->getState() != 1)
@@ -116,7 +154,11 @@ void townScene::update()
 		CAM->videoShooting(_player->getX(), _player->getY());
 	}
 
-	tR.update();
+	for (int i = 0; i < 20; ++i)
+	{
+		_vRing[i]->update();
+		_vRing[i]->collide(_player);
+	}
 }
 
 void townScene::render()
@@ -131,11 +173,17 @@ void townScene::render()
 		_TownMapPixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 		Rectangle(getMemDC(), portal.left - CAM->getX(), portal.top - CAM->getY(), portal.right - CAM->getX(), portal.bottom - CAM->getY());
 	}
-	RENDERMANAGER->addRender(temp.getZ(), &temp);
 	RENDERMANAGER->addRender(g->getZ(), g);
 	RENDERMANAGER->addRender(_player->getZ(), _player);
+	_stuffManager->render();
 
-	tR.renderBack();
+	for (int i = 0; i < 20; ++i)
+	{
+		_vRing[i]->renderBack();
+	}
 	RENDERMANAGER->render(getMemDC());
-	tR.renderFront();
+	for (int i = 0; i < 20; ++i)
+	{
+		_vRing[i]->renderFront();
+	}
 }

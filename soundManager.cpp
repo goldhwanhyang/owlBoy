@@ -120,6 +120,24 @@ void soundManager::play(string keyName, float volume)
 	}
 }
 
+void soundManager::setVolume(float volume)
+{
+	int count = 0;
+
+	arrSoundIter iter = _mTotalSound.begin();
+	for (iter; iter != _mTotalSound.end(); ++iter, count++)
+	{
+		if (_currentSound == iter->first)
+		{
+			//사운드 플레이
+			//_system->playSound(FMOD_CHANNEL_FREE, *iter->second, false, &_channel[count]);
+
+			//볼륨세팅
+			_channel[count]->setVolume(volume);
+		}
+	}
+}
+
 void soundManager::stop(string keyName)
 {
 	int count = 0;

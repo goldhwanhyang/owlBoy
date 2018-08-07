@@ -12,8 +12,6 @@ HRESULT gawk::init(float x, float y, int dir)
 	//=====================================
 	enemy::init(x, y);
 
-	_mapPixel = IMAGEMANAGER->findImage("보스방1픽셀");
-
 	_angle = 0.0f;
 	_speed = 4.0f;
 	_dir = dir;
@@ -25,7 +23,7 @@ HRESULT gawk::init(float x, float y, int dir)
 	_gawkImage[FALL] = _gawkImage[FLY];
 
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
-	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 10);
+	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 2, GAWK_CONST::HITBOX_HEIGHT * 14);
 
 	_state = IDLE;
 	_count = _index = 0;
@@ -53,7 +51,7 @@ void gawk::update()
 	_playerY = _player->getY();
 
 	_hitBox = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH, GAWK_CONST::HITBOX_HEIGHT);
-	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 3, GAWK_CONST::HITBOX_HEIGHT * 10);
+	_scanRc = RectMakeCenter(_x, _y, GAWK_CONST::HITBOX_WIDTH * 3, GAWK_CONST::HITBOX_HEIGHT * 14);
 	//collide가 move뒤에 있어야 제대로 작동했다.
 	
 	bool aniDone;

@@ -28,6 +28,7 @@ class torque : public enemy
 	};
 	RECT _scanRc;
 
+	int _readyCount;			//준비 딜레이
 	int _aimingCount;			//조준 딜레이
 	int _stunCount;				//스턴 딜레이
 	int _attackCount;			//공격 딜레이
@@ -40,8 +41,6 @@ public:
 
 	void search();
 	void turn();
-
-	void readyStone();
 
 	virtual void Bfire(float angle);
 	virtual void Bmove();

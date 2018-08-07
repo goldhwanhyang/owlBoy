@@ -45,6 +45,26 @@ void stuffManager::render()
 	}
 }
 
+liftableActor* stuffManager::collide(player * _player)
+{
+	for (int i = 0; i < _vStuff.size(); ++i)
+	{
+		if (_vStuff[i]->collide(_player))
+		{
+			return _vStuff[i];
+		}
+	}
+	for (int i = 0; i < _vFruit.size(); ++i)
+	{
+		if (_vFruit[i]->collide(_player))
+		{
+			return _vFruit[i];
+		}
+	}
+	return nullptr;
+}
+
+
 void stuffManager::addFruit(int type, float x, float y)
 {
 	liftableActor * temp;
@@ -52,6 +72,8 @@ void stuffManager::addFruit(int type, float x, float y)
 	temp->init();
 	temp->setX(x);
 	temp->setY(y);
+
+	_vFruit.push_back(temp);
 }
 
 void stuffManager::addStuff(int type, float x, float y)
@@ -61,17 +83,11 @@ void stuffManager::addStuff(int type, float x, float y)
 	temp->init();
 	temp->setX(x);
 	temp->setY(y);
+
+	_vStuff.push_back(temp);
 }
 
 void stuffManager::removeFruit(int index)
 {
-}
 
-stuffManager::stuffManager()
-{
-}
-
-
-stuffManager::~stuffManager()
-{
 }
