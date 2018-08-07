@@ -16,6 +16,7 @@ class tortoise : public enemy
 
 	int _deadCount;
 
+	image* _hpBarHead;
 	progressBar* _hpBar;
 public:
 	virtual HRESULT init(float x, float y);
