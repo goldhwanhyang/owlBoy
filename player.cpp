@@ -40,12 +40,15 @@ HRESULT player::init()
 	_angle = PI / 2;			// 플레이어 각도
 	_gravity = 0;				// 플레이어 중력
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH); 
+	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+
 	_count = _index = 0;		// 프레임이미지 돌리기 위한 초기화
 
 	_state = IDLE;				// 기본 상태 = 가만히있는 상태 (플레이어상태)
 	_axisX = _axisY = NONE;		// 키가 안눌린 상태 (키 상태)
 	_FX = _FY = FLY_N;			// 날고있을 때 키 상태 초기화 NONE
 	_beforeState = _state;
+	_oldX = 0;
 	_oldY = 0;					// 이전 위치
 
 	return S_OK;
@@ -57,7 +60,6 @@ void player::release()
 
 
 }
-
 
 void player::update()
 {
@@ -86,9 +88,10 @@ void player::update()
 	// 아래 상하좌우 검사하기전에 히트박스를 먼저 갱신 해주고 검사를한다.
 	// 오투스의 렉트 
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
-
-	//충돌처리함수
-	this->collide();
+	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+	//_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+	//충돌처리함수 ( 맵 , 몬스터랑 플레이어 )
+	this->collideMap();
 	//아울보이 프레임 돌리기
 	this->frameSetting();
 }
@@ -99,6 +102,10 @@ void player::render()
 	{
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
+	if (_state == ATK)	// 렉트가 공격할때만 나타나게
+	{
+		Rectangle(getMemDC(), _spinHitBox.left - CAM->getX(), _spinHitBox.top - CAM->getY(), _spinHitBox.right - CAM->getX(), _spinHitBox.bottom - CAM->getY());
+	}
 	//img[_state]->setFrameY(_dir);
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 
@@ -108,7 +115,7 @@ void player::render()
 	friendsFace->render(getMemDC(), 50, 50);
 
 	char str[128];
-	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
+	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  이전위치 : %d 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_oldX, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,9 +125,10 @@ void player::groundInputKey()
 	_axisX = NONE;										// 키 입력이 없으면 _axisX 는 NONE이 된다.
 	if (_state == JUMPFALL)								// 떨어지고 있을 때 W를 누르면 바로 날고있는 상태가 될 수 있게 _jumpCount를 1로 해주고
 		_jumpCount = 1;
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK )
 	{
 		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
+		_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
 	{
@@ -188,6 +196,9 @@ void player::groundInputKey()
 // 복습 할 부분
 void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값을 따라서 움직여주기
 {
+	//위아래가 동시에 충돌했을때  , _oldX = _x 이전위치x에 현재위치 X를 대입하고 
+	// 위나 아래가 
+	_oldX = _x;
 	_oldY = _y;									// 이전 위치(_oldY)에 현재위치(_y)를 저장한다.
 	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL && _state != LIFT && _state != LIFT2)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
 		_state = IDLE;
@@ -387,6 +398,7 @@ float player::flyAngle(FLYING FX, FLYING FY)
 
 void player::flyMove()
 {
+	_oldX = _x;
 	if (_state == ROLL)							// 구르기 상태일 때는 flySpeed가 rollSpeed가 되고
 	{
 		_flySpeed = _rollSpeed;
@@ -418,70 +430,83 @@ void player::changeState(int state)
 //충돌함수
 void player::collide()
 {
+}
+
+void player::collideMap()
+{
+	bool upCollision = false;	// 위아래가 충돌했는데 x가 안으로 들어가서 버그나지않게 이전위치로 이동시켜준다
 	COLORREF color;
 	int r;
 	int g;
 	int b;
 	//위에 검사
-	for(int i = _hitBox.top + _speed; i >= _hitBox.top; i--)
+	for (int i = _hitBox.top + _speed; i >= _hitBox.top; i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);
 		r = GetRValue(color);
 		g = GetGValue(color);
 		b = GetBValue(color);
-	
+
 		if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
 		{
+			if (!_isFly)
+				_x = _oldX;
 			_y = i + (OTUS_HEIGTH / 2);
+			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+			upCollision = true;
 			break;
 		}
-	}	
+	}
 	//아래 검사
-	for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom ; i++)
+	for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);	// for문을 돌면서 _y를 i로 검사
 		r = GetRValue(color);
 		g = GetGValue(color);
 		b = GetBValue(color);
 
-		if (_state == JUMPFALL || _state == FLYDOWN || _state == WALK || _state == ROLL || _state == ATK)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
+		if (_state == JUMPFALL || _state == FLYDOWN || _state == WALK || _state == ROLL || _state == ATK || _state == IDLE)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
 		{
 			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
+
 				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
+				_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+
 				_gravity = 0.f;				// 중력을 0으로 바꿔주고		
 				_axisY = NONE;	// 계속 점프하는것을 방지
 				_FY = FLY_N;	//
 				_jumpCount = 0;	// 땅에 있으니까 점프카운트 0으로 바꿔준다.
 				_isFly = false;	// 날지 않는 상태라는걸 바꿔주기
-				if(_state != ROLL)
+				if (_state != ROLL)
 					_speed = 7;
-				if (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT )	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
+				if (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT)	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
 				{
 					_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
 				}
 				break;
 			}
 		}
-		
-	}	
+		else if (_state == FLY && upCollision && !(r == 255 && g == 0 && b == 255)) _x = _oldX;
+
+	}
 	//왼쪽 검사
-	//
 	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), i, _y);	// for문을 돌면서 _x를 i로 검사 
 		r = GetRValue(color);
 		g = GetGValue(color);
 		b = GetBValue(color);
-	
+
 		if ((r == 0 && g == 0 && b == 0)) // 검은색이면 검사, 검은색만 검사
 		{
 			_x = i + (OTUS_WIDTH / 2);
+			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+
 			break;
 		}
 	}
 	//오른쪽 검사
-	//for (int i = _hitBox.right; i < _hitBox.right + 1; i++)
 	for (int i = _hitBox.right - _speed; i <= _hitBox.right; i++)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), i, _y);
@@ -491,9 +516,16 @@ void player::collide()
 		if ((r == 0 && g == 0 && b == 0))	// 마젠타가 아니면 검사 마젠타를 무시
 		{
 			_x = i - (OTUS_WIDTH / 2);
+			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+
 			break;
 		}
 	}
+}
+
+void player::collideActor()
+{
+
 }
 
 //이미지프레임셋팅

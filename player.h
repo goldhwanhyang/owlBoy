@@ -1,5 +1,6 @@
 #pragma once
-#include "actor.h"
+#include "actor.h"				// 상속의 부모클래스
+#include "enemyManager.h"		// 상호참조할 클래스
 
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
@@ -24,6 +25,8 @@ private:
 	image* hpBarBack;
 	image* hpBarFront;
 
+	RECT _spinHitBox;
+	bool _isCol;
 	bool _isLeft;
 	bool _isFly;	// 날고있는 상태인지 아닌지
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수
@@ -33,7 +36,9 @@ private:
 	float _flySpeed;	// 날고있을 때 속도
 	float _rollSpeed;	// 구르기 속도
 
-	int _oldY;	// 이전 위치
+
+	int _oldX;	// 이전 x위치
+	int _oldY;	// 이전 y위치
 public:
 	HRESULT init();
 	void release();
@@ -56,6 +61,8 @@ public:
 
 
 	void collide();
+	void collideMap();
+	void collideActor();
 	void frameSetting();
 
 
