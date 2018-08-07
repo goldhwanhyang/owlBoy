@@ -48,8 +48,6 @@ private:
 	float _offSpeed;					//방패없을때 보스의 속도
 	bool _isActiveShield;
 
-	progressBar* _hpBar;
-
 	vector<bullet> _vBullet;			//불릿
 public:
 	virtual void attack();

@@ -36,16 +36,13 @@ HRESULT tortoisePhase1::init(float x, float y)
 	bullet blt;
 	blt.init(10, 5, IGM->findImage("∫∏Ω∫πÊ1")->getWidth(), "∞≈∫œ¿Ã_∫“∏¥");
 	blt.setPower(3);
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
 	}
 
 	_maxHp = 100;
 	_hp = 100;
-	_hpBar = new progressBar;
-	_hpBar->init("Texture/Loading/hpBarFront", "Texture/Loading/hpBarBack",WINSIZEX*0.6, WINSIZEY*0.1, 300, 30);
-	_hpBar->setGauge(_hp, _maxHp);
 
 	_power = 3;
 
@@ -137,9 +134,6 @@ void tortoisePhase1::update()
 	//∫“∏¥π´∫Í
 	Bmove();
 	Bcollide();
-	//hpπŸ æ˜µ•¿Ã∆Æ
-	_hpBar->update();
-	_hpBar->setGauge(_hp, _maxHp);
 }
 
 void tortoisePhase1::render()
@@ -182,9 +176,6 @@ void tortoisePhase1::render()
 	//∫“∏¥∑ª¥ı
 	Brender();
 
-	//hpBar∑ª¥ı
-	_hpBar->render();
-
 	if (_isDebug)
 	{
 		char debug[64];
@@ -197,8 +188,6 @@ void tortoisePhase1::render()
 
 void tortoisePhase1::release()
 {
-	_hpBar->release();
-	SAFE_DELETE(_hpBar);
 }
 
 void tortoisePhase1::attack()
@@ -431,16 +420,26 @@ void tortoisePhase1::Bfire(float angle)
 	if (_delayCount != 0) return;
 	//=============
 
-	for (int i = 0; i < _vBullet.size(); ++i)
+	for (int i = 0; i < 2; ++i)
 	{
-		if (_vBullet[i].getIsActive()) continue;
+		for (int j = 0; j < _vBullet.size()/2; ++j)
+		{
+			if (_vBullet[i*_vBullet.size()/2 + j].getIsActive()) continue;
 
-		_vBullet[i].setIsActive(true);
-		_vBullet[i].setFireCenter(_x, _y - 45);
-		_vBullet[i].setAngle(angle);
-		_vBullet[i].setDir(_dir);
-		++_attackCount;
-		break;
+			_vBullet[i*_vBullet.size()/2 + j].setIsActive(true);
+			if(i == 0) _vBullet[i*_vBullet.size()/2 + j].setFireCenter(_x, _y - 45);
+			else
+			{
+				if(_dir == LEFT)
+					_vBullet[i*_vBullet.size() / 2 + j].setFireCenter(_x - 70, _y - 45);
+				else
+					_vBullet[i*_vBullet.size() / 2 + j].setFireCenter(_x + 70, _y - 45);
+			}
+			_vBullet[i*_vBullet.size()/2 + j].setAngle(angle);
+			_vBullet[i*_vBullet.size()/2 + j].setDir(_dir);
+			++_attackCount;
+			break;
+		}
 	}
 }
 

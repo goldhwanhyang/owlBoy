@@ -8,26 +8,30 @@ HRESULT enemyManager::init()
 	
 	_factory = new enemyFactory;
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		enemy* _enemy = _factory->createEnemy(GAWK);
 		_enemy->setPlayerLink(_player);
 		_enemy->setMapPixel(_mapPixel);
 		_vEnemy.push_back(_enemy);
 	}
-	_vEnemy[2]->setPostion(1200, 130, 1);
-	_vEnemy[3]->setPostion(900, 130, 0);
-	_vEnemy[4]->setPostion(400, 130, 0);
+	_vEnemy[2]->setPostion(5600, 192, RIGHT);
+	_vEnemy[3]->setPostion(6100, 192, RIGHT);
+	_vEnemy[4]->setPostion(7480, 192, RIGHT);
+	_vEnemy[5]->setPostion(7590, 192, RIGHT);
 
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		enemy* _enemy = _factory->createEnemy(TORQUE);
 		_enemy->setPlayerLink(_player);
 		_enemy->setMapPixel(_mapPixel);
 		_vEnemy.push_back(_enemy);
 	}
-	_vEnemy[5]->setPostion(800, 940, 0);
-	_vEnemy[6]->setPostion(400, 940, 1);
+	//_vEnemy[6]->setPostion(3045, 943, RIGHT);
+	_vEnemy[6]->setPostion(8428, 548, RIGHT);
+	_vEnemy[7]->setPostion(3640, 943, RIGHT);
+	_vEnemy[8]->setPostion(4675, 883, LEFT);
+	_vEnemy[9]->setPostion(6030, 912, RIGHT);
 
 	return S_OK;
 }

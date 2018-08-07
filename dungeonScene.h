@@ -9,7 +9,6 @@ class dungeonScene : public gameNode
 	image* _stagePixel;
 	player* _player;
 	enemyManager* _enemyManager;
-
 public:
 	HRESULT init();
 	void update();
@@ -17,6 +16,8 @@ public:
 	void release();
 
 	void setPlayer(player *p) { _player = p; }
+
+	void enterBossRoom();
 
 	dungeonScene() {}
 	~dungeonScene() {}

@@ -332,16 +332,26 @@ void tortoisePhase2::Bfire(float angle)
 	if (_delayCount != 0) return;
 	//=============
 
-	for (int i = 0; i < _vBullet.size(); ++i)
+	for (int i = 0; i < 2; ++i)
 	{
-		if (_vBullet[i].getIsActive()) continue;
+		for (int j = 0; j < _vBullet.size() / 2; ++j)
+		{
+			if (_vBullet[i*_vBullet.size() / 2 + j].getIsActive()) continue;
 
-		_vBullet[i].setIsActive(true);
-		_vBullet[i].setFireCenter(_x, _y - 45);
-		_vBullet[i].setAngle(angle);
-		_vBullet[i].setDir(_dir);
-		++_attackCount;
-		break;
+			_vBullet[i*_vBullet.size() / 2 + j].setIsActive(true);
+			if (i == 0) _vBullet[i*_vBullet.size() / 2 + j].setFireCenter(_x, _y - 45);
+			else
+			{
+				if (_dir == LEFT)
+					_vBullet[i*_vBullet.size() / 2 + j].setFireCenter(_x - 70, _y - 45);
+				else
+					_vBullet[i*_vBullet.size() / 2 + j].setFireCenter(_x + 70, _y - 45);
+			}
+			_vBullet[i*_vBullet.size() / 2 + j].setAngle(angle);
+			_vBullet[i*_vBullet.size() / 2 + j].setDir(_dir);
+			++_attackCount;
+			break;
+		}
 	}
 }
 

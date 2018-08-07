@@ -15,8 +15,9 @@ class tortoise : public enemy
 	bool _isActiveShield;
 
 	int _deadCount;
-public:
 
+	progressBar* _hpBar;
+public:
 	virtual HRESULT init(float x, float y);
 	virtual void update();
 	virtual void render();

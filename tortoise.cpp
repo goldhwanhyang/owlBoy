@@ -23,6 +23,10 @@ HRESULT tortoise::init(float x, float y)
 	_isActive = true;
 	_deadCount = 0;
 
+	_hpBar = new progressBar;
+	_hpBar->init("Texture/Loading/hpBarFront", "Texture/Loading/hpBarBack", WINSIZEX*0.6, WINSIZEY*0.1, 300, 30);
+	_hpBar->setGauge(_currentPhase->getHp(), _currentPhase->getMaxHp());
+
 	return S_OK;
 }
 
@@ -33,6 +37,9 @@ void tortoise::update()
 		if (_currentPhase->getIsActive())
 		{
 			_currentPhase->update();
+			//hp바 업데이트
+			_hpBar->update();
+			_hpBar->setGauge(_currentPhase->getHp(), _currentPhase->getMaxHp());
 		}
 		else
 		{
@@ -66,6 +73,8 @@ void tortoise::render()
 		if (_currentPhase->getIsActive())
 		{
 			_currentPhase->render();
+			//hpBar렌더
+			_hpBar->render();
 		}
 		else if (_isPhase2) //활성화 false이고 페이즈2이면
 		{
@@ -84,4 +93,6 @@ void tortoise::release()
 	SAFE_DELETE(_phase1);
 	_phase2->release();
 	SAFE_DELETE(_phase2);
+	_hpBar->release();
+	SAFE_DELETE(_hpBar);
 }
