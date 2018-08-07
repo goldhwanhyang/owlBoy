@@ -43,6 +43,8 @@ HRESULT townScene::init()
 		temp1->init();
 		RENDERMANAGER->addBackground(temp1->getZ(), temp1);
 	}
+	
+	SOUNDMANAGER->playBgm("¸¶À»",_soundVolume);
 
 	g = new geddy;
 	g->init();

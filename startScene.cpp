@@ -21,15 +21,12 @@ HRESULT startScene::init()
 
 	_title = IMAGEMANAGER->findImage("TITLE");
 
-
 	_text[0] = IMAGEMANAGER->findImage("CONTINUE");
 	_text[2] = IMAGEMANAGER->findImage("GAME_EXIT");
 	_text[1] = IMAGEMANAGER->findImage("OPTION");
 	
 	_backToMenu = IMAGEMANAGER->findImage("BACK_TO_MENU");
 	_board = IMAGEMANAGER->findImage("VOLUME_SETTING");
-
-
 
 	_title->setX(WINSIZEX / 2 - _title->getWidth() / 2);
 	_title->setY(50);
@@ -60,8 +57,9 @@ HRESULT startScene::init()
 	ShowCursor(false);
 
 	SOUNDMANAGER->playBgm("시작", _soundVolume);
-
 	SOUNDMANAGER->playBgm("마을", _soundVolume);
+
+
 	return S_OK;
 }
 
@@ -69,8 +67,6 @@ void startScene::release()
 {
 	_volume->release();
 	SAFE_DELETE(_volume);
-
-
 }
 
 void startScene::update()
@@ -150,8 +146,6 @@ void startScene::updateStartMenu()
 
 void startScene::updateOption()
 {
-
-
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
 		RECT temp = _volume->getRect();
