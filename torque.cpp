@@ -14,7 +14,11 @@ HRESULT torque::init(float x, float y, int dir)
 	IGM->addFrameImage("≈‰≈©_ΩÓ±‚", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
 	IGM->addFrameImage("≈‰≈©_æ∆«ƒ", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
 
+	IGM->addFrameImage("¿œπ›∏˜_¡◊¿Ω", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
+
 	IGM->addFrameImage("≈‰≈©_∫“∏¥", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);
+	IGM->addFrameImage("µπµ¢¿Ã_∆¯πﬂ¿Ã∆Â∆Æ", "Texture/Effect/stonExplode_1344x214_8x1.bmp", 1344, 214, 8, 1);
+	EFFECTMANAGER->addEffect("µπµ¢¿Ã_∆¯πﬂ", "µπµ¢¿Ã_∆¯πﬂ¿Ã∆Â∆Æ", 0.2, 7);
 	
 	enemy::init(x, y);
 
@@ -23,6 +27,7 @@ HRESULT torque::init(float x, float y, int dir)
 	_torqueImage[AIMING] = IMAGEMANAGER->findImage("≈‰≈©_¡∂¡ÿ");
 	_torqueImage[SHOOT] = IMAGEMANAGER->findImage("≈‰≈©_ΩÓ±‚");
 	_torqueImage[STUN] = IMAGEMANAGER->findImage("≈‰≈©_æ∆«ƒ");
+	_torqueImage[DEAD] = IMAGEMANAGER->findImage("¿œπ›∏˜_¡◊¿Ω");
 
 	_torqueHand[READY] = IMAGEMANAGER->findImage("≈‰≈©_∑πµº’");
 	_torqueHand[AIMING] = IMAGEMANAGER->findImage("≈‰≈©_¡∂¡ÿº’");
@@ -39,7 +44,7 @@ HRESULT torque::init(float x, float y, int dir)
 
 	_readyCount = _aimingCount = _stunCount = _attackCount = 0;
 	_isKnockBack = false;
-	_knockBackDistance = 5;
+	_knockBackDistance = 15;
 
 	bullet blt;
 	blt.init(20, 8, IGM->findImage("¥¯¿¸∏ ")->getWidth(),"≈‰≈©_∫“∏¥");
@@ -54,7 +59,11 @@ HRESULT torque::init(float x, float y, int dir)
 
 void torque::update()
 {
-	if (_hp <= 0) _isActive = false;
+	if (_hp <= 0)
+	{
+		_state = DEAD;
+		_hp = 0;
+	}
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
@@ -63,7 +72,8 @@ void torque::update()
 	_scanRc = RectMakeCenter(_x, _y, TORQUE_CONST::HITBOX_WIDTH * 10, TORQUE_CONST::HITBOX_HEIGHT * 10);
 	
 	bool aniDone;
-	aniDone = frameMake(_torqueImage[_state]);
+	if (_state == DEAD) aniDone = frameMake(_torqueImage[_state], 14);
+	else aniDone = frameMake(_torqueImage[_state],7);
 
 	switch (_state)
 	{
@@ -106,6 +116,9 @@ void torque::update()
 		}
 		if (aniDone) ++_stunCount;
 		break;
+	case DEAD:
+		if (aniDone) _isActive = false;
+		break;
 	}
 	if (_isKnockBack && _state == STUN)
 	{
@@ -146,6 +159,10 @@ void torque::render()
 			tempX = _x - 108;
 			tempY = _y - 70;
 			break;
+		case DEAD:
+			tempX = _x - 200;
+			tempY = _y - 190;
+			break;
 		}
 	}
 	else if (_dir == LEFT)
@@ -172,38 +189,38 @@ void torque::render()
 			tempX = _x - 108;
 			tempY = _y - 70;
 			break;
+		case DEAD:
+			tempX = _x - 200;
+			tempY = _y - 190;
+			break;
 		}
 	}
 
 	_torqueImage[_state]->frameRender(getMemDC(), tempX- CAM->getX(), tempY - CAM->getY(), _index, _dir);
 
+	//¡ÿ∫Òµø¿€ø°º≠ µπµ¢¿Ã∑ª¥ı
 	if (_state == READY)
 	{
 		switch (_dir)
 		{
 		case RIGHT:
 			IMAGEMANAGER->findImage("≈‰≈©_∫“∏¥")->frameRender(getMemDC(), tempX+25 - CAM->getX(), tempY+33 - CAM->getY(), 0, _dir);
-			//µπµ¢¿Ã ∑ª¥ı
 			break;
 		case LEFT:
 			IMAGEMANAGER->findImage("≈‰≈©_∫“∏¥")->frameRender(getMemDC(), tempX+70 - CAM->getX(), tempY+33 - CAM->getY(), 0, _dir);
-			//µπµ¢¿Ã ∑ª¥ı
 			break;
 		}
 		_torqueHand[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
 	}
-
 	if (_state == AIMING)
 	{
 		switch (_dir)
 		{
 		case RIGHT:
 			IMAGEMANAGER->findImage("≈‰≈©_∫“∏¥")->frameRender(getMemDC(), tempX+10 - CAM->getX(), tempY+30 - CAM->getY(), 0, _dir);
-			//µπµ¢¿Ã ∑ª¥ı
 			break;
 		case LEFT:
 			IMAGEMANAGER->findImage("≈‰≈©_∫“∏¥")->frameRender(getMemDC(), tempX+110 - CAM->getX(), tempY+30 - CAM->getY(), 0, _dir);
-			//µπµ¢¿Ã ∑ª¥ı
 			break;
 		}
 		_torqueHand[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
@@ -229,18 +246,18 @@ void torque::damaged(actor * e)
 {
 	_state = STUN;
 	_hp -= e->getPower();
-	if(e->getPower() == 0) _isKnockBack = true;
+	if(_hp > 0 && e->getPower() == 0) _isKnockBack = true;
 }
 void torque::knockBack()
 {
-	_knockBackDistance -= 0.1;
+	_knockBackDistance -= 0.8f;
 
-	if(_playerX < _x) _x += _knockBackDistance;
+	if(_dir == LEFT) _x += _knockBackDistance;
 	else _x -= _knockBackDistance;
 
 	if (_knockBackDistance < 0)
 	{
-		_knockBackDistance = 5;
+		_knockBackDistance = 15;
 		_isKnockBack = false;
 	}
 }
@@ -299,6 +316,7 @@ void torque::Bmove()
 			if(_vBullet[i].collide(_mapPixel))
 			{
 				//TODO : ∫“∏¥¿Ã∆Â∆Æ
+				EFFECTMANAGER->play("µπµ¢¿Ã_∆¯πﬂ", _vBullet[i].getX()+50, _vBullet[i].getY()+50);
 			}
 		}
 	}
@@ -311,6 +329,7 @@ void torque::Bcollide()
 	{
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
+			EFFECTMANAGER->play("µπµ¢¿Ã_∆¯πﬂ", _vBullet[i].getX() + 50, _vBullet[i].getY() + 50);
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
 			break;
@@ -326,10 +345,10 @@ void torque::Brender()
 	}
 }
 
-bool torque::frameMake(image * bmp)
+bool torque::frameMake(image * bmp, int cooltime)
 {
 	++_count;
-	if (_count % 12 == 0)
+	if (_count % cooltime == 0)
 	{
 		++_index;
 		if (_index > bmp->getMaxFrameX())

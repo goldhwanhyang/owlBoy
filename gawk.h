@@ -3,7 +3,7 @@
 
 namespace GAWK_CONST
 {
-	const int MAX_STATE = 5;
+	const int MAX_STATE = 6;
 	const int HITBOX_WIDTH = 72;
 	const int HITBOX_HEIGHT = 72;
 }
@@ -18,14 +18,14 @@ private:
 		READY,
 		FLY,
 		FALL,
-		STUN
+		STUN,
+		DEAD
 	};
 	enum DIR
 	{
 		RIGHT,
 		LEFT
 	};
-	//bool _isFall;
 	int _jumpDelay;
 	int _delayCount;
 	RECT _scanRc;
@@ -40,7 +40,7 @@ public:
 	void search();
 	void turn();
 
-	bool frameMake(image * bmp);
+	bool frameMake(image * bmp, int cooltime);
 
 	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();

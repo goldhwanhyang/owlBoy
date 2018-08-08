@@ -4,7 +4,7 @@
 
 namespace TORQUE_CONST
 {
-	const int MAX_STATE = 5;
+	const int MAX_STATE = 6;
 	const int HITBOX_WIDTH = 90;
 	const int HITBOX_HEIGHT = 100;
 }
@@ -19,7 +19,8 @@ class torque : public enemy
 		READY,
 		AIMING,
 		SHOOT,
-		STUN
+		STUN,
+		DEAD
 	};
 	enum DIR
 	{
@@ -56,7 +57,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	bool frameMake(image * bmp);
+	bool frameMake(image * bmp, int cooltime);
 
 	torque() {}
 	~torque() {}

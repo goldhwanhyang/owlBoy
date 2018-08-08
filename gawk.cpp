@@ -9,6 +9,7 @@ HRESULT gawk::init(float x, float y, int dir)
 	IGM->addFrameImage("고크_기본", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
 	IGM->addFrameImage("고크_날기", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
 	IGM->addFrameImage("고크_아픔", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
+	IGM->addFrameImage("일반몹_죽음", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
 	//=====================================
 	enemy::init(x, y);
 
@@ -19,6 +20,7 @@ HRESULT gawk::init(float x, float y, int dir)
 	_gawkImage[READY] = IGM->findImage("고크_기본");
 	_gawkImage[FLY] = IGM->findImage("고크_날기");
 	_gawkImage[STUN] = IGM->findImage("고크_아픔");
+	_gawkImage[DEAD] = IMAGEMANAGER->findImage("일반몹_죽음");
 	_gawkImage[IDLE] = _gawkImage[READY];
 	_gawkImage[FALL] = _gawkImage[FLY];
 
@@ -41,7 +43,11 @@ HRESULT gawk::init(float x, float y, int dir)
 
 void gawk::update()
 {
-	if (_hp <= 0) _isActive = false;
+	if (_hp <= 0)
+	{
+		_state = DEAD;
+		_hp = 0;
+	}
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
@@ -59,9 +65,13 @@ void gawk::update()
 	{
 		_index = _gawkImage[_state]->getMaxFrameX();
 	}
+	else if (_state == DEAD)
+	{
+		aniDone = frameMake(_gawkImage[_state], 14);
+	}
 	else
 	{
-		aniDone = frameMake(_gawkImage[_state]);
+		aniDone = frameMake(_gawkImage[_state], RND->getFromIntTo(5, 12));
 	}
 
 	switch (_state)
@@ -84,6 +94,9 @@ void gawk::update()
 		break;
 	case STUN:
 		stunShake();
+		break;
+	case DEAD:
+		if (aniDone) _isActive = false;
 		break;
 	}
 
@@ -109,6 +122,10 @@ void gawk::render()
 			tempX = _x - 95;
 			tempY = _y - 70;
 			break;
+		case DEAD:
+			tempX = _x - 200;
+			tempY = _y - 190;
+			break;
 		}		
 	}
 	else if (_dir == LEFT)
@@ -125,6 +142,10 @@ void gawk::render()
 		case STUN:
 			tempX = _x - 80;
 			tempY = _y - 70;
+			break;
+		case DEAD:
+			tempX = _x - 200;
+			tempY = _y - 190;
 			break;
 		}
 	}
@@ -153,9 +174,12 @@ void gawk::release()
 void gawk::damaged(actor* e)
 {
 	//POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
-	if (_state != STUN) _oldState = _state;
-	_state = STUN;
 	_hp -= e->getPower();// _hp를 매개변수 actor의 getPower만큼 hp를 깎는다.
+	if (_hp > 0)
+	{
+		if (_state != STUN) _oldState = _state;
+		_state = STUN;
+	}
 }
 
 
@@ -319,10 +343,10 @@ void gawk::turn()
 	}
 }
 
-bool gawk::frameMake(image * bmp)
+bool gawk::frameMake(image * bmp, int cooltime)
 {
 	++_count;
-	if (_count % RND->getFromIntTo(5,12) == 0)
+	if (_count % cooltime == 0)
 	{
 		++_index;
 		if (_index > bmp->getMaxFrameX())
