@@ -10,6 +10,8 @@ HRESULT tortoise::init(float x, float y)
 	IGM->addFrameImage("°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
 	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_ºÒ¸´Æø¹ß", "°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", 0.2, 40);
 	IGM->addImage("°ÅºÏÀÌ_Ã¼·Â¹Ù¸Ó¸®", "Texture/Enemies/Boss1/bossHpBarHead.bmp", 54, 69, true, MAGENTA);
+	IGM->addFrameImage("°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", "Texture/Effect/enemyBossExplode_1600x151_7x1.bmp", 1600, 151, 7, 1);
+	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_Á×À½Æø¹ß", "°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", 0.3, 7);
 	//====================
 	_phase1 = new tortoisePhase1;
 	_phase1->init(x, y);
@@ -60,13 +62,11 @@ void tortoise::update()
 			}
 			else
 			{
-				//TODO : Å¬¸®¾î - Á×À½ÀÌÆåÆ® ÇÃ·¹ÀÌ
-				//EFFECTMANAGER->play("°ÅºÏÀÌ_Á×À½Æø¹ß", _phase2->getX(), _phase2->getY());
+				EFFECTMANAGER->play("°ÅºÏÀÌ_Á×À½Æø¹ß", _phase2->getX()-135+RND->getInt(300), _phase2->getY()-100+RND->getInt(300));
 				++_deadCount;
 			}
 		}
 		_hitBox = _currentPhase->getHitbox();
-		_isActive = _currentPhase->getIsActive();
 	}
 }
 
@@ -87,7 +87,7 @@ void tortoise::render()
 		else if (_isPhase2) //È°¼ºÈ­ falseÀÌ°í ÆäÀÌÁî2ÀÌ¸é
 		{
 			IMAGEMANAGER->frameRender("°ÅºÏÀÌ_Á×À½", getMemDC(), _phase2->getX() - 135 - CAM->getX(), _phase2->getY() - 110 - CAM->getY(), 0, _phase2->getDir());
-			if (_deadCount > 50)
+			if (_deadCount > 90)
 			{
 				_isActive = false;
 			}

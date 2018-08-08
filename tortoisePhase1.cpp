@@ -355,14 +355,15 @@ void tortoisePhase1::moveOff()
 
 void tortoisePhase1::takeShield()
 {
-	//실드 주울때 방향에 따라 앵글값 다시지정
-	//가속도 초기화
+	//실드없을때 체력이0이되면 실드를 줍고 페이즈를 넘어간다
 	if (_hp <= 0)
 	{
 		_isActive = false;
 	}
 	else
 	{
+		//실드 주울때 방향에 따라 앵글값 다시지정
+		//가속도 초기화
 		if (_dir == RIGHT)
 		{
 			_angle = 0;
@@ -388,6 +389,7 @@ void tortoisePhase1::damaged(actor * e)
 	if (e->getPower() == 100)
 	{
 		_hp -= 100; //무게추공격은 실드관계없이 한방에
+		_isActive = false; //실드를 줍는동작없이 페이즈 넘김
 	}
 	else if (_isActiveShield && e->getPower() == 0)
 	{
@@ -439,7 +441,8 @@ void tortoisePhase1::Bmove()
 		{
 			if (_vBullet[i].collide(_mapPixel))
 			{
-				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+				float tempAngle = _vBullet[i].getAngle() + 180;
+				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
 			}
 		}
 	}
@@ -453,6 +456,8 @@ void tortoisePhase1::Bcollide()
 	{
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
+			float tempAngle = _vBullet[i].getAngle() + 180;
+			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
 			break;

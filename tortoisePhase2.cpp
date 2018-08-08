@@ -32,7 +32,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	bullet blt;
 	blt.init(10, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
 	blt.setPower(3);
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
 	}
@@ -269,8 +269,6 @@ void tortoisePhase2::moveOff()
 		_shield->setIsActive(true);
 		_state = TAKE_SHIELD;
 	}
-
-	//OFF_TURN을 넣기 위해서는 턴하는 조건을 변경해야함
 }
 
 void tortoisePhase2::takeShield()
@@ -296,27 +294,27 @@ void tortoisePhase2::damaged(actor * e)
 	//0이면 오터스 회전공격 나머지면 불릿
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
-	//TODO : 임시
-	POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
-																	   //실드가 있고 액터 공격판정이랑 충돌했으면
-	if (e->getPower() == 100)
+	//POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
+																	     //실드가 있고 액터 공격판정이랑 충돌했으면
+	if (_state != READY)
 	{
-		_hp -= 100; //무게추공격은 실드관계없이 한방에
-	}
-	else if (_isActiveShield) // &&	e->getPower() == 0)
-	{
-		if (PtInRect(&_hitBox, t)) //TODO : 임시
+		if (e->getPower() == 100)
 		{
+			_hp -= 100; //무게추공격은 실드관계없이 한방에
+			_isActive = false;
+		}
+		else if (_isActiveShield &&	e->getPower() == 0)
+		{
+			//if (PtInRect(&_hitBox, t)) //TODO : 임시
 			_state = OFF_SHIELD;
 			_shield->setIsActive(false);
 		}
-	}
-	else if (!_isActiveShield)
-	{
-		//TODO : 임시
-		//실드가 없으면 데미지 받음
-		//_hp -= e->getPower();
-		_hp -= 100; //TODO : 임시
+		else if (!_isActiveShield)
+		{
+			//실드가 없으면 데미지 받음
+			_hp -= e->getPower();
+			//_hp -= 100;
+		}
 	}
 }
 
@@ -359,7 +357,8 @@ void tortoisePhase2::Bmove()
 		{
 			if (_vBullet[i].collide(_mapPixel))
 			{
-				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY());
+				float tempAngle = _vBullet[i].getAngle() + 180;
+				EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
 			}
 		}
 	}
@@ -373,6 +372,8 @@ void tortoisePhase2::Bcollide()
 	{
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
+			float tempAngle = _vBullet[i].getAngle() + 180;
+			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
 			break;
