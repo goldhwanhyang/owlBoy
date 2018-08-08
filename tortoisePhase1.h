@@ -67,7 +67,7 @@ public:
 	virtual void Bcollide();
 	virtual void Brender();
 
-	virtual HRESULT init(float x, float y);
+	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();
 	virtual void render();
 	virtual void release();

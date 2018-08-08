@@ -56,7 +56,7 @@ void tortoisePhase2::update()
 
 	_playerX = _player->getX();
 	_playerY = _player->getY();
-	_isActiveShield = _shield->getIsActive();
+	_isActiveShield = !_shield->getIsActive();
 
 	//프레임 돌려줌
 	bool aniDone;
@@ -206,10 +206,13 @@ void tortoisePhase2::move()
 void tortoisePhase2::collide()
 {
 	//플레이어랑 보스몸체랑 충돌했을때
-	RECT tempRc;
-	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+	if ((_state != OFF_STUN) || (_state != OFF_SHIELD))
 	{
-		_player->damaged(this); //this는 자기자신을 가리키는 포인터
+		RECT tempRc;
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+		{
+			_player->damaged(this); //this는 자기자신을 가리키는 포인터
+		}
 	}
 }
 
@@ -266,7 +269,7 @@ void tortoisePhase2::moveOff()
 	//실드의 폭보다 가까워지면 실드를 줍줍
 	if (utl::getDistance(_x, _y, _shield->getX(), _shield->getY()) < _shield->getWidth()/2 && _state == OFF_FLY)
 	{
-		_shield->setIsActive(true);
+		_shield->setIsActive(false);
 		_state = TAKE_SHIELD;
 	}
 }
@@ -307,7 +310,7 @@ void tortoisePhase2::damaged(actor * e)
 		{
 			//if (PtInRect(&_hitBox, t)) //TODO : 임시
 			_state = OFF_SHIELD;
-			_shield->setIsActive(false);
+			_shield->setIsActive(true);
 		}
 		else if (!_isActiveShield)
 		{

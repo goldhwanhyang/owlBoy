@@ -44,7 +44,7 @@ HRESULT torque::init(float x, float y, int dir)
 
 	_readyCount = _aimingCount = _stunCount = _attackCount = 0;
 	_isKnockBack = false;
-	_knockBackDistance = 15;
+	_knockBackSpeed = 15;
 
 	bullet blt;
 	blt.init(20, 8, IGM->findImage("던전맵")->getWidth(),"토크_불릿");
@@ -250,20 +250,85 @@ void torque::damaged(actor * e)
 }
 void torque::knockBack()
 {
-	_knockBackDistance -= 0.8f;
+	_knockBackSpeed -= 0.8f;
 
-	if(_dir == LEFT) _x += _knockBackDistance;
-	else _x -= _knockBackDistance;
+	if(_dir == LEFT) _x += _knockBackSpeed;
+	else _x -= _knockBackSpeed;
 
-	if (_knockBackDistance < 0)
+	if (_knockBackSpeed < 0)
 	{
-		_knockBackDistance = 15;
+		_knockBackSpeed = 15;
 		_isKnockBack = false;
 	}
 }
 
 void torque::collide()
 {
+	//왼쪽
+	for (int i = _hitBox.left+_speed+_knockBackSpeed; i >= _hitBox.left; --i)
+	{
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetRValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_x = i + TORQUE_CONST::HITBOX_WIDTH / 2;
+			break;
+		}
+	}
+
+	//오른쪽
+	for (int i = _hitBox.right-_speed-_knockBackSpeed; i <= _hitBox.right; ++i)
+	{
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), i, _y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetRValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_x = i - TORQUE_CONST::HITBOX_WIDTH / 2;
+			break;
+		}
+	}
+
+	//위쪽
+	for (int i = _hitBox.top + _speed; i >= _hitBox.top; --i)
+	{
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, i);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_y = i + TORQUE_CONST::HITBOX_HEIGHT / 2;
+			break;
+		}
+	}
+	//아래쪽
+	for (int i = _hitBox.bottom - _gravity; i <= _hitBox.bottom; i++)
+	{
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, i);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255))
+		{
+			_gravity = 0;
+			_y = i - TORQUE_CONST::HITBOX_HEIGHT / 2;
+			//break;
+		}
+		else
+		{
+			_gravity += 0.5;
+			_y = i - TORQUE_CONST::HITBOX_HEIGHT / 2 + _gravity;
+		}
+	}
+	//TODO : 대각선 언덕 오르기를 만들자
+
 	RECT tempRc;
 	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
 	{
