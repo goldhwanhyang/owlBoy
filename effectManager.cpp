@@ -81,3 +81,21 @@ void effectManager::play(string effectName, int x, int y)
 		}
 	}
 }
+
+void effectManager::play(string effectName, int x, int y, float angle)
+{
+	miEffect mIter;
+
+	for (mIter = _mEffect.begin(); mIter != _mEffect.end(); ++mIter)
+	{
+		if (!(mIter->first == effectName)) continue;
+
+		//이펙트키와 일치하면 이펙트 실행
+		for (int i = 0; i < mIter->second.size(); i++)
+		{
+			if (mIter->second[i]->getIsRunning()) continue;
+			mIter->second[i]->startEffect(x, y, angle);
+			return;
+		}
+	}
+}

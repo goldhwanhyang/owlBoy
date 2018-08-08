@@ -130,7 +130,7 @@ public:
 	void rotateRender(HDC hdc, float centerX, float centerY, float angle);
 	void rotateFrameRender(HDC hdc, float centerX, float centerY, float angle);
 	void rotateFrameRender(HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle);
-
+	
 //=============================================================
 //	## ¾Ö´Ï·»´õ ## 
 //=============================================================

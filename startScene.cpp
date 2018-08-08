@@ -57,7 +57,6 @@ HRESULT startScene::init()
 	ShowCursor(false);
 
 	SOUNDMANAGER->playBgm("시작", _soundVolume);
-	SOUNDMANAGER->playBgm("마을", _soundVolume);
 
 
 	return S_OK;

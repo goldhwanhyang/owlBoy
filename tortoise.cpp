@@ -65,6 +65,8 @@ void tortoise::update()
 				++_deadCount;
 			}
 		}
+		_hitBox = _currentPhase->getHitbox();
+		_isActive = _currentPhase->getIsActive();
 	}
 }
 
@@ -101,4 +103,10 @@ void tortoise::release()
 	SAFE_DELETE(_phase2);
 	_hpBar->release();
 	SAFE_DELETE(_hpBar);
+}
+
+//가상함수를 재정의 해주지 않아서 상위 클래스 actor의 damaged함수를 불러오고 있었다.
+void tortoise::damaged(actor *e)
+{
+	_currentPhase->damaged(e);
 }

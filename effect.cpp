@@ -38,7 +38,19 @@ void effect::render(void)
 {
 	if (_isRunning)
 	{
-		_effectImg->aniRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _effectAni);
+		if (_angle >= 0)
+		{
+			_effectImg->rotateFrameRender(getMemDC(),
+				_x  - CAM->getX() + _effectImg->getFrameWidth()/2,
+				_y - CAM->getY() + _effectImg->getFrameHeight()/2,
+				_effectAni->getFramePos().x / _effectAni->getFrameWidth(),
+				_effectAni->getFramePos().y / _effectAni->getFrameHeight(),
+				_angle);
+		}
+		else
+		{
+			_effectImg->aniRender(getMemDC(), _x - CAM->getX(), _y - CAM->getY(), _effectAni);
+		}
 	}
 }
 
@@ -50,6 +62,18 @@ void effect::startEffect(int x, int y)
 
 	_isRunning = true;
 	_effectAni->start();
+	_angle = -1;
+}
+
+void effect::startEffect(int x, int y, float angle)
+{
+	//위치를 센터좌표로 만들기
+	_x = x - (_effectAni->getFrameWidth() / 2);
+	_y = y - (_effectAni->getFrameHeight() / 2);
+
+	_isRunning = true;
+	_effectAni->start();
+	_angle = angle;
 }
 
 void effect::stopEffect()

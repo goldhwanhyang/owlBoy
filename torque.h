@@ -33,10 +33,14 @@ class torque : public enemy
 	int _stunCount;				//Ω∫≈œ µÙ∑π¿Ã
 	int _attackCount;			//∞¯∞› µÙ∑π¿Ã
 
+	bool _isKnockBack;
+	float _knockBackDistance;
+
 	vector<bullet> _vBullet;	//∫“∏¥
 
 public:
 	virtual void damaged(actor* e);
+	void knockBack();
 	virtual void collide();
 
 	void search();

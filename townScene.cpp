@@ -140,7 +140,7 @@ void townScene::update()
 
 	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
-		tempCount = (tempCount + 1) % 5;
+		tempCount = (tempCount + 1) % 10;
 		if(tempCount == 0)
 			g->attack();
 	}

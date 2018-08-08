@@ -9,6 +9,8 @@ HRESULT enemy::init(float x, float y, int dir)
 	_gravity = 0;
 	_z = 10;
 
+	_player = NULL;
+
 	_isActive = true;
 
 	return S_OK;

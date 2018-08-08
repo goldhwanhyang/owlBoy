@@ -51,12 +51,6 @@ HRESULT tortoisePhase1::init(float x, float y)
 
 void tortoisePhase1::update()
 {
-	//TODO : 임시
-	//if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	//{
-	//	damaged(_player);
-	//}
-
 	_playerX = _player->getX();
 	_playerY = _player->getY();
 	_isActiveShield = _shield->getIsActive();
@@ -179,7 +173,7 @@ void tortoisePhase1::render()
 	if (_isDebug)
 	{
 		char debug[64];
-		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 		_stprintf_s(debug, "angle: %f, hp: %d", _angle, _hp);
 		TextOut(getMemDC(), 100, 100, debug, strlen(debug));
 		//TextOut(getMemDC(), _x, _y, "X", strlen("X"));
@@ -301,7 +295,7 @@ void tortoisePhase1::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(6, temp);
+	_shield->throwed(8, temp);
 
 	//보스몸체 픽셀충돌
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
@@ -329,7 +323,7 @@ void tortoisePhase1::moveOff()
 {
 	_angle = utl::getAngle(_x, _y, _shield->getX(), _shield->getY());
 	_angle *= 58.8; // degree값으로 변경하기 위해 58.8을 곱했다.
-	if(_offSpeed < PHASE1_CONST::MAX_OFF_SPEED) _offSpeed += 0.1f; // 가속한다.
+	if(_offSpeed < PHASE1_CONST::MAX_OFF_SPEED) _offSpeed += 0.04f; // 가속한다.
 	_x += _offSpeed * cosf(_angle * 0.017); // cosf에 넣기위해 다시 radian으로 변경
 	//앵글값 변경에 따른 문워크 방지
 	// TODO : offTrun을 만들어서 문워크 방지해야함 아직도 버그가 있다.
@@ -350,7 +344,7 @@ void tortoisePhase1::moveOff()
 		_dir = LEFT;
 	}
 	//실드의 폭보다 가까워지면 실드를 줍줍
-	if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth() && _state == OFF_WALK)
+	if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth()/2 && _state == OFF_WALK)
 	{
 		_shield->setIsActive(true);
 		_state = TAKE_SHIELD;
@@ -385,31 +379,24 @@ void tortoisePhase1::takeShield()
 
 void tortoisePhase1::damaged(actor * e)
 {
+	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
 	//e->getPower() 값에 따라 액션 선택
 	//0이면 오터스 회전공격 나머지면 불릿
 	//플레이어에 의해 공격당했을때 보스가 해야할 액션
 
-	//TODO : 임시
-	POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
 	//실드가 있고 액터 공격판정이랑 충돌했으면
 	if (e->getPower() == 100)
 	{
 		_hp -= 100; //무게추공격은 실드관계없이 한방에
 	}
-	else if (_isActiveShield) // &&	e->getPower() == 0)
+	else if (_isActiveShield && e->getPower() == 0)
 	{
-		if (PtInRect(&_hitBox, t)) //TODO : 임시
-		{
-			_state = OFF_SHIELD;
-			_shield->setIsActive(false);
-		}
+		_state = OFF_SHIELD;
+		_shield->setIsActive(false);
 	}
 	else if (!_isActiveShield)
 	{
-		//TODO : 임시
-		//실드가 없으면 데미지 받음
-		//_hp -= e->getPower();
-		_hp -= 100; //TODO : 임시
+		_hp -= e->getPower();
 	}
 }
 

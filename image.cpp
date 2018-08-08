@@ -1113,3 +1113,4 @@ void image::aniAlphaRender(HDC hdc, int destX, int destY, animation * ani, BYTE 
 {
 	alphaRender(hdc, destX, destY, ani->getFramePos().x, ani->getFramePos().y, ani->getFrameWidth(), ani->getFrameHeight(), alpha);
 }
+

@@ -26,6 +26,7 @@ public:
 	void addEffect(string effectName, const char* imageName, float effectFPS, int buffer);
 	//이펙트 플레이
 	void play(string effectName, int x, int y);
+	void play(string effectName, int x, int y, float angle);
 
 	effectManager() {}
 	~effectManager() {}
