@@ -6,8 +6,8 @@ class enemyManager;	// enemyManager라는 클래스가 있다는것을 알리기 위해 전방선언
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
 #define PI 3.14
-#define STATE_MAX 10	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
-enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT, LIFT2 };
+#define STATE_MAX 11	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
+enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT, LIFT2, HIT };
 enum WAY { RIGHT , LEFT, UP, DOWN, NONE};	// 왼쪽, 오른쪽 , 위 , 아래 , 아무것도 누르지 않았을 때
 enum FLYING { FLY_L, FLY_R, FLY_U, FLY_D, FLY_N };
 
