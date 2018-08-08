@@ -59,6 +59,8 @@ HRESULT dungeonScene::init()
 	_stuffManager->init();
 	_stuffManager->addStuff(_shield);
 
+	_player->setStuffManager(_stuffManager);
+
 	CAM->init();
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
 	CAM->setPosition(_player->getX(), _player->getY());

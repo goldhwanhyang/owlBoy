@@ -8,6 +8,7 @@ namespace SHIELD_CONST
 }
 class tortoiseShield : public liftableActor
 {
+	enum {IDLE, HANG = 2};
 private:
 	image* _image;					//¶³¾îÁø ¹æÆÐ ÀÌ¹ÌÁö
 	//bool _isActive;					//¹æÆÐ Ã¬°å´Ï?
@@ -24,9 +25,6 @@ public:
 	void update();
 	void render();
 	void release();
-
-	//bool getIsActive() { return _isActive; }
-	void setIsActive(bool isActive) { _isActive = isActive; }
 
 	int getWidth() { return _image->getFrameWidth(); }
 	int getHeight() { return _image->getFrameHeight(); }

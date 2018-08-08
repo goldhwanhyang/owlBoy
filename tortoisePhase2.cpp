@@ -30,8 +30,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	_offSpeed = PHASE2_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
-	blt.init(10, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
-	blt.setPower(3);
+	blt.init(10, 5, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
 	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -226,7 +225,7 @@ void tortoisePhase2::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(8, temp);
+	_shield->throwed(8, PI-temp);
 
 	//보스몸체 픽셀충돌
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
@@ -267,10 +266,13 @@ void tortoisePhase2::moveOff()
 		_dir = LEFT;
 	}
 	//실드의 폭보다 가까워지면 실드를 줍줍
-	if (utl::getDistance(_x, _y, _shield->getX(), _shield->getY()) < _shield->getWidth()/2 && _state == OFF_FLY)
+	if (_shield->getState() != HANG)
 	{
-		_shield->setIsActive(false);
-		_state = TAKE_SHIELD;
+		if (utl::getDistance(_x, _y, _shield->getX(), _shield->getY()) < _shield->getWidth()/2 && _state == OFF_FLY)
+		{
+			_shield->setIsActive(false);
+			_state = TAKE_SHIELD;
+		}
 	}
 }
 

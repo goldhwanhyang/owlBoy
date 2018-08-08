@@ -37,18 +37,18 @@ HRESULT torque::init(float x, float y, int dir)
 	_hitBox = RectMakeCenter(_x, _y, TORQUE_CONST::HITBOX_WIDTH, TORQUE_CONST::HITBOX_HEIGHT);
 	_scanRc = RectMakeCenter(_x, _y, TORQUE_CONST::HITBOX_WIDTH * 6, TORQUE_CONST::HITBOX_HEIGHT * 6);
 
-	_maxHp = 3;
-	_hp = 3;
+	_maxHp = 30;
+	_hp = 30;
 
 	_speed = 2;
+	_power = 6;
 
 	_readyCount = _aimingCount = _stunCount = _attackCount = 0;
 	_isKnockBack = false;
 	_knockBackSpeed = 15;
 
 	bullet blt;
-	blt.init(20, 8, IGM->findImage("¥¯¿¸∏ ")->getWidth(),"≈‰≈©_∫“∏¥");
-	blt.setPower(3);
+	blt.init(20, 8, 4, IGM->findImage("¥¯¿¸∏ ")->getWidth(), "≈‰≈©_∫“∏¥");
 	for (int i = 0; i < 1; i++)
 	{
 		_vBullet.push_back(blt);

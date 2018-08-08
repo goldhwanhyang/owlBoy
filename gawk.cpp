@@ -33,10 +33,10 @@ HRESULT gawk::init(float x, float y, int dir)
 	_delayCount = 0;
 	_shakeAngle = 0;
 
-	_hp = 3;
-	_maxHp = 3;
+	_hp = 40;
+	_maxHp = 40;
 
-	_power = 1;
+	_power = 4;
 
 	return S_OK;
 }

@@ -26,7 +26,7 @@ void tortoiseShield::update()
 	{
 		move();
 		collide();
-		_hitBox = RectMakeCenter(_x, _y, 220, 160);
+		_hitBox = RectMakeCenter(_x, _y, SHIELD_CONST::HITBOX_WIDTH, SHIELD_CONST::HITBOX_HEIGHT-80);
 		//방패 프레임 돌리기, 맥스프레임이면 프레임 안돈다.
 		if (_index != _image->getMaxFrameX())
 		{
@@ -44,6 +44,17 @@ void tortoiseShield::update()
 		_index = 0; //실드가 달려있을땐 인덱스를 0으로
 		_gravity = 0;
 		_onGround = false;
+		//_isLiftable = false;
+	}
+
+	//없으면 플레이어가 던졌을때 중력값 적용이 안댐
+	if(_state != HANG)
+	{
+		_onGround = false;
+	}
+	else
+	{
+		_onGround = true;
 	}
 }
 
@@ -59,6 +70,11 @@ void tortoiseShield::render()
 		_stprintf_s(_debug, "angle: %f, speed: %f, gravity: %f", _angle, _speed, _gravity);
 		TextOut(getMemDC(), 100, 140, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+	}
+	if (_state == HANG)
+	{
+		image *temp = IMAGEMANAGER->findImage("LIFT2");
+		temp->frameRender(getMemDC(), temp->getX(), temp->getY());
 	}
 }
 
@@ -80,7 +96,7 @@ void tortoiseShield::move()
 	if(!_onGround) _gravity += 0.05f;
 	if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
 	{
-		_x += _speed * cos(PI - _angle);
+		_x += _speed * cos(_angle);
 	}
 	_y += _speed * -sin(_angle) + _gravity;
 }
@@ -152,7 +168,7 @@ void tortoiseShield::collide()
 			_speed = 0;
 			_gravity = 0;
 			_onGround = true;
-			CAM->setShakeInfo(10, 20); // 흔들어줄 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
+			if(_state != HANG) CAM->setShakeInfo(10, 20); // 흔들어줄 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
 			break;
 		}
 	}
@@ -162,7 +178,7 @@ void tortoiseShield::lifted(player * _player)
 {
 	if (_isActive && _onGround)
 	{
-		_index = 4;
+		_index = 3;
 		_x = _player->getX();
 		_y = _player->getY() + _maxHeight / 2;
 	}
