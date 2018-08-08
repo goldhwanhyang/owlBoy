@@ -19,9 +19,7 @@ private:
 	player* _player;
 	RECT portal;
 
-	liftableActor * _liftingActor;
-
-	geddy * g;
+	geddy * _geddy;
 
 	int tempCount = 0;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "actor.h"				// 상속의 부모클래스
-#include "liftableActor.h"
+#include "geddy.h"
 // liftableActor
 // stuffMAnager상호참조
 
@@ -10,8 +10,8 @@ class stuffManager;	// stuffManager라는 클래스가 있다는것을 알리기 위해 전방선언
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
 #define PI 3.14
-#define STATE_MAX 11	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
-enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT, LIFT2, HIT };
+#define STATE_MAX 10	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
+enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT,HIT };
 enum WAY { RIGHT , LEFT, UP, DOWN, NONE};	// 왼쪽, 오른쪽 , 위 , 아래 , 아무것도 누르지 않았을 때
 enum FLYING { FLY_L, FLY_R, FLY_U, FLY_D, FLY_N };
 
@@ -27,12 +27,14 @@ private:
 		번거롭게 mainGame이나 Scene을 거치지 않고 간단하게 서로 직접 접근 가능하게 해준다.	
 	*/
 	liftableActor* _liftableActor;
+	geddy* _geddy;
 
 
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
 	FLYING _FX, _FY;	//
 	image* img[STATE_MAX];
+	image* _liftImg;
 	image* _mapPixel;
 	image* _map;
 
@@ -74,7 +76,7 @@ public:
 	//상태가 바뀔때마다 index를 0으로 초기화해주는 함수
 	void changeState(int state);
 
-
+	void commonInputKey();
 	void collide();
 	void collideMap();
 	void collideActor();
@@ -89,11 +91,13 @@ public:
 
 	void setMap(image *map) { _map = map; }
 	void setMapPixel(image *mapPixel) { _mapPixel = mapPixel; }
-	void setEnemyManager(enemyManager *e) { _enemyManager = e; }	// 틀만 있던 _enemyManager에 다른곳에있는 에너미매니져의정보를 가져오기위한 함수.
-	void setStuffManager(stuffManager *s) { _stuffManager = s; }	// 틀만 있던 _stuffManager에 다른곳에있는 스터프매니져의정보를 가져오기위한 함수.
+	void setEnemyManager(enemyManager* e) { _enemyManager = e; }	// 틀만 있던 _enemyManager에 다른곳에있는 에너미매니져의정보를 가져오기위한 함수.
+	void setStuffManager(stuffManager* s) { _stuffManager = s; }	// 틀만 있던 _stuffManager에 다른곳에있는 스터프매니져의정보를 가져오기위한 함수.
+	void setliftableActor(liftableActor* l) { _liftableActor = l; }
+	void setGeddy(geddy *g) { _geddy = g; }
 
 	// 예시 ) 컵에 물을 따르려면 가만히두면 물이 안따라지니까 손이라는 도구를 사용해서 물을 따른다
 	// 컵 = 틀 , 물 = 알맹이, 손 = set함수
-	player(){}
+	player():_stuffManager(NULL), _liftableActor(NULL){}
 	~player(){}
 };

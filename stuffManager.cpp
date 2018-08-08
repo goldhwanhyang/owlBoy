@@ -61,7 +61,7 @@ liftableActor* stuffManager::collide(player * _player)
 			return _vFruit[i];
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 
