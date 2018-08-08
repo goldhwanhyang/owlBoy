@@ -23,8 +23,8 @@ void bullet::update()
 {
 	if (_isActive)
 	{
-		_x += _speed * cosf(_angle * 0.017);
-		_y += _speed * -sinf(_angle * 0.017) + _gravity;
+		_x += _speed * cosf(_angle * 0.017f);
+		_y += _speed * -sinf(_angle * 0.017f) + _gravity;
 		if (getDistance(_fireX, _fireY, _x, _y) >= _range)
 		{
 			_isActive = false;

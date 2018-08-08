@@ -9,10 +9,14 @@ class player;
 
 #define GEDDY_WIDTH 50
 #define GEDDY_HEIGHT 150
-
+namespace geddyEnum
+{
+	enum { IDLE, ON_AIR, HANG, ATTACK, WALK, PREFARE };
+}
 class geddy : public liftableActor
 {
-	enum {IDLE, ON_AIR, HANG, ATTACK, WALK, PREFARE};
+	enum { IDLE, ON_AIR, HANG, ATTACK, WALK, PREFARE };
+
 private:
 	image * _img[MAX_GEDDY_STATE];
 	image * _handImg;

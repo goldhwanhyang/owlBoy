@@ -55,10 +55,6 @@ void geddy::update()
 		_z = 15;
 		_angle = getAnglef(_x - CAM->getX(), _y - CAM->getY(), _ptMouse.x, _ptMouse.y);
 		convertDir();
-
-		CAM->videoShooting(_x, 
-			_y,
-			0);
 	}
 	else
 	{
@@ -75,12 +71,7 @@ void geddy::update()
 		_bullet[i].update();
 		if (_bullet[i].collide(_mapPixel))
 		{
-			float angle = _bullet[i].getEffectAngle() - PI / 2;
-			if (angle < 0)
-			{
-				angle += 2 * PI;
-			}
-			EFFECTMANAGER->play("총알폭발", _bullet[i].getX(), _bullet[i].getY(), angle);
+			EFFECTMANAGER->play("총알폭발", _bullet[i].getX(), _bullet[i].getY(), _bullet[i].getAngle() * 0.017f + PI/2);
 		}
 	}
 }
@@ -173,7 +164,7 @@ void geddy::attack()
 	{
 		if (_bullet[i].getIsActive()) continue;
 
-		_bullet[i].setFireCenter(_x, _y);
+		_bullet[i].setFireCenter(_x + 50 * cosf(_angle), _y + 50 * -sinf(_angle));
 		_bullet[i].setAngle(_angle * 180 / PI);
 		_bullet[i].setIsActive(true);
 		break;
@@ -201,7 +192,8 @@ void geddy::collide()
 	if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
 	{
 		_y = _hitBox.top + (_hitBox.bottom - _hitBox.top) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 
@@ -226,7 +218,8 @@ void geddy::collide()
 	if ((r == 0 && g == 0 && b == 0)) // 마젠타가 아니면 검사 였다가 검은색이면 검사
 	{
 		_x = _hitBox.left + (_hitBox.right - _hitBox.left) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 
@@ -240,7 +233,8 @@ void geddy::collide()
 										//검은색은 안지나가고 초록색은 지나치게 할려면 
 	{
 		_x = _hitBox.right - (_hitBox.right - _hitBox.left) / 2;
-		_angle = 3 * PI / 2;
+		//_angle = 3 * PI / 2;
+		_speed = 0;
 		//break;
 	}
 }
