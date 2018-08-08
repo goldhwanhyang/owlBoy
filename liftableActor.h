@@ -8,7 +8,7 @@ class player;
 
 enum STUFF_STATE
 {
-	BURIED, ON_GROUND, HANG, ON_AIR
+	ON_GROUND, ON_AIR, HANG, BURIED
 };
 
 class liftableActor : public actor

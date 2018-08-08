@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "player.h"
-#include "enemyManager.h"		/*
-									 전방선언한 enemyManager클래스는 여기서 가져다 사용해라. include안해주면 enemyMagager에 있는 멤버를 전혀 사용할 수 없다.
-									 상호참조할 클래스
-								*/
+#include "enemyManager.h"		
+#include "stuffManager.h"
+
+/*
+	 전방선언한 enemyManager클래스는 여기서 가져다 사용해라. include안해주면 enemyMagager에 있는 멤버를 전혀 사용할 수 없다.
+	 상호참조할 클래스
+*/
 
 /*
 	코딩할 때 실행 순서 잘 보기
@@ -11,7 +14,6 @@
 	걸어준 조건이 잘못되지 않았는지 잘 살펴보기
 */
 
-//내려가는 상태인데 허공에서 날라다니는 문제
 
 HRESULT player::init()
 {
@@ -26,6 +28,7 @@ HRESULT player::init()
 	img[ATK] = IMAGEMANAGER->findImage("ATTACK");
 	img[LIFT] = IMAGEMANAGER->findImage("LIFT");	// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
 	img[LIFT2] = IMAGEMANAGER->findImage("LIFT2");	//	(물체 앞에서 잡고있는 프레임)
+	img[HIT] = IMAGEMANAGER->findImage("DAMAGED");  // 오터스 맞는모션 
 
 	//플레이어 체력 바
 	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
@@ -34,6 +37,7 @@ HRESULT player::init()
 
 	_isLeft = false;			// true = 왼쪽 , false = 오른쪽
 	_isFly = false;				// 날고있는지 아닌지
+	_isKnockBack = false;
 	_x = 440.f;					// 플레이어 x좌표
 	_y = 810.f;					// 플레이어 y좌표
 	_power = 0;					// 오터스의 파워 초기화
@@ -42,10 +46,12 @@ HRESULT player::init()
 	_jumpCount = 0;
 	_flySpeed = 9.f;
 	_rollSpeed = 15.f;
+	_knockBackSpeed = 1.f;
 	_angle = PI / 2;			// 플레이어 각도
 	_gravity = 0;				// 플레이어 중력
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH); 
 	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+	_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
 
 	_count = _index = 0;		// 프레임이미지 돌리기 위한 초기화
 
@@ -70,33 +76,36 @@ void player::release()
 
 void player::update()
 {
-	//날고 있을 때
-	if(_isFly == true)
+	if (_state != HIT)
 	{
-		if (_state == ROLL)
-			_speed = _rollSpeed;
-		else
-		_speed = 10.f;
+		//날고 있을 때
+		if (_isFly == true)
+		{
+			if (_state == ROLL)
+				_speed = _rollSpeed;
+			else
+				_speed = 10.f;
 
+			_axisY = NONE;
+			_gravity = 0;
+			flyInputKey();
+			flyAngle(_FX, _FY);
+			flyMove();
+		}
+		// 땅에 있을 때
+		else
+		{
+			_speed = 7.0f;													// 땅에 있을 때 스피드 7.0f
+			groundInputKey();												// 땅에 있을 때 입력하는 키
+			groundAxis(_axisX, _axisY);
+		}
+	}
 	
-		_axisY = NONE;
-		_gravity = 0;
-		flyInputKey();
-		flyAngle(_FX, _FY);
-		flyMove();
-	}
-	// 땅에 있을 때
-	else
-	{
-		_speed = 7.0f;													// 땅에 있을 때 스피드 7.0f
-		groundInputKey();												// 땅에 있을 때 입력하는 키
-		groundAxis(_axisX, _axisY);
-	}
 	// 아래 상하좌우 검사하기전에 히트박스를 먼저 갱신 해주고 검사를한다.
 	// 오투스의 렉트 
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
 	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
-	//_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+	_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
 	this->collide();
 	//아울보이 프레임 돌리기
 	this->frameSetting();
@@ -107,6 +116,10 @@ void player::render()
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+	{
+		Rectangle(getMemDC(), _rollHitBox.left - CAM->getX(), _rollHitBox.top - CAM->getY(), _rollHitBox.right - CAM->getX(), _rollHitBox.bottom - CAM->getY());
 	}
 	if (_state == ATK)	// 렉트가 공격할때만 나타나게
 	{
@@ -121,19 +134,22 @@ void player::render()
 	friendsFace->render(getMemDC(), 50, 50);
 
 	char str[128];
-	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  이전위치 : %d 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_oldX, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
+	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
 void player::groundInputKey()
 {
+	// 점프중에 왼클릭 안눌러지게 누르면 JUMPFALL상태가 되면서 쭉 떨어진다'
 	_axisX = NONE;										// 키 입력이 없으면 _axisX 는 NONE이 된다.
 	if (_state == JUMPFALL)								// 떨어지고 있을 때 W를 누르면 바로 날고있는 상태가 될 수 있게 _jumpCount를 1로 해주고
 		_jumpCount = 1;
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK )
+
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
 	{
 		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
+		_gravity = 0.f;
 		_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
@@ -141,14 +157,17 @@ void player::groundInputKey()
 		changeState(LIFT);	// 우클릭을 하면 들어올리는 모션이 나와야한다.
 		_isFly = true;		// 날고있는 상태로 바뀜
 	}
-	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL && _state != JUMP)
+	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL )
 	{
-		if (_isLeft)
-		EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
-		else 
-		EFFECTMANAGER->play("구르기오른쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
-
 		changeState(ROLL);
+		if (_state == ROLL)
+		{
+			if (_isLeft)
+				EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
+			else
+				EFFECTMANAGER->play("구르기오른쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트			
+		}			
+		_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
 	}
 	if (KEYMANAGER->isStayKeyDown('A'))	
 	{
@@ -157,7 +176,6 @@ void player::groundInputKey()
 		_axisX = LEFT;									// LEFT 왼쪽으로 이동
 		if (_state == ATK)
 			changeState(ATK);
-
 		else if (_state == ROLL)
 		{
 			changeState(ROLL);
@@ -180,8 +198,12 @@ void player::groundInputKey()
 		_axisY = NONE;
 	if (KEYMANAGER->isOnceKeyDown('W'))
 	{
+		if (_state == ATK)
+			changeState(ATK);	
+		else		
+			changeState(JUMP);								// 위로 점프하는 프레임을 보여준다.
+		
 		_axisY = UP;									// UP이 되면 위로 점프를 한다.
-		changeState(JUMP);								// 위로 점프하는 프레임을 보여준다.
 		_jumpCount += 1;								// _jumpCount가 2가 되면 FLY상태로 바꿔준다.
 		if (_jumpCount > 1)
 		{
@@ -196,7 +218,7 @@ void player::groundInputKey()
 	{
 		_gravity -= 0.16f;								// W키를 오래 누르고 있을 수록 높이 점프할 수 있다.
 	}
-	//_click = NB;	// 
+	
 }
 
 // 복습 할 부분
@@ -214,9 +236,15 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	_gravity += 0.5f가 위에 있으면 땅에 닿아도 0이아니라 0.5f이 더해져서 JUMPFALL상태가 돼서 아래로 내려간다.
 	_y가 위에 있으면 계속 0이 더해진다.
 	*/
-	_y += _gravity;		// y에 중력값을 계속 더해준다. 
-	_gravity += 0.5f;	// 아래로 내려갈 수 있게 점프가 아니어도 계속 중력값을 더해준다.
-
+	if (_state != ROLL)
+	{
+		_y += _gravity;		// y에 중력값을 계속 더해준다. 
+		_gravity += 0.5f;	// 아래로 내려갈 수 있게 점프가 아니어도 계속 중력값을 더해준다.
+		if (_state == ATK)
+		{
+			_gravity -= 0.15f;
+		}
+	}
 	if (_axisY == UP)	// _axisY == UP일 때 위로 점프를 시켜준다.	
 		_y += -sinf(PI / 2) * _jumpSpeed;
 	
@@ -230,12 +258,17 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	//반드시 공부하기 중요 
 	if (_y > _oldY)
 	{
-		// 한번만 실행시켜줘야한다.
-		// 점프를 했다가 떨어질때 자연스럽게 떨어지기 위해 중력을 조절
-		if(_state == JUMP)
-			_gravity += -sinf(PI / 2) * _jumpSpeed;	
+		//공격중에 바로 jumpfall이 안되게
+		if (_state != ROLL && _state != ATK)
+		{
+			// 한번만 실행시켜줘야한다.
+			// 점프를 했다가 떨어질때 자연스럽게 떨어지기 위해 중력을 조절
+			if (_state == JUMP)
+				_gravity += -sinf(PI / 2) * _jumpSpeed;
 
-		changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+			changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+
+		}
 	}
 
 	if (_state == ROLL)				// 구르기 상태일 때
@@ -253,7 +286,6 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	else		// 구르는 상태가 아니라면 스피드는 7이고 구르는속도랑 걷기속도가 누적되지않게 해준다.
 	{
 		_speed = 7.0f;				
-
 		if (_axisX == LEFT)		//  _axisX == LEFT일 때 왼쪽으로 움직여준다.
 		{
 			_x -= _speed;
@@ -262,9 +294,7 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 		{
 			_x += _speed;
 		}
-
 	}
-	
 }
 
 //날고 있을 때
@@ -343,7 +373,8 @@ void player::flyInputKey()
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL)
 	{
 		changeState(ROLL);
-		if (_FX != FLY_N )
+	//	if (_FX != FLY_N )
+		if (_FY == NONE)
 		{
 			if (_isLeft)
 				EFFECTMANAGER->play("구르기왼쪽", _x, _y);	// 내가 왼쪽으로 구르면 왼쪽 이펙트
@@ -396,8 +427,6 @@ float player::flyAngle(FLYING FX, FLYING FY)
 		}
 	}
 	
-
-
 	_angle = fAngle * PI / 180.f;
 	return _angle;
 }
@@ -423,13 +452,38 @@ void player::flyMove()
 }
 
 //상태가 바뀔때마다 인덱스를 0으로 초기화 
+//공부하기
 void player::changeState(int state)
 {
 	if (_state == state) return;	// 매개변수는 함수가 끝나면 없어진다.
 
+	//공격이면 if문을 그냥 지나가니까 
+	// 구르기를 _isFly가 false가 되는 문제 
+	// 구르기를 하면 이전상태를 유지하고 false로 안바뀌게
+	// state != ATK 구르기일때 들어가고 state != ATK state 
+	// 공격이 아니고 구르기가 아닐때
+
+	if (state != ATK && state != ROLL)
+	{
+		if (state == FLY || state == FLYDOWN)
+			_isFly = true;
+		else
+			_isFly = false;
+	}
+	// _state가 공격일 때 _beforeState에 공격이 들어가고 state에 구르기일때 _state에 구르기가 들어가서 _beforState가 공격,구르기를 반복하니까 
+	// 공격 구르기가 아닐때만 이전상태를 저장하면 
+	if (_state != ATK && _state != ROLL)
+	{
+		_beforeState = _state;	// 구르기->공격을 하면 아무것도 입력 안했는데 구르기공격만 반복하기 때문에 걸어준 조건.
+	}
 	_state = state;
-	_index = 0;
-	_count = 0;
+
+	if (_state != HIT)
+	{
+		_index = 0;
+		_count = 0;
+
+	}	
 }
 
 
@@ -535,24 +589,58 @@ void player::collideMap()
 // 플레이어와 몬스터의 충돌 처리
 void player::collideActor()
 {
-	//플레이어가 몬스터에게 대미지를 줄것
+	//플레이어가 몬스터에게 대미지를 줄것(스핀공격 , 구르기)
+	//플레이어가 공격당하면 넉백
+	//
+
+
 	//_enemyManager->getVEnemy()[0]->getHitbox(); // 에너미매니져에 있는 0번 에너미의 히트박스 , 또는 에너미의 여러가지 정보를 불러올 수 있다.
-	//1. 에너미매니져가 에너미를 못가져온다.
-	//2. 계속 죽을때까지 가져와서 터진다.
+
 	if (_enemyManager != NULL)
 	{
 		for (int i = 0; i < _enemyManager->getVEnemy().size(); i++)
 		{
 			RECT temp;
-			if (IntersectRect(&temp, &_spinHitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))	// 플레이어의 공격 렉트와 에너미의 히트박스를 검사한다.
+			if (_state == ATK)
 			{
-				if (_state == ATK)
+				if (IntersectRect(&temp, &_spinHitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))	// 플레이어의 공격 렉트와 에너미의 히트박스를 검사한다.
 				{
 					_enemyManager->getVEnemy()[i]->damaged(this);	// 에너미매니져야 i번째의 에너미에게 플레이어의 정보를 넘겨줘라.
 				}
 			}
+			else if (_state == ROLL)
+			{
+				if (IntersectRect(&temp, &_rollHitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
+				{
+					_enemyManager->getVEnemy()[i]->damaged(this);
+				}
+			}
+			//HIT상태가 아니고 _state가 공격이거나 구르기가 아닐때만 HIT가 되어야 한다.
+			if (_state != HIT)// HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
+			{
+				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
+				{
+					_isKnockBack = true;
+				}
+			}
+			if (_isKnockBack == true)
+			{
+				changeState(HIT);
+				_speed = _knockBackSpeed;
+				if (_isLeft)
+					_x += _speed;
+				else
+					_x -= _speed;
+				//언제 _isKnockBackSpeed 를 언제 false로 바꿔줘야 할까 .
+				// 1. 인덱스가 0일때 해주면 늦게 바꿔줘서 멀리 날라간다.
+				// 2. 
+			}
 		}
 	}
+}
+
+void player::collideStuff()
+{
 }
 
 //이미지프레임셋팅
@@ -570,16 +658,26 @@ void player::frameSetting()
 		_index++;
 		if (_index > img[_state]->getMaxFrameX())
 		{
-			if (_state == ATK || _state == ROLL)
+			if (_state == ATK || _state == ROLL || _state == HIT)
 			{
-				_state = _beforeState;
+				if (_beforeState == JUMP || _beforeState == JUMPFALL)
+				{
+					changeState(FLY);
+					_gravity = 0.f;
+				}
+				else
+					changeState(_beforeState);
 			}
 			if (_state == JUMPFALL)
 			{
 				_index = img[_state]->getMaxFrameX() - 2;
 			}
 			else
+			{
 				_index = 0;
+				_isKnockBack = false;
+			}
+			//_isKnockBack = false;
 		}
 		img[_state]->setFrameX(_index);
 	}	
