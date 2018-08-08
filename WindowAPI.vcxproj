@@ -197,6 +197,7 @@
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="storeScene.h" />
     <ClInclude Include="txtData.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +253,7 @@
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="storeScene.cpp" />
     <ClCompile Include="txtData.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="winMain.cpp" />
   </ItemGroup>
