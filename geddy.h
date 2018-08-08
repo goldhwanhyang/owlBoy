@@ -20,6 +20,7 @@ class geddy : public liftableActor
 private:
 	image * _img[MAX_GEDDY_STATE];
 	image * _handImg;
+	//image * _bulletImage;
 
 	bullet *_bullet;
 

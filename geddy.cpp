@@ -13,13 +13,14 @@ HRESULT geddy::init()
 	_img[WALK] = IMAGEMANAGER->findImage("GEDDY_WALK");
 	_img[PREFARE] = IMAGEMANAGER->findImage("GEDDY_PREPARE_SHOOT");
 	_handImg = IMAGEMANAGER->findImage("GEDDY_HAND");
+	//_bulletImage = IMAGEMANAGER->findImage("GEDDY_BULLET");
 
 	_state = IDLE;
 
 	_bullet = new bullet[MAX_GEDDY_BULLET];
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
 	{
-		_bullet[i].init(5, 10, 500);
+		_bullet[i].init(5, 20, 10, 500, "GEDDY_BULLET");
 	}
 
 	_x = 440.f;			// 플레이어 x좌표
@@ -110,7 +111,14 @@ void geddy::render()
 		_handImg->rotateFrameRender(getMemDC(),
 			_x - CAM->getX() + temp,
 			_y - CAM->getY(),
-			0, _handsDir, angle);
+			_curFrameX, _handsDir, angle);
+
+		if (_curFrameX > 0)
+		{
+			_count = (_count + 1) % 5;
+			if(_count == 0)
+				_curFrameX = (_curFrameX + 1) % (_img[_state]->getMaxFrameX()+1);
+		}
 	}
 	else if (_state != IDLE)
 	{
@@ -167,6 +175,7 @@ void geddy::attack()
 		_bullet[i].setFireCenter(_x + 50 * cosf(_angle), _y + 50 * -sinf(_angle));
 		_bullet[i].setAngle(_angle * 180 / PI);
 		_bullet[i].setIsActive(true);
+		_curFrameX = 1;
 		break;
 	}
 

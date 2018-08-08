@@ -242,6 +242,9 @@
     <ClInclude Include="torque.h">
       <Filter>GameFramework2D\액터\에너미</Filter>
     </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>GameFramework2D\매니져</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -390,6 +393,9 @@
     </ClCompile>
     <ClCompile Include="torque.cpp">
       <Filter>GameFramework2D\액터\에너미</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>GameFramework2D\매니져</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

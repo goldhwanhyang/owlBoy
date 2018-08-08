@@ -1,5 +1,25 @@
 #include "stdafx.h"
 #include "bullet.h"
+HRESULT bullet::init(float radius, float speed, float power, float range, const char * imageName)
+{
+	if (strcmp(imageName, "없음") != 0) //문자열 비교함수 strcmp 
+		_image = IMAGEMANAGER->findImage(imageName);
+	else
+		_image = NULL;
+	_radius = radius;
+	_speed = speed;
+	_range = range;
+	_power = power;
+	_isActive = false;
+
+	_x = _y = _fireX = _fireY = 0;
+	_angle = 0;
+	_gravity = 0;
+	_count = _index = 0;
+
+	return S_OK;
+}
+
 HRESULT bullet::init(float radius, float speed, float range, const char * imageName)
 {
 	if (strcmp(imageName, "없음") != 0) //문자열 비교함수 strcmp 
@@ -9,6 +29,7 @@ HRESULT bullet::init(float radius, float speed, float range, const char * imageN
 	_radius = radius;
 	_speed = speed;
 	_range = range;
+	_power = 10;
 	_isActive = false;
 
 	_x = _y = _fireX = _fireY = 0;
@@ -16,6 +37,7 @@ HRESULT bullet::init(float radius, float speed, float range, const char * imageN
 	_gravity = 0;
 	_count = _index = 0;
 
+	return S_OK;
 	return S_OK;
 }
 
@@ -54,7 +76,7 @@ void bullet::release()
 {
 }
 
-void bullet::collide(string pixelImageName)
+bool bullet::collide(string pixelImageName)
 {
 	//벽과 충돌할떄
 	COLORREF color = GetPixel(IMAGEMANAGER->findImage(pixelImageName)->getMemDC(), _x, _y);
@@ -64,6 +86,7 @@ void bullet::collide(string pixelImageName)
 	if (!(r == 255 && g == 0 && b == 255))
 	{
 		if(_isActive) _isActive = false;
+		return true;
 	}
 
 	//사거리 벗어남
@@ -74,6 +97,7 @@ void bullet::collide(string pixelImageName)
 	}
 
 	//플레이어랑 충돌도 만들자
+	return false;
 }
 
 bool bullet::collide(image * pixelImage)

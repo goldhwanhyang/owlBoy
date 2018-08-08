@@ -209,6 +209,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("GEDDY_WALK", "Texture/friends/geddyWalk_504x308_6x2.bmp", 504, 308, 6, 2);
 	_loading->loadFrameImage("GEDDY_HAND", "Texture/friends/geddyShootingHand_1095x396_5x4.bmp", 1095, 396, 5, 4);
 	_loading->loadFrameImage("GEDDY_PREPARE_SHOOT", "Texture/friends/geddyPrepareShooting_2112x408_11x2.bmp", 2112, 408, 11, 2);
+	_loading->loadFrameImage("GEDDY_BULLET", "Texture/friends/bullet_21x21.bmp", 21, 21, 1, 1);
 
 
 	// enemy
