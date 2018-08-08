@@ -26,9 +26,9 @@ HRESULT player::init()
 	img[FLYDOWN] = IMAGEMANAGER->findImage("FLYDOWN");
 	img[ROLL] = IMAGEMANAGER->findImage("ROLL");
 	img[ATK] = IMAGEMANAGER->findImage("ATTACK");
-	img[LIFT] = IMAGEMANAGER->findImage("LIFT");	// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
-	img[LIFT2] = IMAGEMANAGER->findImage("LIFT2");	//	(물체 앞에서 잡고있는 프레임)
 	img[HIT] = IMAGEMANAGER->findImage("DAMAGED");  // 오터스 맞는모션 
+	img[LIFT] = IMAGEMANAGER->findImage("LIFT");	// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
+	_liftImg = IMAGEMANAGER->findImage("LIFT2");	//	(물체 앞에서 잡고있는 프레임)
 
 	//플레이어 체력 바
 	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
@@ -63,7 +63,7 @@ HRESULT player::init()
 	_oldY = 0;					// 이전 위치
 
 	_enemyManager = NULL;		// townScene에 들어갔을 땐 0으로 만들어준다. 초기화해준다. (안해주면 쓰레기값을 가져와서 터짐)
-
+	_liftableActor = NULL;
 	return S_OK;
 }
 
@@ -79,7 +79,7 @@ void player::update()
 	if (_state != HIT)
 	{
 		//날고 있을 때
-		if (_isFly == true)
+		if (_isFly == true )
 		{
 			if (_state == ROLL)
 				_speed = _rollSpeed;
@@ -99,6 +99,13 @@ void player::update()
 			groundInputKey();												// 땅에 있을 때 입력하는 키
 			groundAxis(_axisX, _axisY);
 		}
+
+		commonInputKey();
+		if (_liftableActor != NULL)
+		{
+			changeState(LIFT);
+			_liftableActor->lifted(this);
+		}
 	}
 	
 	// 아래 상하좌우 검사하기전에 히트박스를 먼저 갱신 해주고 검사를한다.
@@ -116,10 +123,8 @@ void player::render()
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-	}
-	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
-	{
 		Rectangle(getMemDC(), _rollHitBox.left - CAM->getX(), _rollHitBox.top - CAM->getY(), _rollHitBox.right - CAM->getX(), _rollHitBox.bottom - CAM->getY());
+
 	}
 	if (_state == ATK)	// 렉트가 공격할때만 나타나게
 	{
@@ -136,6 +141,13 @@ void player::render()
 	char str[128];
 	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
+
+	if (_liftableActor != NULL)
+	{
+		_liftableActor->render();
+		_liftImg->setFrameX(img[_state]->getFrameX());
+		_liftImg->setFrameY(img[_state]->getFrameY());
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
@@ -146,17 +158,7 @@ void player::groundInputKey()
 	if (_state == JUMPFALL)								// 떨어지고 있을 때 W를 누르면 바로 날고있는 상태가 될 수 있게 _jumpCount를 1로 해주고
 		_jumpCount = 1;
 
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
-	{
-		changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
-		_gravity = 0.f;
-		_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
-	}
-	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
-	{
-		changeState(LIFT);	// 우클릭을 하면 들어올리는 모션이 나와야한다.
-		_isFly = true;		// 날고있는 상태로 바뀜
-	}
+	
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL )
 	{
 		changeState(ROLL);
@@ -228,7 +230,7 @@ void player::groundAxis(WAY axisX, WAY axisY)	// 키 입력으로 바꿔준 상태나 불값�
 	// 위나 아래가 
 	_oldX = _x;
 	_oldY = _y;									// 이전 위치(_oldY)에 현재위치(_y)를 저장한다.
-	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL && _state != LIFT && _state != LIFT2)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
+	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL && _state != LIFT)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
 		_state = IDLE;
 
 	/*
@@ -303,21 +305,11 @@ void player::flyInputKey()
 	if (_state != ROLL)
 		_FX = FLY_N;
 
-	if (_FX == NONE && _FY == NONE && _state != ATK && _state != ROLL && _state != LIFT && _state != LIFT2)	// _FX,_FY가 NONE이고 _state가 ATK아니고 ROLL이 아닐 때 FLY상태 
+	if (_FX == NONE && _FY == NONE && _state != ATK && _state != ROLL && _state != LIFT)	// _FX,_FY가 NONE이고 _state가 ATK아니고 ROLL이 아닐 때 FLY상태 
 		changeState(FLY);						// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 
-	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	{
-		changeState(ATK);
-	}
-	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
-	{
-		changeState(LIFT);
-	}
-	else if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
-	{
-		// 마우스를 누르고있으면 오터스가 빙글빙글 돌면서 내려옴 이미지없어서 나중에 추가하면 넣기
-	}
+	
+	
 	if (KEYMANAGER->isStayKeyDown('A'))	// 대쉬 한 후에 느려지고 날라가는거 유지
 	{
 		_isLeft = true;
@@ -465,7 +457,7 @@ void player::changeState(int state)
 
 	if (state != ATK && state != ROLL)
 	{
-		if (state == FLY || state == FLYDOWN)
+		if (state == FLY || state == FLYDOWN || state == LIFT)
 			_isFly = true;
 		else
 			_isFly = false;
@@ -486,6 +478,45 @@ void player::changeState(int state)
 	}	
 }
 
+
+void player::commonInputKey()
+{
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
+	{
+		if (_liftableActor == NULL)
+		{
+			changeState(ATK); // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
+			_gravity = 0.f;
+			_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
+		}
+		else
+		{
+			_liftableActor->attack();
+		}
+	}
+
+	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
+	{
+		if (_liftableActor != NULL)
+		{
+			//_liftableActor->throwed(5,)
+			//내 마우스와 오투스사이의 각도
+			_liftableActor->throwed(10, getAnglef(_x - CAM->getX(),_y - CAM->getY() , _ptMouse.x, _ptMouse.y));
+			_liftableActor = NULL;
+			changeState(FLY);
+		}
+		else
+		{
+			collideStuff();
+			if (_liftableActor != NULL)
+			{
+				changeState(LIFT);
+				_liftableActor->lifted(this);
+			}
+		}
+	}
+
+}
 
 //충돌함수
 void player::collide()
@@ -641,6 +672,20 @@ void player::collideActor()
 
 void player::collideStuff()
 {
+	RECT temp;
+	if (_liftableActor == NULL)	// _liftableActor가 NULL이면 아무것도 안들고있
+	{
+		if (IntersectRect(&temp, &_hitBox, &_geddy->getHitbox()))
+		{
+			_liftableActor = _geddy;	// NULL이니까 geddy를 들고있다는것을 알 수 있다.
+		}
+		else
+		{
+			_liftableActor = _stuffManager->collide(this);
+		}
+	}
+
+
 }
 
 //이미지프레임셋팅

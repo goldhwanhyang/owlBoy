@@ -43,8 +43,8 @@ void geddy::release()
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
 	{
 		_bullet[i].release();
-		SAFE_DELETE_ARRAY(_bullet);
 	}
+	SAFE_DELETE_ARRAY(_bullet);
 }
 
 void geddy::update()

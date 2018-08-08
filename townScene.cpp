@@ -43,9 +43,6 @@ HRESULT townScene::init()
 	
 	SOUNDMANAGER->playBgm("¸¶À»",_soundVolume);
 
-	g = new geddy;
-	g->init();
-
 /*
 	tR.init(_player->getX() + 500, _player->getY() - 300, 1);
 	*/
@@ -61,6 +58,9 @@ HRESULT townScene::init()
 	}
 
 
+	_geddy = new geddy;
+	_geddy->init();
+
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
 	
@@ -75,8 +75,9 @@ HRESULT townScene::init()
 			RND->getFromIntTo(200, _TownMap->getHeight() - 200));
 	}
 
-	_liftingActor = nullptr;
 
+	_player->setStuffManager(_stuffManager);
+	_player->setGeddy(_geddy);
 	return S_OK;
 }
 
@@ -86,8 +87,8 @@ void townScene::release()
 
 	_stuffManager->release();
 	SAFE_DELETE(_stuffManager);
-
-	SAFE_DELETE(g);
+	_geddy->release();
+	SAFE_DELETE(_geddy);
 }
 
 void townScene::update()
@@ -95,7 +96,7 @@ void townScene::update()
 	_stuffManager->update();
 
 	_player->update();
-
+	/*
 	if (KEYMANAGER->isStayKeyDown('1'))
 	{
 		RECT temp1;
@@ -131,6 +132,19 @@ void townScene::update()
 		}
 	}
 
+	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	{
+	tempCount = (tempCount + 1) % 10;
+	if(tempCount == 0)
+	g->attack();
+	}
+
+
+
+	g->update();
+	*/
+	_geddy->update();
+
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
 	{
@@ -138,16 +152,6 @@ void townScene::update()
 	}
 	
 
-	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
-	{
-		tempCount = (tempCount + 1) % 10;
-		if(tempCount == 0)
-			g->attack();
-	}
-
-
-
-	g->update();
 	CAM->videoShooting(_player->getX(), _player->getY());
 	
 	for (int i = 0; i < 20; ++i)
@@ -169,7 +173,8 @@ void townScene::render()
 		_TownMapPixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 		Rectangle(getMemDC(), portal.left - CAM->getX(), portal.top - CAM->getY(), portal.right - CAM->getX(), portal.bottom - CAM->getY());
 	}
-	RENDERMANAGER->addRender(g->getZ(), g);
+	if(_geddy->getState() != geddyEnum::HANG)
+		RENDERMANAGER->addRender(_geddy->getZ(), _geddy);
 	RENDERMANAGER->addRender(_player->getZ(), _player);
 	_stuffManager->render();
 
@@ -182,4 +187,5 @@ void townScene::render()
 	{
 		_vRing[i]->renderFront();
 	}
+
 }
