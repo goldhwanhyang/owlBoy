@@ -1,15 +1,16 @@
 #pragma once
-#include "enemy.h"
+#include "liftableActor.h"
+
 namespace SHIELD_CONST
 {
 	const int HITBOX_WIDTH = 220;
 	const int HITBOX_HEIGHT = 240;
 }
-class tortoiseShield : public enemy
+class tortoiseShield : public liftableActor
 {
 private:
 	image* _image;					//¶³¾îÁø ¹æÆÐ ÀÌ¹ÌÁö
-	bool _isActive;					//¹æÆÐ Ã¬°å´Ï?
+	//bool _isActive;					//¹æÆÐ Ã¬°å´Ï?
 	bool _onGround;					//¶¥¿¡ ¶³¾îÁø µÚ¿¡ Áß·ÂÀÌ °è¼Ó ÀÛ¿ëÇØ¼­ ÅëÅëÆ¢±â´Â°É ¸·À½
 
 	char _debug[64];
@@ -17,13 +18,14 @@ public:
 	virtual void damaged(actor *e);
 	virtual void move();
 	virtual void collide();
+	virtual void lifted(player* _player);
 
 	HRESULT init(float x, float y);
 	void update();
 	void render();
 	void release();
 
-	bool getIsActive() { return _isActive; }
+	//bool getIsActive() { return _isActive; }
 	void setIsActive(bool isActive) { _isActive = isActive; }
 
 	int getWidth() { return _image->getFrameWidth(); }

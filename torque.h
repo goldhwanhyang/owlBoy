@@ -35,7 +35,7 @@ class torque : public enemy
 	int _attackCount;			//°ø°Ý µô·¹ÀÌ
 
 	bool _isKnockBack;
-	float _knockBackDistance;
+	float _knockBackSpeed;
 
 	vector<bullet> _vBullet;	//ºÒ¸´
 

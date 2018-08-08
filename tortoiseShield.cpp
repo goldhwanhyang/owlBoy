@@ -1,20 +1,28 @@
 #include "stdafx.h"
 #include "tortoiseShield.h"
+#include "player.h"
 
 HRESULT tortoiseShield::init(float x, float y)
 {
-	enemy::init(x, y);
+	_x = x;
+	_y = y;
+	_gravity = 0;
+	_z = 10;
 
 	_image = IGM->findImage("거북이_떨어진방패");
-	_isActive = true;
+	_isActive = false;
 	_gravity = 0;
+	_index = _count = 0;
 	_onGround = false;
+
+	_maxWidth = 100;
+	_maxHeight = 100;
 	return S_OK;
 }
 
 void tortoiseShield::update()
 {
-	if (!_isActive) 
+	if (_isActive) 
 	{
 		move();
 		collide();
@@ -30,7 +38,7 @@ void tortoiseShield::update()
 		}
 	}
 
-	if (_isActive)
+	if (!_isActive)
 	{
 		_hitBox = RectMakeCenter(_x, _y + 20, SHIELD_CONST::HITBOX_WIDTH, SHIELD_CONST::HITBOX_HEIGHT);
 		_index = 0; //실드가 달려있을땐 인덱스를 0으로
@@ -41,10 +49,10 @@ void tortoiseShield::update()
 
 void tortoiseShield::render()
 {
-	if (!_isActive)
-	{
+	//if (_isActive)
+	//{
 		_image->frameRender(getMemDC(), _x - 95 - CAM->getX(), _y - 50 - CAM->getY(), _index, _dir);
-	}
+	//}
 	if (_isDebug)
 	{
 		TextOut(getMemDC(), 100, 120, "방패", strlen("방패"));
@@ -147,5 +155,15 @@ void tortoiseShield::collide()
 			CAM->setShakeInfo(10, 20); // 흔들어줄 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
 			break;
 		}
+	}
+}
+
+void tortoiseShield::lifted(player * _player)
+{
+	if (_isActive && _onGround)
+	{
+		_index = 4;
+		_x = _player->getX();
+		_y = _player->getY() + _maxHeight / 2;
 	}
 }
