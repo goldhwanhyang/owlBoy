@@ -1,6 +1,7 @@
 #pragma once
 #include "actor.h"				// 상속의 부모클래스
 #include "geddy.h"
+#include "progressBar.h"		// 체력바 사용을 위해 가져온다.
 // liftableActor
 // stuffMAnager상호참조
 
@@ -28,6 +29,8 @@ private:
 	*/
 	liftableActor* _liftableActor;
 	geddy* _geddy;
+	progressBar* _hpBar;	
+
 
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
@@ -84,7 +87,11 @@ public:
 	void collideStuff();
 
 	// 플레이어가 대미지를 입으면 자기 자신의 피를 깎는다
-	virtual void damaged(actor *e) {}	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
+	virtual void damaged(actor *e);	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
+	
+	
+	
+	void hitDamage(float damage);
 
 	void frameSetting();
 

@@ -22,9 +22,7 @@ HRESULT townScene::init()
 
 
 	//SOUNDMANAGER->play("»ç¿îµå1");
-	portal = RectMakeCenter(4000, 7500, 100, 100);
-
-	
+	portal = RectMakeCenter(WINSIZEX/2, 50, 100, 100);
 
 	cloud *temp_cloud;
 	for (int i = 0; i < 100; ++i)
@@ -80,6 +78,9 @@ HRESULT townScene::init()
 
 	_player->setStuffManager(_stuffManager);
 	_player->setGeddy(_geddy);
+
+	UIMANAGER->startingNewScene(_player->getX(), _player->getY());
+	endScene = false;
 	return S_OK;
 }
 
@@ -93,10 +94,35 @@ void townScene::release()
 
 void townScene::update()
 {
+	RECT temp;
+
+	if (endScene)
+	{
+		if(!UIMANAGER->isChangingScene())
+			SCENEMANAGER->loadScene("dungeonScene");
+		endScene = false;
+
+		return;
+	}
+	else if (IntersectRect(&temp, &_player->getHitbox(), &portal))
+	{
+
+		if (!UIMANAGER->isChangingScene())
+			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
+		endScene = true;
+
+		return;
+	}
+
 	_stuffManager->update();
 
 	_player->update();
-	/*
+	if (KEYMANAGER->isOnceKeyDown('1'))
+	{
+		UIMANAGER->flickering(RGB(255, 0, 0), 10, 1);
+	}
+	
+	/* 
 	if (KEYMANAGER->isStayKeyDown('1'))
 	{
 		RECT temp1;
@@ -145,11 +171,6 @@ void townScene::update()
 	*/
 	//_geddy->update();
 
-	RECT temp;
-	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
-	{
-		SCENEMANAGER->loadScene("dungeonScene");
-	}
 	
 
 	CAM->videoShooting(_player->getX(), _player->getY());

@@ -32,7 +32,7 @@ void liftableActor::lifted(player * _player)
 		_z = 15;
 		_player->setX(_x);
 		_player->setY(_hitBox.top);
-		_player->setState(FLY);
+		//_player->setState(FLY);
 
 		_count = (_count + 1);
 		if (_count % LIFT_TIME == 0)

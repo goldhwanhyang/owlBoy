@@ -16,12 +16,16 @@ HRESULT UIManager::init(void)
 
 
 	_uiDC = new image;
-	_uiDC->init(WINSIZEX, WINSIZEY);
+	_uiDC->init(WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 
 	_uiType = 0;
 	_isDrawUI = false;
 	_isBlockingUI = false;
+	// flickering
+	_count = 0;
+	_alpha = 200;
 
+	_sceneChanging = _startingScene = false;
 
 	/////////// volume UI
 	_backToMenu = IMAGEMANAGER->findImage("BACK_TO_MENU");
@@ -71,20 +75,130 @@ void UIManager::update()
 
 void UIManager::render(HDC hdc)
 {
-	//GdiTransparentBlt : 비트맵의 특정색상을 제외하고 고속복사 해주는 함수
-	GdiTransparentBlt(
-		hdc,					//복사할 장소의 DC
-		0,					//복사될 좌표 시작점 X
-		0,					//복사될 좌표 시작점 Y
-		WINSIZEX,		//복사될 이미지 가로크기
-		WINSIZEY,		//복사될 이미지 세로크기
-		_uiDC->getMemDC(),		//복사될 대상 DC
-		0, 0,					//복사 시작지점
-		WINSIZEX,		//복사 영역 가로크기
-		WINSIZEY,		//복사 영역 세로크기
-		RGB(255, 0, 255));			//복사할때 제외할 색상 (마젠타)
+
+	_uiDC->render(hdc);
 
 
+	if (_sceneChanging)
+	{
+		_count = 0;
+
+		sceneChange(hdc);
+
+	}
+	else if (_startingScene)
+	{
+		_count = 0;
+
+		newSceneStart(hdc);
+	}
+	else if (_count > 0)
+	{
+		
+		_alpha -= _speed;
+
+		brush = CreateSolidBrush(_color);
+		SelectObject(_uiDC->getMemDC(), brush);
+		Rectangle(_uiDC->getMemDC(), RectMake(0, 0, WINSIZEX, WINSIZEY));
+		DeleteObject(brush);
+
+		_uiDC->alphaRender(hdc, _alpha);
+
+
+		if (_alpha <= 0)
+		{
+			_alpha = 200;
+			_count -= 1;
+		}
+	}
+
+}
+
+void UIManager::flickering(COLORREF color, int speed, int count)
+{
+	_color = color;
+	_speed = speed;
+	_count = count;
+}
+
+void UIManager::sceneChange(HDC hdc)
+{
+	RECT rc = RectMakeCenter(_destX - CAM->getX(), _destY - CAM->getY(), _rcWidth, _rcHeight);
+
+	brush = CreateSolidBrush(RGB(0, 0, 0));
+	SelectObject(_uiDC->getMemDC(), brush);
+	Rectangle(_uiDC->getMemDC(), RectMake(0, 0, WINSIZEX, WINSIZEY));
+	DeleteObject(brush);
+
+	brush = CreateSolidBrush(RGB(255, 0, 255));
+	SelectObject(_uiDC->getMemDC(), brush);
+	Ellipse(_uiDC->getMemDC(), rc);
+	DeleteObject(brush);
+
+	_uiDC->render(hdc);
+
+
+	if (_rcWidth <= 0 || _rcHeight <= 0)
+	{
+		_sceneChanging = false;
+	}
+
+	_rcWidth -= WINSIZEX / 50;
+	_rcHeight -= WINSIZEY / 50;
+	if (_rcWidth <= 0 || _rcHeight <= 0)
+	{
+		_rcWidth = 0;
+		_rcHeight = 0;
+	}
+}
+
+void UIManager::startingSceneChange(int x, int y)
+{
+	_sceneChanging = true;
+	_destX = x;
+	_destY = y;
+	_rcWidth = WINSIZEX * 2;
+	_rcHeight = WINSIZEY * 2;
+}
+
+void UIManager::newSceneStart(HDC hdc)
+{
+	RECT rc = RectMakeCenter(_destX - CAM->getX(), _destY - CAM->getY(), _rcWidth, _rcHeight);
+
+	brush = CreateSolidBrush(RGB(0, 0, 0));
+	SelectObject(_uiDC->getMemDC(), brush);
+	Rectangle(_uiDC->getMemDC(), RectMake(0, 0, WINSIZEX, WINSIZEY));
+	DeleteObject(brush);
+
+	brush = CreateSolidBrush(RGB(255, 0, 255));
+	SelectObject(_uiDC->getMemDC(), brush);
+	Ellipse(_uiDC->getMemDC(), rc);
+	DeleteObject(brush);
+
+	_uiDC->render(hdc);
+
+
+	if (_rcWidth >= WINSIZEX * 2 || _rcHeight >= WINSIZEY * 2)
+	{
+		_startingScene = false;
+	}
+
+	_rcWidth += WINSIZEX / 50;
+	_rcHeight += WINSIZEY / 50;
+	if (_rcWidth >= WINSIZEX * 2 || _rcHeight >= WINSIZEY*2)
+	{
+		_rcWidth = WINSIZEX * 2;
+		_rcHeight = WINSIZEY * 2;;
+	}
+}
+
+void UIManager::startingNewScene(int x, int y)
+{
+	_startingScene = true;
+	_destX = x;
+	_destY = y;
+	_rcWidth = 0;
+	_rcHeight = 0;
 }
 
 void UIManager::clear()

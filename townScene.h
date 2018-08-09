@@ -23,6 +23,8 @@ private:
 
 	int tempCount = 0;
 
+	bool endScene;
+
 	stuffManager * _stuffManager;
 	vector<ring *> _vRing;
 

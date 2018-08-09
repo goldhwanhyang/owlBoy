@@ -89,7 +89,7 @@ void soundManager::addSound(string keyName, string soundName, bool bgm, bool loo
 
 void soundManager::playBgm(string keyName, float volume)
 {
-	if(_currentSound != "" && isPlaySound(_currentSound))
+	//if(_currentSound != "" && isPlaySound(_currentSound))
 		stop(_currentSound);
 
 	_currentSound = keyName;
