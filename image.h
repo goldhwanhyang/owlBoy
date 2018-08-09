@@ -69,7 +69,8 @@ public:
 	~image();
 
 	// 빈 비트맵으로 초기화
-	HRESULT init(int width, int height);
+	HRESULT init(int width, int height, bool isTrans = FALSE, COLORREF transColor = RGB(0, 0, 0));
+	// 빈 비트맵으로 초기화
 	// 이미지 리소스로 초기화(사용안함)
 	HRESULT init(DWORD resID, int width, int height, bool isTrans = FALSE, COLORREF transColor = RGB(0, 0, 0)); // 디폴트 매개변수
 	// 이미지 파일로 초기화 (주로 사용)
