@@ -29,6 +29,7 @@ private:
 	liftableActor* _liftableActor;
 	geddy* _geddy;
 
+	RECT _progressBarRc;
 
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
@@ -45,6 +46,7 @@ private:
 	RECT _spinHitBox;
 	RECT _rollHitBox;
 	bool _isKnockBack;
+	bool _isBack;
 	bool _isLeft;
 	bool _isFly;	// 날고있는 상태인지 아닌지
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수
@@ -54,6 +56,7 @@ private:
 	float _flySpeed;	// 날고있을 때 속도
 	float _rollSpeed;	// 구르기 속도
 	float _knockBackSpeed;
+	float _backSpeed;
 
 	int _oldX;	// 이전 x위치
 	int _oldY;	// 이전 y위치
@@ -85,9 +88,7 @@ public:
 	// 플레이어가 대미지를 입으면 자기 자신의 피를 깎는다
 	virtual void damaged(actor *e) {}	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
 
-
 	void frameSetting();
-
 
 	void setMap(image *map) { _map = map; }
 	void setMapPixel(image *mapPixel) { _mapPixel = mapPixel; }
@@ -98,6 +99,6 @@ public:
 
 	// 예시 ) 컵에 물을 따르려면 가만히두면 물이 안따라지니까 손이라는 도구를 사용해서 물을 따른다
 	// 컵 = 틀 , 물 = 알맹이, 손 = set함수
-	player():_stuffManager(NULL), _liftableActor(NULL){}
+	player():_stuffManager(NULL), _liftableActor(NULL), _geddy(NULL){}
 	~player(){}
 };
