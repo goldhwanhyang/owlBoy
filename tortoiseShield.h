@@ -11,8 +11,6 @@ class tortoiseShield : public liftableActor
 	enum {IDLE, HANG = 2};
 private:
 	image* _image;					//떨어진 방패 이미지
-	//bool _isActive;					//방패 챙겼니?
-	bool _onGround;					//땅에 떨어진 뒤에 중력이 계속 작용해서 통통튀기는걸 막음
 
 	char _debug[64];
 public:
@@ -20,6 +18,7 @@ public:
 	virtual void move();
 	virtual void collide();
 	virtual void lifted(player* _player);
+	virtual void throwed(float speed, float angle);
 
 	HRESULT init(float x, float y);
 	void update();

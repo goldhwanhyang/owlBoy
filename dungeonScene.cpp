@@ -18,36 +18,7 @@ HRESULT dungeonScene::init()
 	_player->setMapPixel(_stagePixel);
 
 	_enemyManager = new enemyManager;
-	_factory = new enemyFactory;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		enemy* _enemy = _factory->createEnemy(GAWK);
-		_enemy->setPlayerLink(_player);	// 플레이어의 정보를 가져감(히트박스나 좌표 등등)
-		_enemy->setMapPixel(_stagePixel);
-		_enemyManager->addEnemy(_enemy);
-	}
-	for (int i = 0; i < 4; ++i)
-	{
-		enemy* _enemy = _factory->createEnemy(TORQUE);
-		_enemy->setPlayerLink(_player);
-		_enemy->setMapPixel(_stagePixel);
-		_enemyManager->addEnemy(_enemy);
-	}
-
-	_enemyManager->setPostion(0, 5600, 192, RIGHT);
-	_enemyManager->setPostion(1, 6100, 192, RIGHT);
-	_enemyManager->setPostion(2, 7480, 192, RIGHT);
-	_enemyManager->setPostion(3, 7590, 192, RIGHT);
-	_enemyManager->setPostion(4, 3045, 943, RIGHT);
-	_enemyManager->setPostion(5, 3640, 943, RIGHT);
-	_enemyManager->setPostion(6, 4675, 883, LEFT);
-	_enemyManager->setPostion(7, 6030, 912, RIGHT);
-
-	_enemyManager->setPostion(3, 8428, 192, RIGHT);
-	_enemyManager->setPostion(4, 8428, 578, RIGHT);
-
-	initTortoise();
+	initMonster();
 
 	_enemyManager->init();
 	_enemyManager->setPlayer(_player);
@@ -57,6 +28,7 @@ HRESULT dungeonScene::init()
 
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
+	_shield->setMapPixel(_stagePixel);
 	_stuffManager->addStuff(_shield);
 
 	_player->setStuffManager(_stuffManager);
@@ -123,4 +95,34 @@ void dungeonScene::enterBossRoom()
 
 void dungeonScene::initMonster()
 {
+	_factory = new enemyFactory;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		enemy* _enemy = _factory->createEnemy(GAWK);
+		_enemy->setPlayerLink(_player);	// 플레이어의 정보를 가져감(히트박스나 좌표 등등)
+		_enemy->setMapPixel(_stagePixel);
+		_enemyManager->addEnemy(_enemy);
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		enemy* _enemy = _factory->createEnemy(TORQUE);
+		_enemy->setPlayerLink(_player);
+		_enemy->setMapPixel(_stagePixel);
+		_enemyManager->addEnemy(_enemy);
+	}
+
+	_enemyManager->setPostion(0, 5600, 192, RIGHT);
+	_enemyManager->setPostion(1, 6100, 192, RIGHT);
+	_enemyManager->setPostion(2, 7480, 192, RIGHT);
+	_enemyManager->setPostion(3, 7590, 192, RIGHT);
+	_enemyManager->setPostion(4, 3045, 943, RIGHT);
+	_enemyManager->setPostion(5, 3640, 943, RIGHT);
+	_enemyManager->setPostion(6, 4675, 883, LEFT);
+	_enemyManager->setPostion(7, 6030, 912, RIGHT);
+
+	_enemyManager->setPostion(3, 8428, 192, RIGHT);
+	_enemyManager->setPostion(4, 8428, 578, RIGHT);
+
+	initTortoise();
 }

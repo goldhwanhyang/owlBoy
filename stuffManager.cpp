@@ -49,14 +49,14 @@ liftableActor* stuffManager::collide(player * _player)
 {
 	for (int i = 0; i < _vStuff.size(); ++i)
 	{
-		if (_vStuff[i]->collide(_player))
+		if (_vStuff[i]->getIsActive() && _vStuff[i]->collide(_player))
 		{
 			return _vStuff[i];
 		}
 	}
 	for (int i = 0; i < _vFruit.size(); ++i)
 	{
-		if (_vFruit[i]->collide(_player))
+		if (_vFruit[i]->getIsActive() && _vFruit[i]->collide(_player))
 		{
 			return _vFruit[i];
 		}

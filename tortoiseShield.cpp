@@ -13,7 +13,6 @@ HRESULT tortoiseShield::init(float x, float y)
 	_isActive = false;
 	_gravity = 0;
 	_index = _count = 0;
-	_onGround = false;
 
 	_maxWidth = 100;
 	_maxHeight = 100;
@@ -43,18 +42,6 @@ void tortoiseShield::update()
 		_hitBox = RectMakeCenter(_x, _y + 20, SHIELD_CONST::HITBOX_WIDTH, SHIELD_CONST::HITBOX_HEIGHT);
 		_index = 0; //실드가 달려있을땐 인덱스를 0으로
 		_gravity = 0;
-		_onGround = false;
-		//_isLiftable = false;
-	}
-
-	//없으면 플레이어가 던졌을때 중력값 적용이 안댐
-	if(_state != HANG)
-	{
-		_onGround = false;
-	}
-	else
-	{
-		_onGround = true;
 	}
 }
 
@@ -66,9 +53,9 @@ void tortoiseShield::render()
 	//}
 	if (_isDebug)
 	{
-		TextOut(getMemDC(), 100, 120, "방패", strlen("방패"));
+		TextOut(getMemDC(), 140, 120, "방패", strlen("방패"));
 		_stprintf_s(_debug, "angle: %f, speed: %f, gravity: %f", _angle, _speed, _gravity);
-		TextOut(getMemDC(), 100, 140, _debug, strlen(_debug));
+		TextOut(getMemDC(), 140, 140, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 	if (_state == HANG)
@@ -84,17 +71,14 @@ void tortoiseShield::release()
 
 void tortoiseShield::damaged(actor * e)
 {
-	if (_onGround)
-	{
-		_index = 0;
-	}
+	_index = 0;
 	//떨어진 실드를 때렸을때의 반응
 }
 
 void tortoiseShield::move()
 {
-	if(!_onGround) _gravity += 0.05f;
-	if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+	_gravity += 0.05f;
+	//if (310 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
 	{
 		_x += _speed * cos(_angle);
 	}
@@ -103,13 +87,11 @@ void tortoiseShield::move()
 
 void tortoiseShield::collide()
 {
-	//TODO : 추후에 플레이어가 들고 나를것까지 생각해야한다.
-
 	//_speed값만큼 게임오브젝트가 칸칸히 위치변경(이동)하기 때문에 _speed값 범위(벽을 최대로 뚫고 들어가는)만큼 검사해야함
 	//위쪽
 	for (int i = _hitBox.top + _speed; i >= _hitBox.top; i--) // 스피드만큼 검사해야 오차없이 깔끔하게, 움직이는 방향으로 검사해야 논리적인 오류가 없다.
 	{
-		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, i);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, i);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
@@ -125,7 +107,7 @@ void tortoiseShield::collide()
 	//왼쪽
 	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
 	{
-		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), i, _y);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), i, _y);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetRValue(color);
@@ -141,7 +123,7 @@ void tortoiseShield::collide()
 	//오른쪽
 	for(int i =_hitBox.right-_speed; i <= _hitBox.right; i++)
 	{
-		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), i, _y);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), i, _y);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetRValue(color);
@@ -157,18 +139,17 @@ void tortoiseShield::collide()
 	//아래쪽
 	for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
 	{
-		COLORREF color = GetPixel(IMAGEMANAGER->findImage("보스방1픽셀")->getMemDC(), _x, _hitBox.bottom);
+		COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, i);
 		int r = GetRValue(color);
 		int g = GetGValue(color);
 		int b = GetBValue(color);
 
 		if (!(r == 255 && g == 0 && b == 255))
 		{
-			_y = i - SHIELD_CONST::HITBOX_HEIGHT / 2;
+			_y = i - (SHIELD_CONST::HITBOX_HEIGHT-80) / 2;
+			if(_state != HANG && _speed !=0) CAM->setShakeInfo(10, 20); // 흔들어줄 백그라운드 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
 			_speed = 0;
 			_gravity = 0;
-			_onGround = true;
-			if(_state != HANG) CAM->setShakeInfo(10, 20); // 흔들어줄 이미지에 getSX(), getSY()를 넣고 setShakeInfo로 쉐킷 실행
 			break;
 		}
 	}
@@ -176,10 +157,20 @@ void tortoiseShield::collide()
 
 void tortoiseShield::lifted(player * _player)
 {
-	if (_isActive && _onGround)
+	if (_isActive)
 	{
+		_state = HANG;
+		_gravity = 0;
 		_index = 3;
 		_x = _player->getX();
 		_y = _player->getY() + _maxHeight / 2;
 	}
 }
+
+void tortoiseShield::throwed(float speed, float angle)
+{
+	actor::throwed(speed, angle);
+	_state = IDLE;
+	_hitBox = RectMakeCenter(_x, _y, SHIELD_CONST::HITBOX_WIDTH, SHIELD_CONST::HITBOX_HEIGHT - 80);
+}
+
