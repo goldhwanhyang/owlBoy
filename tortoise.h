@@ -19,7 +19,7 @@ class tortoise : public enemy
 	image* _hpBarHead;
 	progressBar* _hpBar;
 public:
-	virtual HRESULT init(float x, float y);
+	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();
 	virtual void render();
 	virtual void release();

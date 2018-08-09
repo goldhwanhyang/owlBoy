@@ -2,7 +2,7 @@
 #include "tortoise.h"
 #include "player.h"
 
-HRESULT tortoise::init(float x, float y)
+HRESULT tortoise::init(float x, float y, int dir)
 {	//CHECK 이미지
 	//==========추가 이미지
 	IGM->addFrameImage("거북이_페이즈1_레디", "Texture/Enemies/Boss1/bossReady_975x246_5x1.bmp", 975, 246, 5, 1);
@@ -14,7 +14,7 @@ HRESULT tortoise::init(float x, float y)
 	EFFECTMANAGER->addEffect("거북이_죽음폭발", "거북이_죽음폭발이펙트", 0.3, 7);
 	//====================
 	_phase1 = new tortoisePhase1;
-	_phase1->init(x, y);
+	_phase1->init(x, y, dir);
 	_phase1->setPlayerLink(_player);
 	_phase1->setMapPixel(_mapPixel);
 	_phase1->setShieldLink(_shield);
@@ -51,7 +51,7 @@ void tortoise::update()
 			{
 				//1페이즈가 끝나면 방패까지 보스가 걸어간뒤에 방패를 줍고 그뒤에 2페이즈 레디(점프하고) 2페이즈 시작
 				//TODO : 플레이어를 멈추고 방패까지 걸어간뒤 2페이즈 시작
-				_shield->setIsActive(true);
+				_shield->setIsActive(false);
 				_phase2->init(_phase1->getX(), _phase1->getY(), _phase1->getDir());
 				_phase2->setPlayerLink(_player);
 				_phase2->setMapPixel(_mapPixel);

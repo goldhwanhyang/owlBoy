@@ -24,6 +24,8 @@ public:
 	void update();
 	void render();
 
+	void setMapPixel(image* mapPixel) { _mapPixel = mapPixel; }
+
 	virtual void attack() {}
 	virtual void damaged(actor *e) {}
 	virtual void trampled(float weight) {}

@@ -4,9 +4,9 @@
 
 //hit박스의 크기, 이미지 좌표 보정값등을 숫자가 아니라 WINSIZEX, _image->getWidth() 등을 사용해서 표현할수 있게 해주자.
 
-HRESULT tortoisePhase1::init(float x, float y)
+HRESULT tortoisePhase1::init(float x, float y, int dir)
 {
-	enemy::init(x, y);
+	enemy::init(x, y, dir);
 	_count = _index = 0;
 	_dir = LEFT;
 	_angle = 180;
@@ -34,8 +34,7 @@ HRESULT tortoisePhase1::init(float x, float y)
 	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
-	blt.init(10, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
-	blt.setPower(3);
+	blt.init(10, 5, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
 	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -53,7 +52,7 @@ void tortoisePhase1::update()
 {
 	_playerX = _player->getX();
 	_playerY = _player->getY();
-	_isActiveShield = _shield->getIsActive();
+	_isActiveShield = !_shield->getIsActive();
 
 	//프레임 돌려줌
 	bool aniDone = false;
@@ -277,12 +276,14 @@ void tortoisePhase1::turn()
 void tortoisePhase1::collide()
 {
 	//플레이어랑 보스몸체랑 충돌했을때
-	RECT tempRc;
-	if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+	if ((_state != OFF_STUN) || (_state != OFF_SHIELD))
 	{
-		_player->damaged(this); //this는 자기자신을 가리키는 포인터
+		RECT tempRc;
+		if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
+		{
+			_player->damaged(this); //this는 자기자신을 가리키는 포인터
+		}
 	}
-
 }
 
 void tortoisePhase1::shieldOff()
@@ -295,7 +296,7 @@ void tortoisePhase1::shieldOff()
 	}
 	_y += -2 * -sinf(temp) + _gravity;
 
-	_shield->throwed(8, temp);
+	_shield->throwed(8, PI-temp);
 
 	//보스몸체 픽셀충돌
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
@@ -344,10 +345,13 @@ void tortoisePhase1::moveOff()
 		_dir = LEFT;
 	}
 	//실드의 폭보다 가까워지면 실드를 줍줍
-	if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth()/2 && _state == OFF_WALK)
+	if (_shield->getState() != HANG)
 	{
-		_shield->setIsActive(true);
-		_state = TAKE_SHIELD;
+		if (utl::getDistance(_x,_y, _shield->getX(),_shield->getY()) < _shield->getWidth()/2 && _state == OFF_WALK)
+		{
+			_shield->setIsActive(false);
+			_state = TAKE_SHIELD;
+		}
 	}
 
 	//OFF_TURN을 넣기 위해서는 턴하는 조건을 변경해야함
@@ -394,7 +398,7 @@ void tortoisePhase1::damaged(actor * e)
 	else if (_isActiveShield && e->getPower() == 0)
 	{
 		_state = OFF_SHIELD;
-		_shield->setIsActive(false);
+		_shield->setIsActive(true);
 	}
 	else if (!_isActiveShield)
 	{

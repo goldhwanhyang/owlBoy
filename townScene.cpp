@@ -60,6 +60,7 @@ HRESULT townScene::init()
 
 	_geddy = new geddy;
 	_geddy->init();
+	_geddy->setMapPixel(_TownMapPixel);
 
 	_stuffManager = new stuffManager;
 	_stuffManager->init();

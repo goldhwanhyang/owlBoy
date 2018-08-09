@@ -142,8 +142,9 @@ void loadingScene::loadingImage()
 
 
 	// background
-	_loading->loadImage("검정", "Texture/background/black_50x50.bmp", 50, 50);
-	_loading->loadImage("빨강", "Texture/background/red_50x50.bmp", 50, 50);
+	_loading->loadImage("검정", "Texture/background/black_50x50.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("빨강", "Texture/background/red_50x50.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("마젠타", "Texture/background/magenta_50x50.bmp", WINSIZEX, WINSIZEY);
 	_loading->loadImage("구름1", "Texture/background/cloud_462x174.bmp", 462, 174, true, RGB(255, 0, 255));
 	_loading->loadImage("구름2", "Texture/background/cloud2_789x478.bmp", 789, 478, true, RGB(255, 0, 255));
 	_loading->loadImage("구름3", "Texture/background/cloud3_484x201.bmp", 484, 201, true, RGB(255, 0, 255));
