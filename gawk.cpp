@@ -9,9 +9,6 @@ HRESULT gawk::init(float x, float y, int dir)
 	IGM->addFrameImage("°íÅ©_±âº»", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
 	IGM->addFrameImage("°íÅ©_³¯±â", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
 	IGM->addFrameImage("°íÅ©_¾ÆÇÄ", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
-
-
-	SOUNDMANAGER->addSound("°íÅ©_³¯°³Áþ", "SOUND/SoundEffect/gawkFeather.mp3");
 	//=====================================
 	enemy::init(x, y);
 
@@ -44,13 +41,10 @@ HRESULT gawk::init(float x, float y, int dir)
 
 void gawk::update()
 {
-	if (KEYMANAGER->isOnceKeyDown('7'))
-	{
-		SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
-	}
 	if (_hp <= 0)
 	{
 		EFFECTMANAGER->play("ÀûÆø¹ß", _x, _y);
+		SOUNDMANAGER->play("ÀûÆø¹ß", _soundVolume);
 		_isActive = false;
 		_hp = 0;
 	}
@@ -83,14 +77,10 @@ void gawk::update()
 		turn();
 		break;
 	case READY:
-		//if(_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
-		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		_y += 1.5;
 		if (aniDone) _state = FLY;
 		break;
 	case FLY:
-		//if (_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
-		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		move();
 		turn();
 		break;
@@ -343,6 +333,7 @@ bool gawk::frameMake(image * bmp, int cooltime)
 	++_count;
 	if (_count % cooltime == 0)
 	{
+		soundEffect();
 		++_index;
 		if (_index > bmp->getMaxFrameX())
 		{
@@ -354,3 +345,8 @@ bool gawk::frameMake(image * bmp, int cooltime)
 	return false;
 }
 
+void gawk::soundEffect()
+{
+	if (_state == READY || _state == FLY)
+		SOUNDMANAGER->play("³¯°³Áþ", _soundVolume*0.5);
+}

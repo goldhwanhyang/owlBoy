@@ -6,6 +6,15 @@
 
 HRESULT tortoisePhase2::init(float x, float y, int dir)
 {
+	//CHECK 추가이미지
+	IGM->addFrameImage("거북이_피해_페이즈2_준비", "Texture/Enemies/Boss1/damaged/phase2Ready_2496x684_8x2.bmp", 2496, 684, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_날기", "Texture/Enemies/Boss1/damaged/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_쏘기", "Texture/Enemies/Boss1/damaged/phase2Shoot_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_방패줍기", "Texture/Enemies/Boss1/damaged/phase2takeShield_2448x684_8x2.bmp", 2448, 284, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/phase2OffShield_636x420_2x2.bmp", 636, 420, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_스턴", "Texture/Enemies/Boss1/damaged/phase2OffStun_636x420_2x2.bmp", 636, 420, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈2_날기방패없이", "Texture/Enemies/Boss1/damaged/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = dir;
@@ -19,6 +28,16 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	_tortoiseImage[OFF_SHIELD] = IGM->findImage("거북이_페이즈2_방패떨어뜨리기");
 	_tortoiseImage[OFF_STUN] = IGM->findImage("거북이_페이즈2_스턴");
 	_tortoiseImage[OFF_FLY] = IGM->findImage("거북이_페이즈2_날기방패없이");
+
+	_tortoiseDamagedImg[READY] = IGM->findImage("거북이_피해_페이즈2_준비");
+	_tortoiseDamagedImg[FLY] = IGM->findImage("거북이_피해_페이즈2_날기");
+	_tortoiseDamagedImg[ATTACK] = IGM->findImage("거북이_피해_페이즈2_쏘기");
+	_tortoiseDamagedImg[TAKE_SHIELD] = IGM->findImage("거북이_피해_페이즈2_방패줍기");
+	_tortoiseDamagedImg[OFF_SHIELD] = IGM->findImage("거북이_피해_페이즈2_방패떨어뜨리기");
+	_tortoiseDamagedImg[OFF_STUN] = IGM->findImage("거북이_피해_페이즈2_스턴");
+	_tortoiseDamagedImg[OFF_FLY] = IGM->findImage("거북이_피해_페이즈2_날기방패없이");
+
+	alphaInit();
 
 	_delayCount = 0;
 
@@ -57,58 +76,8 @@ void tortoisePhase2::update()
 	_playerY = _player->getY();
 	_isActiveShield = !_shield->getIsActive();
 
-	//프레임 돌려줌
-	bool aniDone;
-	if (READY != _state || OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
-	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
-
-	switch (_state)
-	{
-	case READY:
-	{
-		if (aniDone)
-		{
-			_state = FLY;
-			_gravity = 0;
-		}
-		else
-		{
-			_y -= 6 - _gravity;
-			_gravity += 0.03;
-		}
-	}
-		break;
-	case FLY:						//날기
-		move();
-		break;
-	case ATTACK:					//총쏨
-		move();
-		attack();
-		break;
-	case TAKE_SHIELD:
-		if (aniDone) takeShield();	//방패줍기
-		break;
-	case OFF_SHIELD:				//방패 떨어뜨리기
-		shieldOff();
-		break;
-	case OFF_STUN:					//스턴
-		if (stun()) _state = OFF_FLY;
-		break;
-	case OFF_FLY:					//방패없이 날기
-		moveOff();
-		break;
-	}
-
-	//상태변경
-	if (_state == FLY && aniDone)
-	{
-		//WALK상태에서 ATTACK상태가 되거나 WALK_SHINING상태가 된다
-		if (RND->getInt(4) > 1)
-		{
-			_state = ATTACK;
-		}
-		else _state = FLY;
-	}
+	stateUpdate();
+	alphaUpdate();
 
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 
@@ -133,28 +102,44 @@ void tortoisePhase2::render()
 	{
 		IMAGEMANAGER->findImage("보스방1픽셀")->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	}
-	if (_state != TAKE_SHIELD)
+
+	float tempX, tempY;
+	switch (_state)
 	{
-		if (_dir == 0)
+	case READY:
+	case FLY:
+	case ATTACK:
+	case OFF_SHIELD:
+	case OFF_STUN:
+	case OFF_FLY:
+		if (_dir == RIGHT)
 		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+			tempX = _x - 135;
+			tempY = _y - 110;
 		}
-		else if (_dir == 1)
+		else
 		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
+			tempX = _x - 120;
+			tempY = _y - 110;
 		}
+		break;
+	case TAKE_SHIELD:
+		if (_dir == RIGHT)
+		{
+			tempX = _x - 135;
+			tempY = _y - 180;
+		}
+		else
+		{
+			tempX = _x - 120;
+			tempY = _y - 180;
+		}
+		break;
 	}
-	else
-	{
-		if (_dir == 0)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
-		}
-		else if (_dir == 1)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
-		}
-	}
+
+	_tortoiseImage[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
+	if (_isAlpha && !_isActiveShield) _tortoiseDamagedImg[_state]->alphaFrameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir, _damAlpha);
+	else if (_isAlpha && _isActiveShield) _tortoiseDamagedImg[_state]->alphaFrameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir, _damAlphaBlue);
 
 	//불릿렌더
 	Brender();
@@ -223,7 +208,7 @@ void tortoisePhase2::shieldOff()
 	{
 		_x += 3 * cosf(temp);
 	}
-	_y += -2 * -sinf(temp) + _gravity;
+	_y += 4 * -sinf(temp) + _gravity;
 
 	_shield->throwed(8, PI-temp);
 
@@ -301,6 +286,7 @@ void tortoisePhase2::damaged(actor * e)
 
 	//POINT t = { _ptMouse.x + CAM->getX() , _ptMouse.y + CAM->getY() }; //마우스위치를 LEVEL의 전역좌표로 바꾼다.
 																	     //실드가 있고 액터 공격판정이랑 충돌했으면
+	_isAlpha = true;
 	if (_state != READY)
 	{
 		if (e->getPower() == 100)
@@ -391,6 +377,90 @@ void tortoisePhase2::Brender()
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].render(true);
+	}
+}
+
+void tortoisePhase2::stateUpdate()
+{
+	//프레임 돌려줌
+	bool aniDone;
+	if (READY != _state || OFF_SHIELD != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
+
+	switch (_state)
+	{
+	case READY:
+	{
+		if (aniDone)
+		{
+			_state = FLY;
+			_gravity = 0;
+		}
+		else
+		{
+			_y -= 6 - _gravity;
+			_gravity += 0.03;
+		}
+	}
+	break;
+	case FLY:						//날기
+		move();
+		break;
+	case ATTACK:					//총쏨
+		move();
+		attack();
+		break;
+	case TAKE_SHIELD:
+		if (aniDone) takeShield();	//방패줍기
+		break;
+	case OFF_SHIELD:				//방패 떨어뜨리기
+		shieldOff();
+		break;
+	case OFF_STUN:					//스턴
+		if (stun()) _state = OFF_FLY;
+		break;
+	case OFF_FLY:					//방패없이 날기
+		moveOff();
+		break;
+	}
+
+	//상태변경
+	if (_state == FLY && aniDone)
+	{
+		//WALK상태에서 ATTACK상태가 되거나 WALK_SHINING상태가 된다
+		if (RND->getInt(4) > 1)
+		{
+			_state = ATTACK;
+		}
+		else _state = FLY;
+	}
+}
+
+void tortoisePhase2::alphaInit()
+{
+	_damAlpha = 255;
+	_damAlphaBlue = 150;
+	_alphaDelay = 0;
+	_alphaCount = 0;
+	_isAlpha = false;
+}
+
+void tortoisePhase2::alphaUpdate()
+{
+	if (_isAlpha)
+	{
+		_alphaDelay = (_alphaDelay + 1) % 5;
+		if (_alphaDelay == 0)
+		{
+			_damAlpha = -_damAlpha;
+			_damAlphaBlue = -_damAlphaBlue;
+			++_alphaCount;
+			if (_alphaCount >= 2)
+			{
+				_isAlpha = false;
+				_alphaCount = 0;
+			}
+		}
 	}
 }
 

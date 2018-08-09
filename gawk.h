@@ -40,6 +40,7 @@ public:
 	void turn();
 
 	bool frameMake(image * bmp, int cooltime);
+	void soundEffect();
 
 	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();

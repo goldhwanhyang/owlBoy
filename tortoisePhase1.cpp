@@ -6,6 +6,17 @@
 
 HRESULT tortoisePhase1::init(float x, float y, int dir)
 {
+	//CHECK 추가이미지
+	IGM->addFrameImage("거북이_피해_페이즈1_꺽기", "Texture/Enemies/Boss1/damaged/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_걷기", "Texture/Enemies/Boss1/damaged/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_걷기빛", "Texture/Enemies/Boss1/damaged/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_쏘기", "Texture/Enemies/Boss1/damaged/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_방패줍기", "Texture/Enemies/Boss1/damaged/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_스턴", "Texture/Enemies/Boss1/damaged/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/damaged/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	IGM->addFrameImage("거북이_피해_페이즈1_걷기방패없이", "Texture/Enemies/Boss1/damaged/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
+
 	enemy::init(x, y, dir);
 	_count = _index = 0;
 	_dir = LEFT;
@@ -23,6 +34,22 @@ HRESULT tortoisePhase1::init(float x, float y, int dir)
 	_tortoiseImage[OFF_STUN] = IMAGEMANAGER->findImage("거북이_페이즈1_스턴");
 	_tortoiseImage[OFF_TURN] = IMAGEMANAGER->findImage("거북이_페이즈1_꺽기방패없이");
 	_tortoiseImage[OFF_WALK] = IMAGEMANAGER->findImage("거북이_페이즈1_걷기방패없이");
+
+	//피해받음
+	_tortoiseDamagedImg[READY] = _tortoiseImage[READY];
+	_tortoiseDamagedImg[TURN] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_꺽기");
+	_tortoiseDamagedImg[WALK] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_걷기");
+	_tortoiseDamagedImg[WALK_SHINING] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_걷기빛");
+	_tortoiseDamagedImg[ATTACK] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_쏘기");
+
+	_tortoiseDamagedImg[TAKE_SHIELD] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_방패줍기");
+
+	_tortoiseDamagedImg[OFF_SHIELD] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_방패떨어뜨리기");
+	_tortoiseDamagedImg[OFF_STUN] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_스턴");
+	_tortoiseDamagedImg[OFF_TURN] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_꺽기방패없이");
+	_tortoiseDamagedImg[OFF_WALK] = IMAGEMANAGER->findImage("거북이_피해_페이즈1_걷기방패없이");
+
+	alphaInit();
 
 	_delayCount = 0;
 
@@ -54,67 +81,11 @@ void tortoisePhase1::update()
 	_playerY = _player->getY();
 	_isActiveShield = !_shield->getIsActive();
 
-	//프레임 돌려줌
-	bool aniDone = false;
-	if (READY == _state)
-	{
-		if(_playerX < 900) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
-		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
-	}
-	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
-	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
-
-	switch (_state)
-	{
-	case READY:
-		if (aniDone) _state = WALK;
-		break;
-	case TURN:					//꺽기
-		if (aniDone) turn();	//TURN상태가 되면 이미지프레임이 돌고 다돌고나면(aniDone==true) 방향바꿈
-		break;
-	case WALK:					//걷기
-		move();
-		break;
-	case WALK_SHINING:			//걷다가 빛남
-		move();
-		break;
-	case ATTACK:				//총쏨
-		move();
-		attack();
-		break;
-	case TAKE_SHIELD:			//방패줍기
-		if (aniDone) takeShield();
-		break;
-	case OFF_SHIELD:			//방패 떨어뜨리기
-		shieldOff();
-		break;
-	case OFF_STUN:				//스턴
-		if(stun()) _state = OFF_WALK;
-		break;
-	case OFF_TURN:				//방패없이 꺽기
-		if (aniDone) turn();
-	case OFF_WALK:				//방패없이 걷기
-		moveOff();
-		break;
-	}
-
-	//상태변경
-	if (_state == WALK && aniDone)
-	{
-		//WALK상태에서 ATTACK상태가 되거나 WALK_SHINING상태가 된다
-		if (RND->getInt(4) > 1)
-		{
-			_state = ATTACK;
-		}
-		else _state = WALK_SHINING;
-	}
-	else if (_state == WALK_SHINING && aniDone)
-	{
-		//WALK_SHINING상태에서 WALK상태가 된다
-		_state = WALK;
-	}
+	stateUpdate();
+	alphaUpdate();
 
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
+
 	collide();
 
 	//실드를 활성하면 보스위치를 따라감
@@ -139,32 +110,49 @@ void tortoisePhase1::render()
 		_mapPixel->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 	}
 
-	if (_state == READY)
+	float tempX, tempY;
+	switch (_state)
 	{
-		_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, 0);
+	case READY:
+		tempX = _x - 135;
+		tempY = _y - 110;
+		break;
+	case TURN:
+	case WALK:
+	case WALK_SHINING:
+	case ATTACK:
+	case OFF_SHIELD:
+	case OFF_STUN:
+	case OFF_TURN:
+	case OFF_WALK:
+		if (_dir == RIGHT)
+		{
+			tempX = _x - 135;
+			tempY = _y - 110;
+		}
+		else
+		{
+			tempX = _x - 120;
+			tempY = _y - 110;
+		}
+		break;
+	case TAKE_SHIELD:
+		if (_dir == RIGHT)
+		{
+			tempX = _x - 135;
+			tempY = _y - 180;
+		}
+		else
+		{
+			tempX = _x - 120;
+			tempY = _y - 180;
+		}
+		break;
 	}
-	else if (_state != TAKE_SHIELD)
-	{
-		if (_dir == 0)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
-		}
-		else if (_dir == 1)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 110 - CAM->getY(), _index, _dir);
-		}
-	}
-	else
-	{
-		if (_dir == 0)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 135 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
-		}
-		else if (_dir == 1)
-		{
-			_tortoiseImage[_state]->frameRender(getMemDC(), _x - 120 - CAM->getX(), _y - 180 - CAM->getY(), _index, _dir);
-		}
-	}
+
+	_tortoiseImage[_state]->frameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir);
+	if (_isAlpha && !_isActiveShield) _tortoiseDamagedImg[_state]->alphaFrameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir, _damAlpha);
+	else if(_isAlpha && _isActiveShield) _tortoiseDamagedImg[_state]->alphaFrameRender(getMemDC(), tempX - CAM->getX(), tempY - CAM->getY(), _index, _dir, _damAlphaBlue);
 	
 	//불릿렌더
 	Brender();
@@ -294,7 +282,7 @@ void tortoisePhase1::shieldOff()
 	{
 		_x += 3 * cosf(temp);
 	}
-	_y += -2 * -sinf(temp) + _gravity;
+	_y += 4 * -sinf(temp) + _gravity;
 
 	_shield->throwed(8, PI-temp);
 
@@ -384,25 +372,53 @@ void tortoisePhase1::takeShield()
 
 void tortoisePhase1::damaged(actor * e)
 {
-	//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
-	//e->getPower() 값에 따라 액션 선택
-	//0이면 오터스 회전공격 나머지면 불릿
-	//플레이어에 의해 공격당했을때 보스가 해야할 액션
+	//TODO : 레디가 아닐때만 피격당해야함
+	//if (_state != READY)
+	{
+		//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
+		//e->getPower() 값에 따라 액션 선택
+		//0이면 오터스 회전공격 나머지면 불릿
+		//플레이어에 의해 공격당했을때 보스가 해야할 액션
+		_isAlpha = true;
+		//실드가 있고 액터 공격판정이랑 충돌했으면
+		if (e->getPower() == 100)
+		{
+			_hp -= 100; //무게추공격은 실드관계없이 한방에
+			_isActive = false; //실드를 줍는동작없이 페이즈 넘김
+		}
+		else if (_isActiveShield && e->getPower() == 0)
+		{
+			_state = OFF_SHIELD;
+			_shield->setIsActive(true);
+		}
+		else if (!_isActiveShield)
+		{
+			//TODO : 실드없을때 회전공격 받으면 뒤로 밀쳐지고 스턴됨, 보스가 보스방 픽셀충돌 없어서 작동안함
+			//if (e->getPower() == 0)
+			//{
+			//	_gravity += 0.05;
+			//	float temp = utl::getAngle(_playerX, _playerY, _x, _y);
+			//	if (301 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+			//	{
+			//		_x += 3 * cosf(temp);
+			//	}
+			//	_y += 4 * -sinf(temp) + _gravity;
 
-	//실드가 있고 액터 공격판정이랑 충돌했으면
-	if (e->getPower() == 100)
-	{
-		_hp -= 100; //무게추공격은 실드관계없이 한방에
-		_isActive = false; //실드를 줍는동작없이 페이즈 넘김
-	}
-	else if (_isActiveShield && e->getPower() == 0)
-	{
-		_state = OFF_SHIELD;
-		_shield->setIsActive(true);
-	}
-	else if (!_isActiveShield)
-	{
-		_hp -= e->getPower();
+			//	//보스몸체 픽셀충돌
+			//	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
+			//	int r = GetRValue(color);
+			//	int g = GetGValue(color);
+			//	int b = GetBValue(color);
+
+			//	if (!(r == 255 && g == 0 && b == 255))
+			//	{
+			//		_y = _hitBox.bottom - 160;
+			//		_gravity = 0;
+			//		_state = OFF_STUN;
+			//	}
+			//}
+			_hp -= e->getPower();
+		}
 	}
 }
 
@@ -474,6 +490,98 @@ void tortoisePhase1::Brender()
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		_vBullet[i].render(true);
+	}
+}
+
+void tortoisePhase1::stateUpdate()
+{
+
+	//프레임 돌려줌
+	bool aniDone = false;
+	if (READY == _state)
+	{
+		if (_playerX < 900) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
+		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
+	}
+	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
+
+	switch (_state)
+	{
+	case READY:
+		if (aniDone) _state = WALK;
+		break;
+	case TURN:					//꺽기
+		if (aniDone) turn();	//TURN상태가 되면 이미지프레임이 돌고 다돌고나면(aniDone==true) 방향바꿈
+		break;
+	case WALK:					//걷기
+		move();
+		break;
+	case WALK_SHINING:			//걷다가 빛남
+		move();
+		break;
+	case ATTACK:				//총쏨
+		move();
+		attack();
+		break;
+	case TAKE_SHIELD:			//방패줍기
+		if (aniDone) takeShield();
+		break;
+	case OFF_SHIELD:			//방패 떨어뜨리기
+		shieldOff();
+		break;
+	case OFF_STUN:				//스턴
+		if (stun()) _state = OFF_WALK;
+		break;
+	case OFF_TURN:				//방패없이 꺽기
+		if (aniDone) turn();
+	case OFF_WALK:				//방패없이 걷기
+		moveOff();
+		break;
+	}
+
+	//상태변경
+	if (_state == WALK && aniDone)
+	{
+		//WALK상태에서 ATTACK상태가 되거나 WALK_SHINING상태가 된다
+		if (RND->getInt(4) > 1)
+		{
+			_state = ATTACK;
+		}
+		else _state = WALK_SHINING;
+	}
+	else if (_state == WALK_SHINING && aniDone)
+	{
+		//WALK_SHINING상태에서 WALK상태가 된다
+		_state = WALK;
+	}
+}
+
+void tortoisePhase1::alphaInit()
+{
+	_damAlpha = 255;
+	_damAlphaBlue = 150;
+	_alphaDelay = 0;
+	_alphaCount = 0;
+	_isAlpha = false;
+}
+
+void tortoisePhase1::alphaUpdate()
+{
+	if (_isAlpha)
+	{
+		_alphaDelay = (_alphaDelay + 1) % 5;
+		if (_alphaDelay == 0)
+		{
+			_damAlpha = -_damAlpha;
+			_damAlphaBlue = -_damAlphaBlue;
+			++_alphaCount;
+			if (_alphaCount >= 2)
+			{
+				_isAlpha = false;
+				_alphaCount = 0;
+			}
+		}
 	}
 }
 
