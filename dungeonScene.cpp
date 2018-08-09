@@ -46,6 +46,8 @@ HRESULT dungeonScene::init()
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
 	CAM->setPosition(_player->getX(), _player->getY());
 
+	SOUNDMANAGER->playBgm("´øÀü", _soundVolume);
+
 	return S_OK;
 }
 
