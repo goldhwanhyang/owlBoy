@@ -50,7 +50,7 @@ public:
 
 	int convertDir();
 
-	geddy() {}
+	geddy():_enemyManager(NULL){}
 	~geddy() {}
 };
 
