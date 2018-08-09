@@ -131,7 +131,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("EXIT_MENU", "Texture/UI/exitMenu_1110x90.bmp", 1110, 90, true, RGB(255, 0, 255));
 	_loading->loadImage("FRIEND_UI", "Texture/UI/friendGeddyUI_75x69.bmp", 75, 69, true, RGB(255, 0, 255));
 	_loading->loadImage("HP_BACK", "Texture/UI/hpBarBack_223x36.bmp", 223, 36, true, RGB(255, 0, 255));
-	_loading->loadImage("HP_FRONT", "Texture/UI/hpBarFront_220x27.bmp", 220, 27, true, RGB(255, 0, 255));
+	_loading->loadImage("HP_FRONT", "Texture/UI/hpBarFront_223x36.bmp", 223, 36, true, RGB(255, 0, 255));
 	_loading->loadImage("MOUSE_LEFT", "Texture/UI/leftClickUI_54x60.bmp", 54, 60, true, RGB(255, 0, 255));
 	_loading->loadImage("MOUSE_RIGHT", "Texture/UI/rightClickUI_54x60.bmp", 54, 60, true, RGB(255, 0, 255));
 	_loading->loadImage("VOLUME_BACK", "Texture/UI/volumeProgressBack_673x81.bmp", 673, 81, true, RGB(255, 0, 255));
@@ -276,7 +276,20 @@ void loadingScene::loadingSound()
 	_loading->loadSound("상점", "SOUND/OST/shop.mp3", true, true);
 	_loading->loadSound("보스_페이즈1", "SOUND/OST/Turtle_Guardian_Phase_1.mp3", true, true);
 	_loading->loadSound("보스_페이즈2", "SOUND/OST/Turtle_Guardian_Phase_2.mp3", true, true);
-	_loading->loadSound("마을", "SOUND/OST/Vellie.mp3", true, true);
+	_loading->loadSound("공격", "SOUND/SoundEffect/attack.mp3");
+	_loading->loadSound("총알폭발", "SOUND/SoundEffect/bulletExplode.mp3");
+	_loading->loadSound("적폭발", "SOUND/SoundEffect/EnemyExplode.mp3");
+	_loading->loadSound("게임시작", "SOUND/SoundEffect/gameStart.mp3");
+	_loading->loadSound("게디쏘기", "SOUND/SoundEffect/geddyFire.mp3");
+	_loading->loadSound("메뉴커서충돌", "SOUND/SoundEffect/mouseOnMenu.mp3");
+	_loading->loadSound("고리충돌", "SOUND/SoundEffect/ringCollide.mp3");
+	_loading->loadSound("구르기", "SOUND/SoundEffect/roll.mp3");
+	_loading->loadSound("메뉴선택", "SOUND/SoundEffect/selectMenu.mp3");
+	_loading->loadSound("돌폭발", "SOUND/SoundEffect/stonExplode.mp3");
+	_loading->loadSound("돌던지기", "SOUND/SoundEffect/stonThrow.mp3");
+	_loading->loadSound("소환", "SOUND/SoundEffect/summon.mp3");
+	_loading->loadSound("던지기", "SOUND/SoundEffect/throw.mp3");
+	_loading->loadSound("날개짓", "SOUND/SoundEffect/날개짓.mp3");
 }
 
 void loadingScene::loadingEffect()

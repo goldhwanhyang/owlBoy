@@ -9,7 +9,9 @@ HRESULT gawk::init(float x, float y, int dir)
 	IGM->addFrameImage("°íÅ©_±âº»", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
 	IGM->addFrameImage("°íÅ©_³¯±â", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
 	IGM->addFrameImage("°íÅ©_¾ÆÇÄ", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
-	IGM->addFrameImage("ÀÏ¹Ý¸÷_Á×À½", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
+
+
+	SOUNDMANAGER->addSound("°íÅ©_³¯°³Áþ", "SOUND/SoundEffect/gawkFeather.mp3");
 	//=====================================
 	enemy::init(x, y);
 
@@ -20,7 +22,6 @@ HRESULT gawk::init(float x, float y, int dir)
 	_gawkImage[READY] = IGM->findImage("°íÅ©_±âº»");
 	_gawkImage[FLY] = IGM->findImage("°íÅ©_³¯±â");
 	_gawkImage[STUN] = IGM->findImage("°íÅ©_¾ÆÇÄ");
-	_gawkImage[DEAD] = IMAGEMANAGER->findImage("ÀÏ¹Ý¸÷_Á×À½");
 	_gawkImage[IDLE] = _gawkImage[READY];
 	_gawkImage[FALL] = _gawkImage[FLY];
 
@@ -43,9 +44,14 @@ HRESULT gawk::init(float x, float y, int dir)
 
 void gawk::update()
 {
+	if (KEYMANAGER->isOnceKeyDown('7'))
+	{
+		SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+	}
 	if (_hp <= 0)
 	{
-		_state = DEAD;
+		EFFECTMANAGER->play("ÀûÆø¹ß", _x, _y);
+		_isActive = false;
 		_hp = 0;
 	}
 
@@ -65,10 +71,6 @@ void gawk::update()
 	{
 		_index = _gawkImage[_state]->getMaxFrameX();
 	}
-	else if (_state == DEAD)
-	{
-		aniDone = frameMake(_gawkImage[_state], 14);
-	}
 	else
 	{
 		aniDone = frameMake(_gawkImage[_state], RND->getFromIntTo(5, 12));
@@ -81,10 +83,14 @@ void gawk::update()
 		turn();
 		break;
 	case READY:
+		//if(_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		_y += 1.5;
 		if (aniDone) _state = FLY;
 		break;
 	case FLY:
+		//if (_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		move();
 		turn();
 		break;
@@ -94,9 +100,6 @@ void gawk::update()
 		break;
 	case STUN:
 		stunShake();
-		break;
-	case DEAD:
-		if (aniDone) _isActive = false;
 		break;
 	}
 
@@ -122,10 +125,6 @@ void gawk::render()
 			tempX = _x - 95;
 			tempY = _y - 70;
 			break;
-		case DEAD:
-			tempX = _x - 200;
-			tempY = _y - 190;
-			break;
 		}		
 	}
 	else if (_dir == LEFT)
@@ -142,10 +141,6 @@ void gawk::render()
 		case STUN:
 			tempX = _x - 80;
 			tempY = _y - 70;
-			break;
-		case DEAD:
-			tempX = _x - 200;
-			tempY = _y - 190;
 			break;
 		}
 	}

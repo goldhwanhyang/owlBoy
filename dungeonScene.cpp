@@ -26,16 +26,27 @@ HRESULT dungeonScene::init()
 	
 	_player->setEnemyManager(_enemyManager);	// 에너미매니저가 플레이어의 정보를 가져간것처럼 플레이어도 에너미매니져의 정보를 가져간다.
 
+	_geddy = new geddy;
+	_geddy->init();
+	_geddy->setMapPixel(_stagePixel);
+	_geddy->setEnemyManager(_enemyManager);
+
+
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
 	_shield->setMapPixel(_stagePixel);
 	_stuffManager->addStuff(_shield);
 
+	_stuffManager->addStuff(_geddy);
+
 	_player->setStuffManager(_stuffManager);
+	_player->setGeddy(_geddy);
 
 	CAM->init();
 	CAM->setRange(_stage->getWidth(), _stage->getHeight());
 	CAM->setPosition(_player->getX(), _player->getY());
+
+	SOUNDMANAGER->playBgm("던전", _soundVolume);
 
 	return S_OK;
 }

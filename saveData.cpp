@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "saveData.h"
 #include "player.h"
+#include "geddy.h"
 
 HRESULT saveData::init()
 {

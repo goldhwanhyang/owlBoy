@@ -3,6 +3,7 @@
 //씬 전환등에 사용하도록 하자
 
 class player;
+class geddy;
 
 class saveData : public singletonBase <saveData>
 {
@@ -13,6 +14,7 @@ private:
 	char _data[128];
 
 	player* _player;
+	geddy* _geddy;
 
 public:
 	HRESULT init();
@@ -23,6 +25,9 @@ public:
 
 	player* getPlayer() { return _player; }
 	void setPlayer(player * p) { _player = p; }
+
+	geddy* getGeddy() { return _geddy; }
+	void setGeddy(geddy * g) { _geddy = g; }
 
 	saveData() {}
 	~saveData() {}

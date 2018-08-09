@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "geddy.h"
 #include "player.h"
-
+#include "enemyManager.h"
 
 HRESULT geddy::init()
 {
@@ -35,6 +35,9 @@ HRESULT geddy::init()
 
 	_maxWidth = 100;
 	_maxHeight = 100;
+
+	_isActive = true;
+
 	return S_OK;
 }
 
@@ -62,7 +65,7 @@ void geddy::update()
 		if (_state != IDLE)
 		{
 			move();
-			collide();
+			collideWall();
 		}
 		_z = 0;
 		if (_angle > PI / 2 && _angle < 3 * PI / 2)
@@ -80,6 +83,8 @@ void geddy::update()
 			EFFECTMANAGER->play("ÃÑ¾ËÆø¹ß", _bullet[i].getX(), _bullet[i].getY(), _bullet[i].getAngle() * 0.017f + PI/2);
 		}
 	}
+
+	collideEnemy();
 }
 
 void geddy::render()
@@ -196,6 +201,12 @@ void geddy::move()
 
 void geddy::collide()
 {
+	collideWall();
+	collideEnemy();
+}
+
+void geddy::collideWall()
+{
 
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
 	int r = GetRValue(color);
@@ -249,6 +260,29 @@ void geddy::collide()
 		//_angle = 3 * PI / 2;
 		_speed = 0;
 		//break;
+	}
+}
+
+void geddy::collideEnemy()
+{
+	if (_enemyManager == NULL) return;
+
+	vector<enemy *> em = _enemyManager->getVEnemy();
+	RECT temp;
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		if (!_bullet[i].getIsActive()) continue;
+
+		for (int j = 0; j < em.size(); ++j)
+		{
+			if (!em[j]->getIsActive()) continue;
+
+			if (IntersectRect(&temp, &em[j]->getHitbox(), &_bullet[i].getHitbox()))
+			{
+				em[j]->damaged(&_bullet[i]);
+				_bullet[i].setIsActive(false);
+			}
+		}
 	}
 }
 

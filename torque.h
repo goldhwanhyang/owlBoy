@@ -19,8 +19,7 @@ class torque : public enemy
 		READY,
 		AIMING,
 		SHOOT,
-		STUN,
-		DEAD
+		STUN
 	};
 	enum DIR
 	{

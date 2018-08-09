@@ -1,5 +1,6 @@
 #pragma once
 #include "gameNode.h"
+#include "geddy.h"
 #include "player.h"
 #include "enemyManager.h"
 #include "stuffManager.h"
@@ -12,6 +13,8 @@ class dungeonScene : public gameNode
 	enemyFactory* _factory;
 	enemyManager* _enemyManager;
 	stuffManager* _stuffManager;
+
+	geddy *_geddy;
 
 	tortoise * _tortoise;
 	tortoiseShield* _shield;
