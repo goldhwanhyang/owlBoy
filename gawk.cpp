@@ -10,6 +10,8 @@ HRESULT gawk::init(float x, float y, int dir)
 	IGM->addFrameImage("°íÅ©_³¯±â", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
 	IGM->addFrameImage("°íÅ©_¾ÆÇÄ", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
 	IGM->addFrameImage("ÀÏ¹Ý¸÷_Á×À½", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
+
+	SOUNDMANAGER->addSound("°íÅ©_³¯°³Áþ", "SOUND/SoundEffect/gawkFeather.mp3");
 	//=====================================
 	enemy::init(x, y);
 
@@ -43,6 +45,10 @@ HRESULT gawk::init(float x, float y, int dir)
 
 void gawk::update()
 {
+	if (KEYMANAGER->isOnceKeyDown('7'))
+	{
+		SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+	}
 	if (_hp <= 0)
 	{
 		_state = DEAD;
@@ -81,10 +87,14 @@ void gawk::update()
 		turn();
 		break;
 	case READY:
+		//if(_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		_y += 1.5;
 		if (aniDone) _state = FLY;
 		break;
 	case FLY:
+		//if (_index == 2) SOUNDMANAGER->play("³¯°³Áþ", _soundVolume);
+		//else SOUNDMANAGER->stop("³¯°³Áþ");
 		move();
 		turn();
 		break;
