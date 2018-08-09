@@ -1,7 +1,7 @@
 #pragma once
 #include "actor.h"				// 상속의 부모클래스
 #include "geddy.h"
-#include "progressBar.h"		// 체력바 사용을 위해 가져온다.
+#include "progressBar.h"		// 체력바 클래스 사용을 위해 가져온다.
 // liftableActor
 // stuffMAnager상호참조
 
@@ -11,8 +11,8 @@ class stuffManager;	// stuffManager라는 클래스가 있다는것을 알리기 위해 전방선언
 #define OTUS_WIDTH 50
 #define OTUS_HEIGTH 125
 #define PI 3.14
-#define STATE_MAX 10	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
-enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT,HIT };
+#define STATE_MAX 11	// 상태 추가 될때마다 까먹지말고 갯수 늘려주기
+enum STATE { IDLE , WALK, JUMP, JUMPFALL , FLY , FLYDOWN, ROLL , ATK, LIFT,HIT,DEAD };
 enum WAY { RIGHT , LEFT, UP, DOWN, NONE};	// 왼쪽, 오른쪽 , 위 , 아래 , 아무것도 누르지 않았을 때
 enum FLYING { FLY_L, FLY_R, FLY_U, FLY_D, FLY_N };
 
@@ -31,7 +31,6 @@ private:
 	geddy* _geddy;
 	progressBar* _hpBar;	
 
-
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
 	FLYING _FX, _FY;	//
@@ -41,8 +40,6 @@ private:
 	image* _map;
 
 	image* friendsFace;
-	image* hpBarBack;
-	image* hpBarFront;
 
 	RECT _spinHitBox;
 	RECT _rollHitBox;
@@ -50,8 +47,9 @@ private:
 	bool _isBack;
 	bool _isLeft;
 	bool _isFly;	// 날고있는 상태인지 아닌지
+	bool _isDead;
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수
-
+	int _coin;
 
 	float _jumpSpeed;	// 점프 스피드 중력
 	float _flySpeed;	// 날고있을 때 속도
@@ -89,10 +87,6 @@ public:
 	// 플레이어가 대미지를 입으면 자기 자신의 피를 깎는다
 	virtual void damaged(actor *e);	// 체력 감소, 넉백, 동료 떨어트리기(오투스), 서있을 때 피격시 사라짐(게디, 알폰스)
 	
-	
-	
-	void hitDamage(float damage);
-
 	void frameSetting();
 
 	void setMap(image *map) { _map = map; }
@@ -102,8 +96,13 @@ public:
 	void setliftableActor(liftableActor* l) { _liftableActor = l; }
 	void setGeddy(geddy *g) { _geddy = g; }
 
+	int getCoin() { return _coin; }
+	int setCoin(int coin) { _coin = coin; }
+	
+
+
 	// 예시 ) 컵에 물을 따르려면 가만히두면 물이 안따라지니까 손이라는 도구를 사용해서 물을 따른다
 	// 컵 = 틀 , 물 = 알맹이, 손 = set함수
-	player():_stuffManager(NULL), _liftableActor(NULL), _geddy(NULL){}
+	player():_stuffManager(NULL), _liftableActor(NULL), _geddy(NULL), _hpBar(NULL), _coin(-1){}
 	~player(){}
 };

@@ -15,7 +15,6 @@
 */
 
 /*
-	맞으면 에너지 달기,
 	체력이 다 깎이면 오터스 죽는거
 	게디들고있을때 검은색픽셀 안통과하게 고치기
 */
@@ -32,20 +31,19 @@ HRESULT player::init()
 	img[ROLL] = IMAGEMANAGER->findImage("ROLL");
 	img[ATK] = IMAGEMANAGER->findImage("ATTACK");
 	img[HIT] = IMAGEMANAGER->findImage("DAMAGED");									// 오터스 맞는모션 
+	img[DEAD] = IMAGEMANAGER->findImage("DEAD");
 	img[LIFT] = IMAGEMANAGER->findImage("LIFT");									// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
 	_liftImg = IMAGEMANAGER->findImage("LIFT2");									//	(물체 앞에서 잡고있는 프레임)
 
-
-	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
-	
 	//hp바
+	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
 	_hpBar = new progressBar;
 	_hpBar->init("HP_FRONT", "HP_BACK", 120, 63, 220, 30);
 	_maxHp = 30;	// 맥스HP
 	_hp = 29;	// 현재 에너지(이미지수정때문에29)
 	_hpBar->setGauge(_hp, _maxHp);
 
-
+	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
 	_isFly = false;																	// 날고있는지 아닌지
 	_isKnockBack = false;															// 넉백인지 아닌지
@@ -58,7 +56,7 @@ HRESULT player::init()
 	_jumpCount = 0;																	// 점프 카운트
 	_flySpeed = 9.f;																// 날기 속도
 	_rollSpeed = 15.f;																// 구르기 속도
-	_knockBackSpeed = 1.f;															// 뒤로 밀려나는(넉백)속도
+	_knockBackSpeed = 10.f;															// 뒤로 밀려나는(넉백)속도
 	_backSpeed = 0.7f;																// 뒤로 밀려나는 속도
 	_angle = PI / 2;																// 플레이어 각도
 	_gravity = 0;																	// 플레이어 중력
@@ -74,6 +72,7 @@ HRESULT player::init()
 	_beforeState = _state;															// 이전 상태에 현재 상태를 저장
 	_oldX = 0;																		// 이전 X위치
 	_oldY = 0;																		// 이전 Y위치
+	_coin = 0;
 
 	_enemyManager = NULL;															// townScene에 들어갔을 땐 0으로 만들어준다. 초기화해준다. (안해주면 쓰레기값을 가져와서 터짐)
 	_liftableActor = NULL;															// 초기화 ( 안해주면 터짐 )
@@ -84,8 +83,11 @@ HRESULT player::init()
 
 void player::release()
 {
-	SAFE_DELETE(_hpBar);
-
+	if (_hpBar != NULL)
+	{
+		_hpBar->release();
+		SAFE_DELETE(_hpBar);
+	}
 }
 
 void player::update()
@@ -105,6 +107,7 @@ void player::update()
 			flyAngle(_FX, _FY);														// 입력받은 키에 따라 각도 설정해주기
 			flyMove();																// 설정된 각도에 따라 움직인다.
 		}
+
 		else																		// 땅에 있을 때
 		{
 			_speed = 7.0f;															// 땅에 있을 때 스피드 7.0f
@@ -147,10 +150,7 @@ void player::render()
 	{
 		Rectangle(getMemDC(), _spinHitBox.left - CAM->getX(), _spinHitBox.top - CAM->getY(), _spinHitBox.right - CAM->getX(), _spinHitBox.bottom - CAM->getY());
 	}
-	//img[_state]->setFrameY(_dir);
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
-
-	
 
 	char str[128];
 	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
@@ -281,9 +281,7 @@ void player::groundAxis(WAY axisX, WAY axisY)										// 키 입력으로 바꿔준 상�
 			// 점프를 했다가 떨어질때 자연스럽게 떨어지기 위해 중력을 조절
 			if (_state == JUMP)
 				_gravity += -sinf(PI / 2) * _jumpSpeed;
-
 			changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
-
 		}
 	}
 
@@ -469,17 +467,14 @@ void player::changeState(int state)									// 상태(스테이트)가 바뀔때 마다 inde
 	}
 	// _state가 공격일 때 _beforeState에 공격이 들어가고 state에 구르기일때 _state에 구르기가 들어가서 _beforState가 공격,구르기를 반복하니까 방지해줘야한다.
 	// 공격 구르기가 아닐때만 이전상태를 저장하면 반복하지 않는다.
-	if (_state != ATK && _state != ROLL && _state != LIFT)
+	if (_state != ATK && _state != ROLL && _state != LIFT && _state != DEAD)
 	{
 		_beforeState = _state;										// 구르기->공격을 하면 아무것도 입력 안했는데 구르기공격만 반복하기 때문에 걸어준 조건. 
 	}
 	_state = state;
 
-	if (_state != HIT)												// 넉백상태가 아닐때만 초기화
-	{
-		_index = 0;
-		_count = 0;
-	}	
+	_index = 0;
+	_count = 0;
 }
 
 //공부하기
@@ -575,7 +570,6 @@ void player::collideMap()
 		{
 			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
-
 				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
 				_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
@@ -632,11 +626,6 @@ void player::collideMap()
 // 플레이어와 몬스터의 충돌 처리
 void player::collideActor()
 {
-	//플레이어가 몬스터에게 대미지를 줄것(스핀공격 , 구르기)
-	//플레이어가 공격당하면 넉백
-	//
-
-
 	//_enemyManager->getVEnemy()[0]->getHitbox(); // 에너미매니져에 있는 0번 에너미의 히트박스 , 또는 에너미의 여러가지 정보를 불러올 수 있다.
 
 	if (_enemyManager != NULL)															// 에너미매니져가 NULL이 아니면
@@ -658,16 +647,27 @@ void player::collideActor()
 				{
 					_enemyManager->getVEnemy()[i]->damaged(this);
 					_isBack = true;
+					changeState(ATK);
 				}
 			}
-			//HIT상태가 아니고 _state가 공격이아니고 구르기가 아닐때만 HIT가 되어야 한다. HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
 			if (_state != HIT && _state != ATK && _state != ROLL)
 			{
 				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
-				{				
-					//고크가 플레이어와의 충돌체크를 해서 충돌이 되면 _player->damaged(this) 플레이어에게 준다. 
+				{
+
 				}
 			}
+			//HIT상태가 아니고 _state가 공격이아니고 구르기가 아닐때만 HIT가 되어야 한다. HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
+			//고크가 플레이어와의 충돌체크를 해서 충돌이 되면 _player->damaged(this) 플레이어에게 준다. 
+			/*
+			if (_state != HIT && _state != ATK && _state != ROLL)
+			{
+				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
+				{
+
+				}
+			}
+
 			if (_isKnockBack == true)
 			{
 				_speed = _knockBackSpeed;
@@ -675,19 +675,31 @@ void player::collideActor()
 					_x += _speed;
 				else
 					_x -= _speed;
-			}
+			}*/
 			if (_isBack == true)
 			{
 				//나중에 밀려나는 모션 추가하던가 하기
 				//changeState(_beforeState);
-				//_speed = _backSpeed;
-				//if (_isLeft)
-				//	_x += _speed;
-				//else
-				//	_x -= _speed;
+				_speed = _backSpeed;
+				if (_isLeft)
+					_x += _speed;
+				else
+					_x -= _speed;
 			}
 		}
 	}
+
+	if (_isKnockBack == true)
+	{
+		_speed = _knockBackSpeed;
+		if (_isLeft)
+			_x += _speed;
+		else
+			_x -= _speed;
+	}
+	_knockBackSpeed -= 0.5f;
+	if (_knockBackSpeed < 0)
+		_knockBackSpeed = 0;
 }
 
 void player::collideStuff()
@@ -710,20 +722,30 @@ void player::collideStuff()
 
 void player::damaged(actor * e)
 {
+	if (_state == HIT || _state == ATK || _state == ROLL || _state == DEAD) 
+	{
+		return;
+	}
 	//this를 넣으면 플레이어가 자기자신을 때리는거고 몬스터는 이미 플레이어에게 자신의대미지를 넘겨줬다.
 	//내가 HIT가 아닐때만 데미지를 받고 몬스터가 살아있을때만 데미지를 받는다.
-	if (_state != HIT && e->getIsActive() == TRUE)
+	if (_state != HIT && e->getIsActive() == TRUE && _state != DEAD)
 	{
 		_hp -= e->getPower();
 		changeState(HIT);
+		if (_hp <= 0)
+		{
+			_hp = 0;
+
+		}
+		_hpBar->setGauge(_hp, _maxHp);
 		_isKnockBack = true;
+		_knockBackSpeed = 10.f;
 		if (_state == LIFT)
 		{
 			_liftableActor = NULL;
 		}
 	}	
 }
-
 
 //이미지프레임셋팅
 void player::frameSetting()
