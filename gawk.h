@@ -18,8 +18,7 @@ private:
 		READY,
 		FLY,
 		FALL,
-		STUN,
-		DEAD
+		STUN
 	};
 	enum DIR
 	{

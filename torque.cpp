@@ -4,7 +4,6 @@
 
 HRESULT torque::init(float x, float y, int dir)
 {
-	//TODO : ∑πµ,¡∂¡ÿ ªÛ≈¬ø°º≠ ∫“∏¥ ∂ÁøˆµŒ±‚
 	//CHECK √ﬂ∞° ¿ÃπÃ¡ˆ
 	IGM->addFrameImage("≈‰≈©_±‚∫ª", "Texture/Enemies/Torque/idle_882x258_6x2.bmp", 882, 258, 6, 2);
 	IGM->addFrameImage("≈‰≈©_∑πµ", "Texture/Enemies/Torque/ready_165x258_1x2.bmp", 165, 258, 1, 2);
@@ -14,11 +13,7 @@ HRESULT torque::init(float x, float y, int dir)
 	IGM->addFrameImage("≈‰≈©_ΩÓ±‚", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
 	IGM->addFrameImage("≈‰≈©_æ∆«ƒ", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
 
-	IGM->addFrameImage("¿œπ›∏˜_¡◊¿Ω", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
-
-	IGM->addFrameImage("≈‰≈©_∫“∏¥", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);
-	IGM->addFrameImage("µπµ¢¿Ã_∆¯πﬂ¿Ã∆Â∆Æ", "Texture/Effect/stonExplode_1344x214_8x1.bmp", 1344, 214, 8, 1);
-	EFFECTMANAGER->addEffect("µπµ¢¿Ã_∆¯πﬂ", "µπµ¢¿Ã_∆¯πﬂ¿Ã∆Â∆Æ", 0.2, 7);
+	IGM->addFrameImage("≈‰≈©_∫“∏¥", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);;
 	
 	enemy::init(x, y);
 
@@ -27,7 +22,6 @@ HRESULT torque::init(float x, float y, int dir)
 	_torqueImage[AIMING] = IMAGEMANAGER->findImage("≈‰≈©_¡∂¡ÿ");
 	_torqueImage[SHOOT] = IMAGEMANAGER->findImage("≈‰≈©_ΩÓ±‚");
 	_torqueImage[STUN] = IMAGEMANAGER->findImage("≈‰≈©_æ∆«ƒ");
-	_torqueImage[DEAD] = IMAGEMANAGER->findImage("¿œπ›∏˜_¡◊¿Ω");
 
 	_torqueHand[READY] = IMAGEMANAGER->findImage("≈‰≈©_∑πµº’");
 	_torqueHand[AIMING] = IMAGEMANAGER->findImage("≈‰≈©_¡∂¡ÿº’");
@@ -61,7 +55,8 @@ void torque::update()
 {
 	if (_hp <= 0)
 	{
-		_state = DEAD;
+		EFFECTMANAGER->play("¿˚∆¯πﬂ", _x, _y);
+		_isActive = false;
 		_hp = 0;
 	}
 
@@ -71,9 +66,7 @@ void torque::update()
 	_hitBox = RectMakeCenter(_x, _y, TORQUE_CONST::HITBOX_WIDTH, TORQUE_CONST::HITBOX_HEIGHT);
 	_scanRc = RectMakeCenter(_x, _y, TORQUE_CONST::HITBOX_WIDTH * 10, TORQUE_CONST::HITBOX_HEIGHT * 10);
 	
-	bool aniDone;
-	if (_state == DEAD) aniDone = frameMake(_torqueImage[_state], 14);
-	else aniDone = frameMake(_torqueImage[_state],7);
+	bool aniDone = frameMake(_torqueImage[_state],7);
 
 	switch (_state)
 	{
@@ -116,9 +109,6 @@ void torque::update()
 		}
 		if (aniDone) ++_stunCount;
 		break;
-	case DEAD:
-		if (aniDone) _isActive = false;
-		break;
 	}
 	if (_isKnockBack && _state == STUN)
 	{
@@ -159,10 +149,6 @@ void torque::render()
 			tempX = _x - 108;
 			tempY = _y - 70;
 			break;
-		case DEAD:
-			tempX = _x - 200;
-			tempY = _y - 190;
-			break;
 		}
 	}
 	else if (_dir == LEFT)
@@ -188,10 +174,6 @@ void torque::render()
 		case STUN:
 			tempX = _x - 108;
 			tempY = _y - 70;
-			break;
-		case DEAD:
-			tempX = _x - 200;
-			tempY = _y - 190;
 			break;
 		}
 	}
@@ -380,8 +362,7 @@ void torque::Bmove()
 		{
 			if(_vBullet[i].collide(_mapPixel))
 			{
-				//TODO : ∫“∏¥¿Ã∆Â∆Æ
-				EFFECTMANAGER->play("µπµ¢¿Ã_∆¯πﬂ", _vBullet[i].getX()+50, _vBullet[i].getY()+50);
+				EFFECTMANAGER->play("µπ∆¯πﬂ", _vBullet[i].getX()+50, _vBullet[i].getY()+50);
 			}
 		}
 	}
@@ -394,7 +375,7 @@ void torque::Bcollide()
 	{
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
-			EFFECTMANAGER->play("µπµ¢¿Ã_∆¯πﬂ", _vBullet[i].getX() + 50, _vBullet[i].getY() + 50);
+			EFFECTMANAGER->play("µπ∆¯πﬂ", _vBullet[i].getX() + 50, _vBullet[i].getY() + 50);
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
 			break;
