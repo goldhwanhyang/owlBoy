@@ -35,6 +35,9 @@ HRESULT geddy::init()
 
 	_maxWidth = 100;
 	_maxHeight = 100;
+
+	_isActive = true;
+
 	return S_OK;
 }
 
@@ -62,7 +65,7 @@ void geddy::update()
 		if (_state != IDLE)
 		{
 			move();
-			collide();
+			collideWall();
 		}
 		_z = 0;
 		if (_angle > PI / 2 && _angle < 3 * PI / 2)
@@ -80,6 +83,8 @@ void geddy::update()
 			EFFECTMANAGER->play("ÃÑ¾ËÆø¹ß", _bullet[i].getX(), _bullet[i].getY(), _bullet[i].getAngle() * 0.017f + PI/2);
 		}
 	}
+
+	collideEnemy();
 }
 
 void geddy::render()
@@ -260,6 +265,8 @@ void geddy::collideWall()
 
 void geddy::collideEnemy()
 {
+	if (_enemyManager == NULL) return;
+
 	vector<enemy *> em = _enemyManager->getVEnemy();
 	RECT temp;
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
@@ -273,6 +280,7 @@ void geddy::collideEnemy()
 			if (IntersectRect(&temp, &em[j]->getHitbox(), &_bullet[i].getHitbox()))
 			{
 				em[j]->damaged(&_bullet[i]);
+				_bullet[i].setIsActive(false);
 			}
 		}
 	}
