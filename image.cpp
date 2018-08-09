@@ -11,7 +11,7 @@ image::~image()
 {
 }
 
-HRESULT image::init(int width, int height)
+HRESULT image::init(int width, int height, bool isTrans, COLORREF transColor)
 {
 	// 재 초기화 방지용, 이미지 정보에 값이 들어있다면 릴리즈먼저 하자
 	if (_imageInfo != NULL) this->release();
@@ -29,12 +29,15 @@ HRESULT image::init(int width, int height)
 	_imageInfo->width = width;
 	_imageInfo->height = height;
 
+	_isTrans = isTrans;
+	_transColor = transColor;
+
 	// 파일이름
 	_fileName = NULL;
 
 	//투명키 컬러 셋팅
-	_isTrans = FALSE;
-	_transColor = RGB(0, 0, 0);
+	_isTrans = isTrans;
+	_transColor = transColor;
 
 	//리소스 얻는데 실패하면 종료
 	if (_imageInfo->hBit == 0) //비트맵 정보가 제대로 들어오지 않으면

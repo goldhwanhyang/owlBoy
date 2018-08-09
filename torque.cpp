@@ -56,6 +56,7 @@ void torque::update()
 	if (_hp <= 0)
 	{
 		EFFECTMANAGER->play("利气惯", _x, _y);
+		SOUNDMANAGER->play("利气惯", _soundVolume);
 		_isActive = false;
 		_hp = 0;
 	}
@@ -341,6 +342,7 @@ void torque::turn()
 
 void torque::Bfire(float angle)
 {
+	SOUNDMANAGER->play("倒带瘤扁", _soundVolume);
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		if (_vBullet[i].getIsActive()) continue;
@@ -363,6 +365,7 @@ void torque::Bmove()
 			if(_vBullet[i].collide(_mapPixel))
 			{
 				EFFECTMANAGER->play("倒气惯", _vBullet[i].getX()+50, _vBullet[i].getY()+50);
+				SOUNDMANAGER->play("倒气惯", _soundVolume);
 			}
 		}
 	}
@@ -376,6 +379,7 @@ void torque::Bcollide()
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_vBullet[i].getHitbox()) && _vBullet[i].getIsActive())
 		{
 			EFFECTMANAGER->play("倒气惯", _vBullet[i].getX() + 50, _vBullet[i].getY() + 50);
+			SOUNDMANAGER->play("倒气惯", _soundVolume);
 			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
 			break;

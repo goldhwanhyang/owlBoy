@@ -272,6 +272,7 @@ void loadingScene::loadingImage()
 void loadingScene::loadingSound()
 {
 	_loading->loadSound("시작", "SOUND/OST/Owlboy_Main_Title.mp3", true, true);
+	_loading->loadSound("마을", "SOUND/OST/Vellie.mp3", true, true);
 	_loading->loadSound("던전", "SOUND/OST/OwlTemple.mp3", true, true);
 	_loading->loadSound("상점", "SOUND/OST/shop.mp3", true, true);
 	_loading->loadSound("보스_페이즈1", "SOUND/OST/Turtle_Guardian_Phase_1.mp3", true, true);

@@ -39,7 +39,14 @@ private:
 	int _attackCount;					//몇발쐈는지 체크
 	int _delayCount;					//불릿 딜레이
 
-	image* _tortoiseImage[PHASE2_CONST::MAX_STATE];	//보스 이미지[상태]			
+	image* _tortoiseImage[PHASE2_CONST::MAX_STATE];	//보스 이미지[상태]	
+	image* _tortoiseDamagedImg[PHASE2_CONST::MAX_STATE]; //보스 피격 이미지
+	int _damAlpha;
+	int _damAlphaBlue;
+	int _alphaDelay;
+	int _alphaCount;
+	bool _isAlpha;
+
 	tortoiseShield* _shield;			//방패
 	float _offSpeed;					//방패없을때 보스의 속도
 	bool _isActiveShield;
@@ -63,6 +70,11 @@ public:
 	virtual void Bmove();
 	virtual void Bcollide();
 	virtual void Brender();
+
+	void stateUpdate();
+
+	void alphaInit();
+	void alphaUpdate();
 
 	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();

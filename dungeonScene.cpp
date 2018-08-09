@@ -48,6 +48,8 @@ HRESULT dungeonScene::init()
 
 	SOUNDMANAGER->playBgm("´øÀü", _soundVolume);
 
+	UIMANAGER->startingNewScene(_player->getX(), _player->getY());
+
 	return S_OK;
 }
 
