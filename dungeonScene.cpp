@@ -31,6 +31,8 @@ HRESULT dungeonScene::init()
 	_shield->setMapPixel(_stagePixel);
 	_stuffManager->addStuff(_shield);
 
+	// 게디 임시 방편 추가.
+
 	_player->setStuffManager(_stuffManager);
 
 	CAM->init();

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "geddy.h"
 #include "player.h"
-
+#include "enemyManager.h"
 
 HRESULT geddy::init()
 {
@@ -196,6 +196,12 @@ void geddy::move()
 
 void geddy::collide()
 {
+	collideWall();
+	collideEnemy();
+}
+
+void geddy::collideWall()
+{
 
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
 	int r = GetRValue(color);
@@ -249,6 +255,26 @@ void geddy::collide()
 		//_angle = 3 * PI / 2;
 		_speed = 0;
 		//break;
+	}
+}
+
+void geddy::collideEnemy()
+{
+	vector<enemy *> em = _enemyManager->getVEnemy();
+	RECT temp;
+	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
+	{
+		if (!_bullet[i].getIsActive()) continue;
+
+		for (int j = 0; j < em.size(); ++j)
+		{
+			if (!em[j]->getIsActive()) continue;
+
+			if (IntersectRect(&temp, &em[j]->getHitbox(), &_bullet[i].getHitbox()))
+			{
+				em[j]->damaged(&_bullet[i]);
+			}
+		}
 	}
 }
 

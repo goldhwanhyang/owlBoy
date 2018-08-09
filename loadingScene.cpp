@@ -276,7 +276,20 @@ void loadingScene::loadingSound()
 	_loading->loadSound("상점", "SOUND/OST/shop.mp3", true, true);
 	_loading->loadSound("보스_페이즈1", "SOUND/OST/Turtle_Guardian_Phase_1.mp3", true, true);
 	_loading->loadSound("보스_페이즈2", "SOUND/OST/Turtle_Guardian_Phase_2.mp3", true, true);
-	_loading->loadSound("마을", "SOUND/OST/Vellie.mp3", true, true);
+	_loading->loadSound("공격", "SOUND/SoundEffect/attack.mp3");
+	_loading->loadSound("총알폭발", "SOUND/SoundEffect/bulletExplode.mp3");
+	_loading->loadSound("적폭발", "SOUND/SoundEffect/EnemyExplode.mp3");
+	_loading->loadSound("게임시작", "SOUND/SoundEffect/gameStart.mp3");
+	_loading->loadSound("게디쏘기", "SOUND/SoundEffect/geddyFire.mp3");
+	_loading->loadSound("메뉴커서충돌", "SOUND/SoundEffect/mouseOnMenu.mp3");
+	_loading->loadSound("고리충돌", "SOUND/SoundEffect/ringCollide.mp3");
+	_loading->loadSound("구르기", "SOUND/SoundEffect/roll.mp3");
+	_loading->loadSound("메뉴선택", "SOUND/SoundEffect/selectMenu.mp3");
+	_loading->loadSound("돌폭발", "SOUND/SoundEffect/stonExplode.mp3");
+	_loading->loadSound("돌던지기", "SOUND/SoundEffect/stonThrow.mp3");
+	_loading->loadSound("소환", "SOUND/SoundEffect/summon.mp3");
+	_loading->loadSound("던지기", "SOUND/SoundEffect/throw.mp3");
+	_loading->loadSound("날개짓", "SOUND/SoundEffect/날개짓.mp3");
 }
 
 void loadingScene::loadingEffect()
