@@ -17,6 +17,7 @@
 /*
 	맞으면 에너지 달기,
 	체력이 다 깎이면 오터스 죽는거
+	게디들고있을때 검은색픽셀 안통과하게 고치기
 */
 
 HRESULT player::init()
@@ -34,13 +35,16 @@ HRESULT player::init()
 	img[LIFT] = IMAGEMANAGER->findImage("LIFT");									// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
 	_liftImg = IMAGEMANAGER->findImage("LIFT2");									//	(물체 앞에서 잡고있는 프레임)
 
-	//플레이어 체력 바
-	//_progressBarRc = RectMakeCenter(200, 100, 250, 40);
-	//pBarBack->render(getMemDC(), 120, 63);
 
 	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
-	hpBarBack = IMAGEMANAGER->findImage("HP_BACK");
-	hpBarFront = IMAGEMANAGER->findImage("HP_FRONT");
+	
+	//hp바
+	_hpBar = new progressBar;
+	_hpBar->init("HP_FRONT", "HP_BACK", 120, 63, 220, 30);
+	_maxHp = 30;	// 맥스HP
+	_hp = 29;	// 현재 에너지(이미지수정때문에29)
+	_hpBar->setGauge(_hp, _maxHp);
+
 
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
 	_isFly = false;																	// 날고있는지 아닌지
@@ -49,7 +53,7 @@ HRESULT player::init()
 	_x = 440.f;																		// 플레이어 x좌표
 	_y = 810.f;																		// 플레이어 y좌표
 	_power = 0;																		// 오터스의 파워 초기화
-	_speed = 7.0f;																	// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )
+	_speed = 7.0f;																	// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )	
 	_jumpSpeed = 15.f;																// 플레이어 점프 속도
 	_jumpCount = 0;																	// 점프 카운트
 	_flySpeed = 9.f;																// 날기 속도
@@ -80,7 +84,7 @@ HRESULT player::init()
 
 void player::release()
 {
-
+	SAFE_DELETE(_hpBar);
 
 }
 
@@ -122,7 +126,11 @@ void player::update()
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
 	_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);			 // 오터스의 왼쪽공격(회전) 히트박스 
 	_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
+	//충돌함수
 	this->collide();
+	//체력바 업데이트
+	_hpBar->update();
+	_hpBar->setGauge(_hp, _maxHp);
 	//아울보이 프레임 돌리기
 	this->frameSetting();
 }
@@ -142,10 +150,7 @@ void player::render()
 	//img[_state]->setFrameY(_dir);
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 
-	//체력 바
-	hpBarBack->render(getMemDC(), 120, 63);
-	hpBarFront->render(getMemDC(), 120, 66);
-	friendsFace->render(getMemDC(), 50, 50);
+	
 
 	char str[128];
 	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
@@ -158,6 +163,8 @@ void player::render()
 		_liftImg->setFrameY(img[_state]->getFrameY());
 	}
 
+	_hpBar->render();
+	friendsFace->render(getMemDC(), 50, 50);
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
@@ -657,17 +664,12 @@ void player::collideActor()
 			if (_state != HIT && _state != ATK && _state != ROLL)
 			{
 				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
-				{
-					_isKnockBack = true;
-					if (_state == LIFT)
-					{
-						_liftableActor = NULL;
-					}
+				{				
+					//고크가 플레이어와의 충돌체크를 해서 충돌이 되면 _player->damaged(this) 플레이어에게 준다. 
 				}
 			}
 			if (_isKnockBack == true)
 			{
-				changeState(HIT);			
 				_speed = _knockBackSpeed;
 				if (_isLeft)
 					_x += _speed;
@@ -703,6 +705,25 @@ void player::collideStuff()
 		}
 	}
 }
+
+//몬스터가 플레이어를 때려서 몬스터의대미지만큼 플레이어의 HP를 깎아준다. 그리고 플레이어는 맞는 모션을 보여준다.
+
+void player::damaged(actor * e)
+{
+	//this를 넣으면 플레이어가 자기자신을 때리는거고 몬스터는 이미 플레이어에게 자신의대미지를 넘겨줬다.
+	//내가 HIT가 아닐때만 데미지를 받고 몬스터가 살아있을때만 데미지를 받는다.
+	if (_state != HIT && e->getIsActive() == TRUE)
+	{
+		_hp -= e->getPower();
+		changeState(HIT);
+		_isKnockBack = true;
+		if (_state == LIFT)
+		{
+			_liftableActor = NULL;
+		}
+	}	
+}
+
 
 //이미지프레임셋팅
 void player::frameSetting()
