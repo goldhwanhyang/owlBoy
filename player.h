@@ -29,8 +29,6 @@ private:
 	liftableActor* _liftableActor;
 	geddy* _geddy;
 
-	RECT _progressBarRc;
-
 	int _beforeState;
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
 	FLYING _FX, _FY;	//

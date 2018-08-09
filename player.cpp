@@ -15,9 +15,6 @@
 */
 
 /*
-	Q를 누르면 게디 소환하는거 생각해보기
-	피격상태가 되면 게디 놓치기
-	소환이펙트
 	맞으면 에너지 달기,
 	체력이 다 깎이면 오터스 죽는거
 */
@@ -160,7 +157,7 @@ void player::render()
 		_liftImg->setFrameX(img[_state]->getFrameX());
 		_liftImg->setFrameY(img[_state]->getFrameY());
 	}
-	Rectangle(getMemDC(), _progressBarRc);
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
@@ -510,6 +507,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			if (_liftableActor != NULL)
 			{
 				changeState(LIFT);
+				EFFECTMANAGER->play("들기", _x, _y);
 				_liftableActor->lifted(this);
 			}
 		}
@@ -518,6 +516,8 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 	{
 		if (_liftableActor == NULL) 
 		{
+			EFFECTMANAGER->play("소환", _x, _y);
+			EFFECTMANAGER->play("소환", _geddy->getX(), _geddy->getY());
 			_liftableActor = _geddy;								// NULL이니까 geddy를 들고있다는것을 알 수 있다.
 		}			
 	}
@@ -653,13 +653,16 @@ void player::collideActor()
 					_isBack = true;
 				}
 			}
-			//HIT상태가 아니고 _state가 공격이거나 구르기가 아닐때만 HIT가 되어야 한다.
-			if (_state != HIT && _state != ATK && _state != ROLL)// HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
+			//HIT상태가 아니고 _state가 공격이아니고 구르기가 아닐때만 HIT가 되어야 한다. HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
+			if (_state != HIT && _state != ATK && _state != ROLL)
 			{
 				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
 				{
 					_isKnockBack = true;
-					_liftableActor = NULL;
+					if (_state == LIFT)
+					{
+						_liftableActor = NULL;
+					}
 				}
 			}
 			if (_isKnockBack == true)

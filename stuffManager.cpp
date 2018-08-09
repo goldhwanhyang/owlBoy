@@ -11,10 +11,12 @@ void stuffManager::release()
 {
 	for (int i = 0; i < _vStuff.size(); ++i)
 	{
+		_vStuff[i]->release();
 		SAFE_DELETE(_vStuff[i]);
 	}
 	for (int i = 0; i < _vFruit.size(); ++i)
 	{
+		_vFruit[i]->release();
 		SAFE_DELETE(_vFruit[i]);
 	}
 }

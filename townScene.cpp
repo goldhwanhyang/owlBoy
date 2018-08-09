@@ -64,7 +64,8 @@ HRESULT townScene::init()
 
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
-	
+	_stuffManager->addStuff(_geddy);
+
 	for (int i = 0; i < 20; ++i)
 	{
 		_stuffManager->addStuff(0, RND->getFromIntTo(200, _TownMap->getWidth() - 200),
@@ -88,8 +89,6 @@ void townScene::release()
 
 	_stuffManager->release();
 	SAFE_DELETE(_stuffManager);
-	_geddy->release();
-	SAFE_DELETE(_geddy);
 }
 
 void townScene::update()
@@ -144,7 +143,7 @@ void townScene::update()
 
 	g->update();
 	*/
-	_geddy->update();
+	//_geddy->update();
 
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
@@ -174,8 +173,8 @@ void townScene::render()
 		_TownMapPixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
 		Rectangle(getMemDC(), portal.left - CAM->getX(), portal.top - CAM->getY(), portal.right - CAM->getX(), portal.bottom - CAM->getY());
 	}
-	if(_geddy->getState() != geddyEnum::HANG)
-		RENDERMANAGER->addRender(_geddy->getZ(), _geddy);
+	//if(_geddy->getState() != geddyEnum::HANG)
+	//	RENDERMANAGER->addRender(_geddy->getZ(), _geddy);
 	RENDERMANAGER->addRender(_player->getZ(), _player);
 	_stuffManager->render();
 
