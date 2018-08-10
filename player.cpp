@@ -16,7 +16,7 @@
 
 /*
 	마우스 우클릭을 누르고있으면 포물선을 그려주는것
-	구르기만 속도 빠르게
+	WALK일 때 대각선으로 내려가는거
 */
 
 HRESULT player::init()
@@ -51,10 +51,8 @@ HRESULT player::init()
 		_maxHp = 30;	// 맥스HP
 		_hp = 29;	// 현재 에너지(이미지수정때문에29)
 		_hpBar->setGauge(_hp, _maxHp);
-
 	}
 	//코인
-	//IMAGEMANAGER->addFrameImage("number", "Texture/UI/number_220x36_10x1.bmp", 220, 36, 10, 1, true, RGB(255, 0, 255));
 	_maxCoin = 9999;
 	_coin = 0;
 
@@ -311,6 +309,7 @@ void player::groundAxis(WAY axisX, WAY axisY)										// 키 입력으로 바꿔준 상�
 	if (_y > _oldY)
 	{
 		//공격중에 바로 jumpfall이 안되게
+		//if (_state != ROLL && _state != ATK && _state != WALK)
 		if (_state != ROLL && _state != ATK)
 		{
 			// 한번만 실행시켜줘야한다.
@@ -862,7 +861,7 @@ void player::frameSetting()
 			}
 			if (_state == JUMPFALL)
 			{
-				_index = img[_state]->getMaxFrameX() - 2;
+				_index = img[_state]->getMaxFrameX();
 			}
 			if (_state == DEAD)
 			{
@@ -877,4 +876,12 @@ void player::frameSetting()
 		}
 		img[_state]->setFrameX(_index);
 	}	
+}
+
+int player::sumCoin(int coin)
+{
+	_coin += coin;
+
+
+	return _coin;
 }
