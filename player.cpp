@@ -15,8 +15,8 @@
 */
 
 /*
-	체력이 다 깎이면 오터스 죽는거
-	게디들고있을때 검은색픽셀 안통과하게 고치기
+	코인 이미지
+
 */
 
 HRESULT player::init()
@@ -37,12 +37,15 @@ HRESULT player::init()
 
 	//hp바
 	friendsFace = IMAGEMANAGER->findImage("FRIEND_UI");
-	_hpBar = new progressBar;
-	_hpBar->init("HP_FRONT", "HP_BACK", 120, 63, 220, 30);
-	_maxHp = 30;	// 맥스HP
-	_hp = 29;	// 현재 에너지(이미지수정때문에29)
-	_hpBar->setGauge(_hp, _maxHp);
+	if (_hpBar == NULL)
+	{
+		_hpBar = new progressBar;
+		_hpBar->init("HP_FRONT", "HP_BACK", 120, 63, 220, 30);
+		_maxHp = 30;	// 맥스HP
+		_hp = 29;	// 현재 에너지(이미지수정때문에29)
+		_hpBar->setGauge(_hp, _maxHp);
 
+	}
 	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
 	_isFly = false;																	// 날고있는지 아닌지
@@ -92,7 +95,7 @@ void player::release()
 
 void player::update()
 {
-	if (_state != HIT)																// 넉백상태가 아닐 때 (충돌이 아닐 때)
+	if (_state != HIT && _state != DEAD)																// 넉백상태가 아닐 때 (충돌이 아닐 때)
 	{
 		if (_isFly == true)															// _isFly가 true이면, 날고있는 상태면
 		{
@@ -493,7 +496,6 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			_liftableActor->attack();												 // _liftableActor가NULL이 아니면 게디가? 들고있는 대상이? 공격한다.
 		}
 	}
-
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
 	{
 		if (_liftableActor != NULL)													// _liftableActor가 NULL이 아니면 오터스가 뭔가 들고있는 상태이다.
@@ -514,7 +516,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			}
 		}
 	}
-	if (KEYMANAGER->isOnceKeyDown('Q'))
+	if (KEYMANAGER->isOnceKeyDown('Q'))	// 게디 소환
 	{
 		if (_liftableActor == NULL) 
 		{
@@ -587,7 +589,32 @@ void player::collideMap()
 				break;
 			}
 		}
-		else if (_state == FLY && upCollision && !(r == 255 && g == 0 && b == 255)) _x = _oldX;
+		else if (_state == FLY && upCollision && !(r == 255 && g == 0 && b == 255))
+		{
+			_x = _oldX;
+		}
+		else
+		{
+			if (r == 0 && g == 0 && b == 0)	// 마젠타가 아니면 검사
+			{
+				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
+				_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+
+				_gravity = 0.f;				// 중력을 0으로 바꿔주고		
+				_axisY = NONE;	// 계속 점프하는것을 방지
+				_FY = FLY_N;	//
+				_jumpCount = 0;	// 땅에 있으니까 점프카운트 0으로 바꿔준다.
+				_isFly = false;	// 날지 않는 상태라는걸 바꿔주기
+				if (_state != ROLL)
+					_speed = 7;
+				if (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT)	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
+				{
+					_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
+				}
+				break;
+			}
+		}
+
 
 	}
 	//왼쪽 검사
@@ -722,7 +749,7 @@ void player::collideStuff()
 
 void player::damaged(actor * e)
 {
-	if (_state == HIT || _state == ATK || _state == ROLL || _state == DEAD) 
+	if (_state == HIT || _state == ATK || _state == ROLL || _state == DEAD)		// 맞거나, 공격하거나 , 죽으면 이 함수를 종료한다. 계속 대미지 입지않게
 	{
 		return;
 	}
@@ -731,17 +758,20 @@ void player::damaged(actor * e)
 	if (_state != HIT && e->getIsActive() == TRUE && _state != DEAD)
 	{
 		_hp -= e->getPower();
+		UIMANAGER->flickering(RGB(255, 0, 0), 10, 1);	// 피격당했을 때 화면이 붉어지는것
 		changeState(HIT);
 		if (_hp <= 0)
 		{
 			_hp = 0;
-
+			changeState(DEAD);	// hp가 0과 같거나 이하가 되면 0으로 고정시켜주고 DEAD상태로 바꿔준다.
+			_isKnockBack = false;
 		}
 		_hpBar->setGauge(_hp, _maxHp);
 		_isKnockBack = true;
 		_knockBackSpeed = 10.f;
-		if (_state == LIFT)
+		if (_liftableActor != NULL && (_state == HIT || _state == DEAD))
 		{
+			_liftableActor->setState(ON_AIR);
 			_liftableActor = NULL;
 		}
 	}	
@@ -775,6 +805,10 @@ void player::frameSetting()
 			if (_state == JUMPFALL)
 			{
 				_index = img[_state]->getMaxFrameX() - 2;
+			}
+			if (_state == DEAD)
+			{
+				_index = img[_state]->getMaxFrameX();
 			}
 			else
 			{
