@@ -81,6 +81,8 @@ void tortoisePhase2::update()
 
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 
+	collide();
+
 	//실드를 활성하면 보스위치를 따라감
 	if (_isActiveShield)
 	{
@@ -164,7 +166,7 @@ void tortoisePhase2::attack()
 	Bfire(utl::getAngle(_x, _y, _playerX, _playerY) * 58.8); //degree값으로 다시 바꾸기 위해 58.8를 곱했다.
 
 	//불릿을 쏠때 카운트를 올리고 8발 쏘면 상태변화, count++은 Bfire에 있음
-	if (_attackCount > 8)
+	if (_attackCount >= 16)
 	{
 		_state = FLY;
 		_attackCount = 0;
@@ -196,6 +198,9 @@ void tortoisePhase2::collide()
 		if (IntersectRect(&tempRc, &_player->getHitbox(), &_hitBox))
 		{
 			_player->damaged(this); //this는 자기자신을 가리키는 포인터
+			_x += 50 * cosf(utl::getAngle(_playerX, _playerY, _x, _y));
+			_y += 50 * -sinf(utl::getAngle(_playerX, _playerY, _x, _y));
+			_hitBox = RectMakeCenter(_x, _y + 60, PHASE2_CONST::HITBOX_WIDTH, PHASE2_CONST::HITBOX_HEIGHT);
 		}
 	}
 }
@@ -296,7 +301,6 @@ void tortoisePhase2::damaged(actor * e)
 		}
 		else if (_isActiveShield &&	e->getPower() == 0)
 		{
-			//if (PtInRect(&_hitBox, t)) //TODO : 임시
 			_state = OFF_SHIELD;
 			_shield->setIsActive(true);
 		}
@@ -365,8 +369,8 @@ void tortoisePhase2::Bcollide()
 		{
 			float tempAngle = _vBullet[i].getAngle() + 180;
 			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
-			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
+			_vBullet[i].setIsActive(false);
 			break;
 		}
 	}

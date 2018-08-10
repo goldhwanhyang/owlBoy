@@ -380,8 +380,8 @@ void torque::Bcollide()
 		{
 			EFFECTMANAGER->play("µ¹Æø¹ß", _vBullet[i].getX() + 50, _vBullet[i].getY() + 50);
 			SOUNDMANAGER->play("µ¹Æø¹ß", _soundVolume);
-			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
+			_vBullet[i].setIsActive(false);
 			break;
 		}
 	}

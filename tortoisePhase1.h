@@ -41,6 +41,7 @@ private:
 	bool _isAttack;						//공격중
 	int _attackCount;					//몇발쐈는지 체크
 	int _delayCount;					//불릿 딜레이
+	int _attPerCount;					//공격확률상승
 
 	image* _tortoiseImage[PHASE1_CONST::MAX_STATE];	//보스 이미지[상태]
 	image* _tortoiseDamagedImg[PHASE1_CONST::MAX_STATE]; //보스 피격 이미지
@@ -73,6 +74,8 @@ public:
 	virtual void Bmove();
 	virtual void Bcollide();
 	virtual void Brender();
+
+	bool attPercent(int num, int* count);
 
 	void stateUpdate();
 

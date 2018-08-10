@@ -56,6 +56,8 @@ HRESULT tortoisePhase1::init(float x, float y, int dir)
 	_hitBox = RectMakeCenter(_x, _y + 60, PHASE1_CONST::HITBOX_WIDTH, PHASE1_CONST::HITBOX_HEIGHT);
 	_isAttack = false;
 	_attackCount = 0;
+	_attPerCount = 0;
+
 	_state = READY;
 
 	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
@@ -201,8 +203,8 @@ void tortoisePhase1::attack()
 		}
 	}
 
-	//불릿을 쏠때 카운트를 올리고 8발 쏘면 상태변화
-	if (_attackCount > 8)
+	//불릿을 쏠때 카운트를 올리고 8*2발 쏘면 상태변화
+	if (_attackCount >= 16)
 	{
 		_state = WALK_SHINING;
 		_attackCount = 0;
@@ -248,6 +250,7 @@ void tortoisePhase1::turn()
 		//	_shield.offSpeed = DEFAULT_OFF_SPEED; //턴할때 가속도 초기화
 		//}
 		_angle = 0;
+		_attackCount = 0;
 	}
 	else if (_dir == LEFT)
 	{
@@ -258,6 +261,7 @@ void tortoisePhase1::turn()
 		//	_shield.offSpeed = DEFAULT_OFF_SPEED; //턴할때 가속도 초기화
 		//}
 		_angle = 180;
+		_attackCount = 0;
 	}
 }
 
@@ -315,15 +319,6 @@ void tortoisePhase1::moveOff()
 	if(_offSpeed < PHASE1_CONST::MAX_OFF_SPEED) _offSpeed += 0.04f; // 가속한다.
 	_x += _offSpeed * cosf(_angle * 0.017); // cosf에 넣기위해 다시 radian으로 변경
 	//앵글값 변경에 따른 문워크 방지
-	// TODO : offTrun을 만들어서 문워크 방지해야함 아직도 버그가 있다.
-	//if (-90 > _angle && _angle > -190 || _angle > 179)
-	//{
-	//	_dir = LEFT;
-	//}
-	//else if (_angle < 178 &&_angle > -28)
-	//{
-	//	_dir = RIGHT;
-	//}
 	if (_shield->getX() > _x)
 	{
 		_dir = RIGHT;
@@ -372,8 +367,7 @@ void tortoisePhase1::takeShield()
 
 void tortoisePhase1::damaged(actor * e)
 {
-	//TODO : 레디가 아닐때만 피격당해야함
-	//if (_state != READY)
+	if (_state != READY)
 	{
 		//CHECK 오터스의 공격과 게디의 공격을 판정하는 방법 -> 데미지로 체크
 		//e->getPower() 값에 따라 액션 선택
@@ -478,8 +472,8 @@ void tortoisePhase1::Bcollide()
 		{
 			float tempAngle = _vBullet[i].getAngle() + 180;
 			EFFECTMANAGER->play("거북이_불릿폭발", _vBullet[i].getX(), _vBullet[i].getY(), tempAngle*0.017);
-			_vBullet[i].setIsActive(false);
 			_player->damaged(&_vBullet[i]);
+			_vBullet[i].setIsActive(false);
 			break;
 		}
 	}
@@ -493,6 +487,21 @@ void tortoisePhase1::Brender()
 	}
 }
 
+bool tortoisePhase1::attPercent(int num, int* count)
+{
+	int seed = num / 3;
+	if (RND->getInt(100) < seed * (*count))
+	{
+		*count = 0;
+		return true;
+	}
+	else
+	{
+		++*count;
+		return false;
+	}
+}
+
 void tortoisePhase1::stateUpdate()
 {
 
@@ -500,10 +509,10 @@ void tortoisePhase1::stateUpdate()
 	bool aniDone = false;
 	if (READY == _state)
 	{
-		if (_playerX < 900) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
+		if (_playerX < 980) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
 		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
 	}
-	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state)	aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
+	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
 	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
 
 	switch (_state)
@@ -544,11 +553,11 @@ void tortoisePhase1::stateUpdate()
 	if (_state == WALK && aniDone)
 	{
 		//WALK상태에서 ATTACK상태가 되거나 WALK_SHINING상태가 된다
-		if (RND->getInt(4) > 1)
+		if (attPercent(50, &_attPerCount))
 		{
 			_state = ATTACK;
 		}
-		else _state = WALK_SHINING;
+		else if (_state != ATTACK) _state = WALK_SHINING;
 	}
 	else if (_state == WALK_SHINING && aniDone)
 	{
