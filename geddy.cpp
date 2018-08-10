@@ -33,11 +33,11 @@ HRESULT geddy::init()
 
 	_handsDir = _shootingDir = 0;
 
-	_maxWidth = 100;
-	_maxHeight = 100;
+	_maxWidth = GEDDY_WIDTH;
+	_maxHeight = GEDDY_HEIGHT;
 
 	_isActive = true;
-
+	_weight = 40;
 	return S_OK;
 }
 
@@ -207,7 +207,8 @@ void geddy::collide()
 
 void geddy::collideWall()
 {
-
+	liftableActor::collide();
+	/*
 	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
 	int r = GetRValue(color);
 	int g = GetGValue(color);
@@ -261,6 +262,7 @@ void geddy::collideWall()
 		_speed = 0;
 		//break;
 	}
+	*/
 }
 
 void geddy::collideEnemy()

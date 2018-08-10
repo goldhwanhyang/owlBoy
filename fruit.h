@@ -13,7 +13,7 @@ public:
 
 	virtual void trampled(float weight) {}
 	//virtual void lifted(player* _player);
-	//virtual void used(player* _player);
+	virtual void use(actor* _player);
 
 	fruit() : liftableActor() {}
 	~fruit() {}

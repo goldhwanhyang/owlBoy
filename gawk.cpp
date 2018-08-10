@@ -4,12 +4,6 @@
 
 HRESULT gawk::init(float x, float y, int dir)
 {
-	//CHECK 이미지
-	//===============이미지 추가============
-	IGM->addFrameImage("고크_기본", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
-	IGM->addFrameImage("고크_날기", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
-	IGM->addFrameImage("고크_아픔", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
-	//=====================================
 	enemy::init(x, y);
 
 	_angle = 0.0f;

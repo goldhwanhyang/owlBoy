@@ -3,16 +3,7 @@
 #include "player.h"
 
 HRESULT tortoise::init(float x, float y, int dir)
-{	//CHECK ÀÌ¹ÌÁö
-	//==========Ãß°¡ ÀÌ¹ÌÁö
-	IGM->addFrameImage("°ÅºÏÀÌ_ÆäÀÌÁî1_·¹µð", "Texture/Enemies/Boss1/bossReady_975x492_5x2.bmp", 975, 492, 5, 2);
-	IGM->addFrameImage("°ÅºÏÀÌ_Á×À½", "Texture/Enemies/Boss1/bossDead_309X504_1x2.bmp", 309, 504, 1, 2);
-	IGM->addFrameImage("°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
-	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_ºÒ¸´Æø¹ß", "°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", 0.2, 40);
-	IGM->addImage("°ÅºÏÀÌ_Ã¼·Â¹Ù¸Ó¸®", "Texture/Enemies/Boss1/bossHpBarHead.bmp", 54, 69, true, MAGENTA);
-	IGM->addFrameImage("°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", "Texture/Effect/enemyBossExplode_1600x151_7x1.bmp", 1600, 151, 7, 1);
-	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_Á×À½Æø¹ß", "°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", 0.3, 7);
-	//====================
+{
 	enemy::init(x, y, dir);
 	_phase1 = new tortoisePhase1;
 	_phase1->init(x, y, dir);

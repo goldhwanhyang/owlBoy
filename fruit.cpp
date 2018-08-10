@@ -4,7 +4,11 @@
 HRESULT fruit::init()
 {
 	liftableActor::init();
-	_img = IMAGEMANAGER->findImage("과일1");
+	
+	if (RND->getInt(2) == 0)
+		_img = IMAGEMANAGER->findImage("과일1");
+	else
+		_img = IMAGEMANAGER->findImage("과일2");
 
 
 	_state = BURIED;
@@ -36,4 +40,12 @@ void fruit::render()
 	_img->render(getMemDC(), _x - _img->getWidth() / 2 - CAM->getX(),
 		_y - _img->getHeight() / 2 - CAM->getY(),
 		0, 0, _img->getWidth(), _height);
+}
+
+void fruit::use(actor * _player)
+{
+	int temp = _player->getHp() + 5;
+	if (temp > _player->getMaxHp())
+		temp = _player->getMaxHp();
+	_player->setHp(temp);
 }

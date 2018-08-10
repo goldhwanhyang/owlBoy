@@ -12,9 +12,11 @@ HRESULT ironWeight::init()
 	_img[ON_AIR] = IMAGEMANAGER->findImage("무게추공중");
 
 	_state = BURIED;
-	_height = _img[HANG]->getFrameHeight() / 3;
-	_maxHeight = _img[HANG]->getFrameHeight();
-	_maxWidth = _img[HANG]->getFrameWidth();
+	_height = _img[HANG]->getFrameHeight() / 2;
+	_maxHeight = _img[HANG]->getFrameHeight() - 30;
+	_maxWidth = _img[HANG]->getFrameWidth() - 20;
+
+
 
 	return S_OK;
 }
@@ -31,20 +33,11 @@ void ironWeight::update()
 		move();
 		_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
 		collide();
-	}//아래 검사
-	//if (_state == HANG)
-	//{
-	//	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
-	//	int r = GetRValue(color);
-	//	int g = GetGValue(color);
-	//	int b = GetBValue(color);
-	//
-	//	if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
-	//	{
-	//		_y = _hitBox.bottom - (_hitBox.bottom - _hitBox.top) / 2;
-	//		_state = ON_GROUND;
-	//	}
-	//}
+	}
+	if (_state != BURIED)
+	{
+		_height = _img[HANG]->getFrameHeight();
+	}
 }
 
 void ironWeight::render()
@@ -74,6 +67,11 @@ void ironWeight::render()
 		_img[_state]->render(getMemDC(),
 			_x - _img[_state]->getWidth() / 2 - CAM->getX(),
 			_y - _img[_state]->getHeight() / 2 - CAM->getY());
+	}
+
+	if (KEYMANAGER->isToggleKey(VK_F1))
+	{
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 }
 

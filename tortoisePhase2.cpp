@@ -6,15 +6,6 @@
 
 HRESULT tortoisePhase2::init(float x, float y, int dir)
 {
-	//CHECK 추가이미지
-	IGM->addFrameImage("거북이_피해_페이즈2_준비", "Texture/Enemies/Boss1/damaged/phase2Ready_2496x684_8x2.bmp", 2496, 684, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_날기", "Texture/Enemies/Boss1/damaged/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_쏘기", "Texture/Enemies/Boss1/damaged/phase2Shoot_2352x594_8x2.bmp", 2352, 594, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_방패줍기", "Texture/Enemies/Boss1/damaged/phase2takeShield_2448x684_8x2.bmp", 2448, 284, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/phase2OffShield_636x420_2x2.bmp", 636, 420, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_스턴", "Texture/Enemies/Boss1/damaged/phase2OffStun_636x420_2x2.bmp", 636, 420, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈2_날기방패없이", "Texture/Enemies/Boss1/damaged/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
-
 	enemy::init(x, y);
 	_count = _index = 0;
 	_dir = dir;
