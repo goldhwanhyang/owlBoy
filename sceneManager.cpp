@@ -66,6 +66,8 @@ HRESULT sceneManager::loadScene(string sceneName)
 	//바꾸려는 씬과 현재씬이 같다면 E_FAIL
 	if (find->second == _currentScene) return E_FAIL;
 
+	if(_currentScene != NULL)
+		_currentScene->release();
 	//여기까지 왔으면 문제없이 씬 초기화 하고 변경해준다
 	if (SUCCEEDED(find->second->init()))
 	{

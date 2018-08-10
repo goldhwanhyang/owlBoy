@@ -141,6 +141,7 @@ void UIManager::sceneChange(HDC hdc)
 	if (_rcWidth <= 0 || _rcHeight <= 0)
 	{
 		_sceneChanging = false;
+		_endScene = true;
 	}
 
 	_rcWidth -= WINSIZEX / 50;
@@ -155,6 +156,7 @@ void UIManager::sceneChange(HDC hdc)
 void UIManager::startingSceneChange(int x, int y)
 {
 	_sceneChanging = true;
+	_endScene = false;
 	_destX = x;
 	_destY = y;
 	_rcWidth = WINSIZEX * 2;
@@ -181,6 +183,7 @@ void UIManager::newSceneStart(HDC hdc)
 	if (_rcWidth >= WINSIZEX * 2 || _rcHeight >= WINSIZEY * 2)
 	{
 		_startingScene = false;
+		_endScene = false;
 	}
 
 	_rcWidth += WINSIZEX / 50;
@@ -194,6 +197,7 @@ void UIManager::newSceneStart(HDC hdc)
 
 void UIManager::startingNewScene(int x, int y)
 {
+	_endScene = false;
 	_startingScene = true;
 	_destX = x;
 	_destY = y;

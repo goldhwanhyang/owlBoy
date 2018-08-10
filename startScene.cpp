@@ -10,6 +10,9 @@ HRESULT startScene::init()
 	_stone1 = IMAGEMANAGER->findImage("START_SCENE_OTUS");
 	_stone2 = IMAGEMANAGER->findImage("START_SCENE_STONE");
 
+	player * _player= SAVEDATA->getPlayer();
+	_player->init();
+
 	_maxOption = 3;
 
 	_selectedAlpha = 255;
