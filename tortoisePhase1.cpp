@@ -6,17 +6,6 @@
 
 HRESULT tortoisePhase1::init(float x, float y, int dir)
 {
-	//CHECK 추가이미지
-	IGM->addFrameImage("거북이_피해_페이즈1_꺽기", "Texture/Enemies/Boss1/damaged/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_걷기", "Texture/Enemies/Boss1/damaged/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_걷기빛", "Texture/Enemies/Boss1/damaged/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_쏘기", "Texture/Enemies/Boss1/damaged/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_방패줍기", "Texture/Enemies/Boss1/damaged/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_스턴", "Texture/Enemies/Boss1/damaged/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/damaged/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
-	IGM->addFrameImage("거북이_피해_페이즈1_걷기방패없이", "Texture/Enemies/Boss1/damaged/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
-
 	enemy::init(x, y, dir);
 	_count = _index = 0;
 	_dir = RIGHT;

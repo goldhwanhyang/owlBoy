@@ -183,7 +183,8 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("구르기먼지오른쪽이펙트", "Texture/Effect/rollDustRightEffect_912x160_8x1.bmp", 912, 160, 8, 1);
 	_loading->loadFrameImage("적폭발", "Texture/Effect/enemyExplode_4200x340_10x1.bmp", 4200, 340, 10, 1);
 	_loading->loadFrameImage("돌폭발", "Texture/Effect/stonExplode_1344x214_8x1.bmp", 1344, 214, 8, 1);
-
+	_loading->loadFrameImage("거북이_불릿폭발이펙트", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
+	_loading->loadFrameImage("거북이_죽음폭발이펙트", "Texture/Effect/enemyBossExplode_1600x151_7x1.bmp", 1600, 151, 7, 1);
 
 	// player
 	_loading->loadFrameImage("IDLE", "Texture/player/otusIdle_700x250_10x2.bmp", 700, 250, 10, 2);
@@ -215,9 +216,11 @@ void loadingScene::loadingImage()
 
 	// enemy
 	// tortoise
+	_loading->loadImage("거북이_체력바머리", "Texture/Enemies/Boss1/bossHpBarHead.bmp", 54, 69, true, MAGENTA);
 	_loading->loadFrameImage("거북이_떨어진방패", "Texture/Enemies/Boss1/bossShieldDrop_3672x366_17_2.bmp", 3672, 366, 17, 2);
 	_loading->loadFrameImage("거북이_불릿", "Texture/Enemies/Boss1/bossBullet_525x138_7x2.bmp", 525, 138, 7, 2);
 								   
+	_loading->loadFrameImage("거북이_페이즈1_레디", "Texture/Enemies/Boss1/bossReady_975x492_5x2.bmp", 975, 492, 5, 2);
 	_loading->loadFrameImage("거북이_페이즈1_꺽기", "Texture/Enemies/Boss1/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈1_걷기", "Texture/Enemies/Boss1/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 	_loading->loadFrameImage("거북이_페이즈1_걷기빛", "Texture/Enemies/Boss1/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
@@ -228,6 +231,16 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("거북이_페이즈1_스턴", "Texture/Enemies/Boss1/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈1_방패줍기", "Texture/Enemies/Boss1/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
+
+	_loading->loadFrameImage("거북이_피해_페이즈1_꺽기", "Texture/Enemies/Boss1/damaged/bossTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_걷기", "Texture/Enemies/Boss1/damaged/bossWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_걷기빛", "Texture/Enemies/Boss1/damaged/bossWalkShining_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_쏘기", "Texture/Enemies/Boss1/damaged/bossShoot_1968x504_8x2.bmp", 1968, 504, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_방패줍기", "Texture/Enemies/Boss1/damaged/bossTakeShield_1968x648_8x2.bmp", 1968, 648, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/bossOffShield_522x504_2x2.bmp", 522, 504, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_스턴", "Texture/Enemies/Boss1/damaged/bossOffStun_522x504_2x2.bmp", 522, 504, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_꺽기방패없이", "Texture/Enemies/Boss1/damaged/bossOffTurn_492x504_2x2.bmp", 492, 504, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈1_걷기방패없이", "Texture/Enemies/Boss1/damaged/bossOffWalk_1968x504_8x2.bmp", 1968, 504, 8, 2);
 								   
 	_loading->loadFrameImage("거북이_페이즈2_준비", "Texture/Enemies/Boss1/phase2Ready_2496x684_8x2.bmp", 2496, 684, 8, 2);
 	_loading->loadFrameImage("거북이_페이즈2_날기", "Texture/Enemies/Boss1/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
@@ -236,6 +249,31 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("거북이_페이즈2_방패떨어뜨리기", "Texture/Enemies/Boss1/phase2OffShield_636x420_2x2.bmp", 636, 420, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈2_스턴", "Texture/Enemies/Boss1/phase2OffStun_636x420_2x2.bmp", 636, 420, 2, 2);
 	_loading->loadFrameImage("거북이_페이즈2_날기방패없이", "Texture/Enemies/Boss1/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+
+	_loading->loadFrameImage("거북이_피해_페이즈2_준비", "Texture/Enemies/Boss1/damaged/phase2Ready_2496x684_8x2.bmp", 2496, 684, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_날기", "Texture/Enemies/Boss1/damaged/phase2Fly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_쏘기", "Texture/Enemies/Boss1/damaged/phase2Shoot_2352x594_8x2.bmp", 2352, 594, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_방패줍기", "Texture/Enemies/Boss1/damaged/phase2takeShield_2448x684_8x2.bmp", 2448, 284, 8, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_방패떨어뜨리기", "Texture/Enemies/Boss1/damaged/phase2OffShield_636x420_2x2.bmp", 636, 420, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_스턴", "Texture/Enemies/Boss1/damaged/phase2OffStun_636x420_2x2.bmp", 636, 420, 2, 2);
+	_loading->loadFrameImage("거북이_피해_페이즈2_날기방패없이", "Texture/Enemies/Boss1/damaged/phase2OffFly_2352x594_8x2.bmp", 2352, 594, 8, 2);
+
+	_loading->loadFrameImage("거북이_죽음", "Texture/Enemies/Boss1/bossDead_309X504_1x2.bmp", 309, 504, 1, 2);
+
+	// gawk
+	_loading->loadFrameImage("고크_기본", "Texture/Enemies/Gawk/idle_1392x330_8x2.bmp", 1392, 330, 8, 2);
+	_loading->loadFrameImage("고크_날기", "Texture/Enemies/Gawk/fly_1044x288_6x2.bmp", 1044, 288, 6, 2);
+	_loading->loadFrameImage("고크_아픔", "Texture/Enemies/Gawk/damaged_348x288_2x2.bmp", 348, 288, 2, 2);
+
+	//torque
+	_loading->loadFrameImage("토크_기본", "Texture/Enemies/Torque/idle_882x258_6x2.bmp", 882, 258, 6, 2);
+	_loading->loadFrameImage("토크_레디", "Texture/Enemies/Torque/ready_165x258_1x2.bmp", 165, 258, 1, 2);
+	_loading->loadFrameImage("토크_레디손", "Texture/Enemies/Torque/readyOver_165x258_1x2.bmp", 165, 258, 1, 2);
+	_loading->loadFrameImage("토크_조준", "Texture/Enemies/Torque/aiming_390x282_2x2.bmp", 390, 282, 2, 2);
+	_loading->loadFrameImage("토크_조준손", "Texture/Enemies/Torque/aimingOver_390x282_2x2.bmp", 390, 282, 2, 2);
+	_loading->loadFrameImage("토크_쏘기", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
+	_loading->loadFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
+	_loading->loadFrameImage("토크_불릿", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);
 
 	// liftableActor
 	_loading->loadFrameImage("무게추", "Texture/Stuff/weight_510x170_3x1.bmp", 510, 170, 3, 1);
@@ -303,5 +341,6 @@ void loadingScene::loadingEffect()
 	EFFECTMANAGER->addEffect("구르기오른쪽", "구르기먼지오른쪽이펙트", 0.2, 10);
 	EFFECTMANAGER->addEffect("적폭발", "적폭발", 0.2, 10);
 	EFFECTMANAGER->addEffect("돌폭발", "돌폭발", 0.2, 10);
-
+	EFFECTMANAGER->addEffect("거북이_불릿폭발", "거북이_불릿폭발이펙트", 0.2, 40);
+	EFFECTMANAGER->addEffect("거북이_죽음폭발", "거북이_죽음폭발이펙트", 0.3, 7);
 }

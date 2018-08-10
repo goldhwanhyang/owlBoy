@@ -3,18 +3,7 @@
 #include "player.h"
 
 HRESULT torque::init(float x, float y, int dir)
-{
-	//CHECK 추가 이미지
-	IGM->addFrameImage("토크_기본", "Texture/Enemies/Torque/idle_882x258_6x2.bmp", 882, 258, 6, 2);
-	IGM->addFrameImage("토크_레디", "Texture/Enemies/Torque/ready_165x258_1x2.bmp", 165, 258, 1, 2);
-	IGM->addFrameImage("토크_레디손", "Texture/Enemies/Torque/readyOver_165x258_1x2.bmp", 165, 258, 1, 2);
-	IGM->addFrameImage("토크_조준", "Texture/Enemies/Torque/aiming_390x282_2x2.bmp", 390, 282, 2, 2);
-	IGM->addFrameImage("토크_조준손", "Texture/Enemies/Torque/aimingOver_390x282_2x2.bmp", 390, 282, 2, 2);
-	IGM->addFrameImage("토크_쏘기", "Texture/Enemies/Torque/shoot_1386x348_6x2.bmp", 1386, 348, 6, 2);
-	IGM->addFrameImage("토크_아픔", "Texture/Enemies/Torque/damaged_456x294_2x2.bmp", 456, 294, 2, 2);
-
-	IGM->addFrameImage("토크_불릿", "Texture/Enemies/Torque/bullet_69x136_1x2.bmp", 69, 136, 1, 2);;
-	
+{	
 	enemy::init(x, y);
 
 	_torqueImage[IDLE] = IMAGEMANAGER->findImage("토크_기본");
