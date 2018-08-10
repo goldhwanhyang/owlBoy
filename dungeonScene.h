@@ -9,6 +9,7 @@ class dungeonScene : public gameNode
 {
 	image* _stage;
 	image* _stagePixel;
+	image* _stageTunnel;
 	player* _player;
 	enemyFactory* _factory;
 	enemyManager* _enemyManager;
@@ -18,6 +19,9 @@ class dungeonScene : public gameNode
 
 	tortoise * _tortoise;
 	tortoiseShield* _shield;
+
+	int _enterBossDelay;
+	bool _isEnterBoss;
 public:
 	HRESULT init();
 	void update();

@@ -35,6 +35,8 @@ private:
 	WAY _axisX, _axisY;	// 어떤키가 눌렸는지 , 아무것도 안눌렸는지 확인
 	FLYING _FX, _FY;	//
 	image* img[STATE_MAX];
+	int _frameCount[STATE_MAX];
+
 	image* _liftImg;
 	image* _mapPixel;
 	image* _map;
@@ -50,6 +52,7 @@ private:
 	bool _isDead;
 	int _jumpCount; // 땅에있는지 날고있는지 구분하기위한 변수
 	int _coin;
+	int _maxCoin;
 
 	float _jumpSpeed;	// 점프 스피드 중력
 	float _flySpeed;	// 날고있을 때 속도

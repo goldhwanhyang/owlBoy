@@ -4,7 +4,7 @@
 namespace SHIELD_CONST
 {
 	const int HITBOX_WIDTH = 220;
-	const int HITBOX_HEIGHT = 240;
+	const int HITBOX_HEIGHT = 160;
 }
 class tortoiseShield : public liftableActor
 {

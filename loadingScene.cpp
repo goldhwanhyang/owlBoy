@@ -124,6 +124,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("OPTION", "Texture/Text/option_69x39.bmp", 69, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("SYSTEM", "Texture/Text/system_99x39.bmp", 99, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("TITLE", "Texture/Text/title_597x303.bmp", 597, 303, true, RGB(255, 0, 255));
+	_loading->loadFrameImage("number", "Texture/Text/number_220x36_10x1.bmp", 220, 36, 10, 1, true, RGB(255, 0, 255));
 
 	//UI
 	_loading->loadImage("CURSOR", "Texture/UI/cursor_30x42.bmp", 30, 42, true, RGB(255, 0, 255));
@@ -139,7 +140,6 @@ void loadingScene::loadingImage()
 	_loading->loadImage("VOLUME_RIGHT", "Texture/UI/volumeProgressFrontRight_19x66.bmp", 19, 50, true, RGB(255, 0, 255));
 	//_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_1473x495.bmp", 1473, 495, true, RGB(255, 0, 255));
 	_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_800x269.bmp", 800, 269, true, RGB(255, 0, 255));
-
 
 	// background
 	_loading->loadImage("검정", "Texture/background/black_50x50.bmp", WINSIZEX, WINSIZEY);
@@ -297,7 +297,7 @@ void loadingScene::loadingEffect()
 {
 	EFFECTMANAGER->addEffect("들기", "친구들기이펙트", 0.5, 5);
 	EFFECTMANAGER->addEffect("총알폭발", "총알폭발이펙트", 0.2, 20);
-	EFFECTMANAGER->addEffect("소환", "친구소환이펙트", 0.5, 5);
+	EFFECTMANAGER->addEffect("소환", "친구소환이펙트", 0.2, 5);
 	EFFECTMANAGER->addEffect("구르기먼지", "구르기먼지이펙트", 0.5, 10);
 	EFFECTMANAGER->addEffect("구르기왼쪽", "구르기먼지왼쪽이펙트", 0.2, 10);
 	EFFECTMANAGER->addEffect("구르기오른쪽", "구르기먼지오른쪽이펙트", 0.2, 10);

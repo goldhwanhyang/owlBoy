@@ -5,14 +5,16 @@ HRESULT dungeonScene::init()
 {
 	IGM->addImage("던전맵", "Texture/Maps/Boss1/dungeonMap_9235x1080.bmp", 9235, 1080);
 	IGM->addImage("던전맵픽셀", "Texture/Maps/Boss1/dungeonMapPixel_9235_1080.bmp", 9235, 1080);
+	IGM->addImage("던전맵터널", "Texture/Maps/Boss1/tunnel_658_420.bmp", 658, 420, true, MAGENTA);
 
 	_player = SAVEDATA->getPlayer();
 	_player->init();
 	_player->setX(8960);
 	_player->setY(584);
 
-	_stage = IGM->findImage("던전맵");
+	_stage = IMAGEMANAGER->findImage("던전맵");
 	_stagePixel = IMAGEMANAGER->findImage("던전맵픽셀");
+	_stageTunnel = IMAGEMANAGER->findImage("던전맵터널");
 
 	_player->setMap(_stage);
 	_player->setMapPixel(_stagePixel);
@@ -30,7 +32,7 @@ HRESULT dungeonScene::init()
 	_geddy->init();
 	_geddy->setMapPixel(_stagePixel);
 	_geddy->setEnemyManager(_enemyManager);
-
+	_geddy->setIsActive(false);
 
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
@@ -50,6 +52,9 @@ HRESULT dungeonScene::init()
 
 	UIMANAGER->startingNewScene(_player->getX(), _player->getY());
 
+	_enterBossDelay = 0;
+	_isEnterBoss = false;
+
 	return S_OK;
 }
 
@@ -60,7 +65,8 @@ void dungeonScene::update()
 	_player->update();
 	enterBossRoom();
 
-	CAM->videoShooting(_player->getX(), _player->getY());
+	if(_isEnterBoss) CAM->videoShooting(_tortoise->getX(), _tortoise->getY(),15.0f);
+	else CAM->videoShooting(_player->getX(), _player->getY());
 }
 
 void dungeonScene::render()
@@ -69,6 +75,7 @@ void dungeonScene::render()
 	_enemyManager->render();
 	_stuffManager->render();
 	_player->render();
+	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
 
 	RENDERMANAGER->render(getMemDC());
 }
@@ -90,7 +97,7 @@ void dungeonScene::initTortoise()
 	_tortoise->setPlayerLink(_player);
 	_tortoise->setMapPixel(_stagePixel);
 	_tortoise->setShieldLink(_shield);
-	_tortoise->init(1400, 850, LEFT); //init함수 안에 setLink들이 있으므로 위의 2줄 _tortoise->setLink부터 해야함
+	_tortoise->init(470, 850, LEFT); //init함수 안에 setLink들이 있으므로 위의 2줄 _tortoise->setLink부터 해야함
 
 	_shield->init(_tortoise->getX(), _tortoise->getY()); //_tortoise의 x,y를 받아서 init해야하므로 맨 마지막
 
@@ -99,10 +106,45 @@ void dungeonScene::initTortoise()
 
 void dungeonScene::enterBossRoom()
 {
-	if (2000 < _player->getX() && _player->getX() < 2540)
+	if (2300 < _player->getX() && _player->getX() < 2540 && !_tortoise->getIsStandby())
 	{
-		_player->setX(420);
-		_player->setY(937);
+		_isEnterBoss = true;
+	}
+	if (_isEnterBoss)
+	{
+		++_enterBossDelay;
+	}
+	if (_enterBossDelay >= 240) _isEnterBoss = false;
+	else if (_enterBossDelay >= 20)
+	{
+		_tortoise->setIsStandby(true);
+	}
+	if (_player->getX() < 1750 && _tortoise->getIsStandby())
+	{
+		HPEN myPen, oldPen;
+		HBRUSH myBrush, oldBrush;
+		myBrush = CreateSolidBrush(RGB(0, 0, 0));
+		oldBrush = (HBRUSH)SelectObject(_stagePixel->getMemDC(), myBrush);
+		myPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+		oldPen = (HPEN)SelectObject(_stagePixel->getMemDC(), myPen);
+
+		Rectangle(_stagePixel->getMemDC(), 1778,488,2394,710);
+		SelectObject(_stagePixel->getMemDC(), oldBrush);
+		SelectObject(_stagePixel->getMemDC(), oldPen);
+		
+		myBrush = CreateSolidBrush(RGB(255, 0, 255));
+		oldBrush = (HBRUSH)SelectObject(_stageTunnel->getMemDC(), myBrush);
+		myPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 255));
+		oldPen = (HPEN)SelectObject(_stageTunnel->getMemDC(), myPen);
+
+		Rectangle(_stageTunnel->getMemDC(), 0, 0, 100, 420);
+		SelectObject(_stageTunnel->getMemDC(), oldBrush);
+		SelectObject(_stageTunnel->getMemDC(), oldPen);
+		
+		DeleteObject(myBrush);
+		DeleteObject(oldBrush);
+		DeleteObject(myPen);
+		DeleteObject(oldPen);
 	}
 }
 
