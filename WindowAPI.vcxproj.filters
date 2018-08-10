@@ -245,6 +245,9 @@
     <ClInclude Include="UIManager.h">
       <Filter>GameFramework2D\매니져</Filter>
     </ClInclude>
+    <ClInclude Include="endScene.h">
+      <Filter>GameFramework2D\씬</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -396,6 +399,9 @@
     </ClCompile>
     <ClCompile Include="UIManager.cpp">
       <Filter>GameFramework2D\매니져</Filter>
+    </ClCompile>
+    <ClCompile Include="endScene.cpp">
+      <Filter>GameFramework2D\씬</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

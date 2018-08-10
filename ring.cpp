@@ -101,10 +101,12 @@ void ring::collide()
 bool ring::collide(player * a)
 {
 	RECT temp;
-	if (IntersectRect(&temp, &a->getHitbox(), &_hitBox))
+
+	if (_curFrameX == 0 && IntersectRect(&temp, &a->getHitbox(), &_hitBox))
 	{
-		if (_curFrameX == 0)
-			_curFrameX = 1;
+		_curFrameX = 1;
+		SOUNDMANAGER->play("고리충돌", _effectVolume*2);
+		a->sumCoin(5);
 		return true;
 	}
 	return false;

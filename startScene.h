@@ -13,6 +13,7 @@ class startScene :
 	image *_board, *_backToMenu;
 
 	progressBar * _volume;
+	progressBar * _effectVolumeBar;
 
 	int _selectedAlpha, _nonAlpha;
 	int _count, _index;
@@ -23,8 +24,10 @@ class startScene :
 	int _maxOption;
 
 	int _volumeWidth, _volumeX, _volumeY;
+	int _effectVolumeWidth, _effectVolumeX, _effectVolumeY;
 
 	float _angle;
+
 public:
 	virtual HRESULT init();
 	virtual void release();

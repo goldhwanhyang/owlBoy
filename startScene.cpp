@@ -2,6 +2,7 @@
 #include "startScene.h"
 
 float _soundVolume = 1;
+float _effectVolume = 1;
 
 HRESULT startScene::init()
 {
@@ -50,11 +51,19 @@ HRESULT startScene::init()
 	_backToMenu->setY(_board->getY() - _backToMenu->getHeight() - 50);
 
 	_volume = new progressBar;
-	_volumeX = WINSIZEX / 2 - 25;
-	_volumeY = WINSIZEY / 2 - _board->getY() / 4;
+	_volumeX = WINSIZEX / 2 - 35;
+	_volumeY = WINSIZEY / 2 - _board->getY() / 4 - 65;
 	_volume->init("Texture/UI/volumeProgressFront_641x66", "Texture/UI/volumeProgressBack_673x81", _volumeX ,_volumeY, _board->getWidth() / 2 - 25, 50);
 	_volume->setGauge(_soundVolume * 100, 100);
 	_volumeWidth = 0;
+
+	_effectVolumeBar = new progressBar;
+	_effectVolumeX = WINSIZEX / 2 - 35;
+	_effectVolumeY = WINSIZEY / 2 - _board->getY() / 4 + 35;
+	_effectVolumeBar->init("Texture/UI/volumeProgressFront_641x66", "Texture/UI/volumeProgressBack_673x81", _effectVolumeX, _effectVolumeY, _board->getWidth() / 2 - 25, 50);
+	_effectVolumeBar->setGauge(_effectVolume * 100, 100);
+	_effectVolumeWidth = 0;
+
 
 
 	ShowCursor(false);
@@ -69,6 +78,8 @@ void startScene::release()
 {
 	_volume->release();
 	SAFE_DELETE(_volume);
+	_effectVolumeBar->release();
+	SAFE_DELETE(_effectVolumeBar);
 }
 
 void startScene::update()
@@ -122,24 +133,28 @@ void startScene::updateStartMenu()
 		if (PtInRect(&_text[i]->boundingBox(), _ptMouse))
 		{
 			_selectedOption = i;
-
 		}
 	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		if (_selectedOption == -1)
+		{
 			return;
+		}
 
 		switch (_selectedOption)
 		{
 		case 0:
+			SOUNDMANAGER->play("게임시작", 1);
 			SCENEMANAGER->loadScene("townScene");
 			break;
 		case 1:
 			_curMenu = 1;
+			SOUNDMANAGER->play("메뉴선택", 1);
 			break;
 		case 2:
+			SOUNDMANAGER->play("메뉴선택", 1);
 			PostMessage(_hWnd, WM_DESTROY, 0, 0);
 			break;
 		}
@@ -148,6 +163,14 @@ void startScene::updateStartMenu()
 
 void startScene::updateOption()
 {
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		if (PtInRect(&_backToMenu->boundingBox(), _ptMouse))
+		{
+			SOUNDMANAGER->play("메뉴선택", 1);
+			_curMenu = 0;
+		}
+	}
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
 		RECT temp = _volume->getRect();
@@ -155,23 +178,36 @@ void startScene::updateOption()
 		{
 			_soundVolume = (_ptMouse.x - temp.left) / (float)(temp.right - temp.left);
 			_volume->setGauge(_soundVolume * 100, 100);
-			//SOUNDMANAGER->playBgm(_soundVolume);
 			SOUNDMANAGER->setVolume(_soundVolume);
 		}
 
-		if (PtInRect(&_backToMenu->boundingBox(), _ptMouse))
+		temp = _effectVolumeBar->getRect();
+		if (PtInRect(&temp, _ptMouse))
 		{
-			_curMenu = 0;
+			_effectVolume = (_ptMouse.x - temp.left) / (float)(temp.right - temp.left);
+			_effectVolumeBar->setGauge(_effectVolume * 100, 100);
+		}
+
+		
+	}
+	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
+	{
+		RECT temp = _effectVolumeBar->getRect();
+		if (PtInRect(&temp, _ptMouse))
+		{
+			SOUNDMANAGER->play("공격", _effectVolume);
 		}
 	}
 
 	_volume->update();
+	_effectVolumeBar->update();
 }
 
 void startScene::drawOption()
 {
 	_board->render(getMemDC(), _board->getX(), _board->getY());
 	_volume->render();
+	_effectVolumeBar->render();
 	_backToMenu->render(getMemDC(), _backToMenu->getX(), _backToMenu->getY());
 }
 

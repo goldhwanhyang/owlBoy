@@ -11,8 +11,8 @@ private:
 	bool _managerInit;		//매니져 초기화 했냐?
 
 public:
-	virtual HRESULT init();				//void로 써도되는데 초기화에 문제가 생기면 바로 알려줌
 	virtual HRESULT init(bool managerInit);	//오버로딩된 이걸통해 초기화하도록 하자
+	virtual HRESULT init();				//void로 써도되는데 초기화에 문제가 생기면 바로 알려줌
 	virtual void release();
 	virtual void update();
 	virtual void render();

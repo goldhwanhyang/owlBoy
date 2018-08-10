@@ -11,6 +11,7 @@ HRESULT mainGame::init()
 	gameNode::init(TRUE);
 
 	_soundVolume = INIDATA->loadDataFloat("Data/setting", "Sound", "master");
+	_effectVolume = INIDATA->loadDataFloat("Data/setting", "Sound", "effect");
 
 	//이곳에서 초기화를 한다
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
@@ -41,6 +42,7 @@ void mainGame::release()
 
 
 	INIDATA->addData("Sound", "master", to_string(_soundVolume).c_str());
+	INIDATA->addData("Sound", "effect", to_string(_effectVolume).c_str());
 	INIDATA->saveINI("Data/setting");
 }
 

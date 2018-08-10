@@ -38,7 +38,7 @@ void gawk::update()
 	if (_hp <= 0)
 	{
 		EFFECTMANAGER->play("利气惯", _x, _y);
-		SOUNDMANAGER->play("利气惯", _soundVolume);
+		SOUNDMANAGER->play("利气惯", _effectVolume);
 		_isActive = false;
 		_hp = 0;
 	}
@@ -342,5 +342,5 @@ bool gawk::frameMake(image * bmp, int cooltime)
 void gawk::soundEffect()
 {
 	if (_state == READY || _state == FLY)
-		SOUNDMANAGER->play("朝俺窿", _soundVolume*0.5);
+		SOUNDMANAGER->play("朝俺窿", _effectVolume*0.5);
 }

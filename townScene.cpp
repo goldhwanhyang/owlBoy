@@ -246,17 +246,13 @@ void townScene::update()
 	_stuffManager->update();
 
 	_player->update();
-	if (KEYMANAGER->isOnceKeyDown('1'))
-	{
-		UIMANAGER->flickering(RGB(255, 0, 0), 10, 1);
-	}
-
-	
 
 	CAM->videoShooting(_player->getX(), _player->getY());
 	
 	for (int i = 0; i < 20; ++i)
 	{
+		if (!_vRing[i]->getIsActive()) continue;
+
 		_vRing[i]->update();
 		_vRing[i]->collide(_player);
 	}
@@ -302,12 +298,14 @@ void townScene::render()
 
 	for (int i = 0; i < 20; ++i)
 	{
-		_vRing[i]->renderBack();
+		if(_vRing[i]->getIsActive())
+			_vRing[i]->renderBack();
 	}
 	RENDERMANAGER->render(getMemDC());
 	for (int i = 0; i < 20; ++i)
 	{
-		_vRing[i]->renderFront();
+		if (_vRing[i]->getIsActive())
+			_vRing[i]->renderFront();
 	}
 
 	for (int i = 0; i < MAX_FRAME_10; ++i)

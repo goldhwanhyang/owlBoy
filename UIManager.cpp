@@ -10,7 +10,7 @@ HRESULT UIManager::init(void)
 	//image
 	IMAGEMANAGER->addImage("VOLUME_BACK", "Texture/UI/volumeProgressBack_673x81.bmp", 673, 81, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("VOLUME_FRONT", "Texture/UI/volumeProgressFront_641x66.bmp", 641, 66, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("VOLUME_SETTING", "Texture/UI/volumeSetting_800x269.bmp", 800, 269, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("VOLUME_SETTING", "Texture/UI/volumeSetting_800x368.bmp", 800, 368, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("BACK_TO_MENU", "Texture/Text/backtoMenu_456x63.bmp", 456, 63, true, RGB(255, 0, 255));
 
 

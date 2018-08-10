@@ -411,7 +411,7 @@ void player::flyInputKey()
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL)								// 구르는 도중에 다시구르기 안하게 걸어준다.
 	{
 		changeState(ROLL);
-		SOUNDMANAGER->play("구르기", 4);
+		SOUNDMANAGER->play("구르기", _effectVolume);
 		if (_FY == NONE && _liftableActor == NULL)																	// 위아래로 날때는 구르는이펙트가 안나오게 해준다.
 		{			
 			if (_isLeft)
@@ -516,7 +516,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 {																					
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
 	{							
-		SOUNDMANAGER->play("공격", 4);
+		SOUNDMANAGER->play("공격", _effectVolume);
 		if (_liftableActor == NULL)													// _liftableActor가 NULL이면 오터스가 아무것도 안들고 있는 상태이기때문에 오터스가 공격한다.											
 		{																			
 			changeState(ATK);														 // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
@@ -534,7 +534,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 		{
 			//내 마우스와 오투스사이의 각도를 구해서 던지고 손에 아무것도 없다는것을 알리기위해 NULL로 바꿔주고 상태도 FLY로 바꿔준다.
 			_liftableActor->throwed(10, getAnglef(_x - CAM->getX(),_y - CAM->getY() , _ptMouse.x, _ptMouse.y));
-			SOUNDMANAGER->play("던지기", 4);
+			SOUNDMANAGER->play("던지기", _effectVolume);
 			_liftableActor = NULL;
 			changeState(FLY);
 		}
@@ -544,7 +544,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			if (_liftableActor != NULL)
 			{
 				changeState(LIFT);
-				SOUNDMANAGER->play("소환", 4);
+				SOUNDMANAGER->play("소환", _effectVolume);
 				EFFECTMANAGER->play("들기", _x, _y);
 				_liftableActor->lifted(this);
 			}
@@ -561,7 +561,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 	{
 		if (_liftableActor == NULL) 
 		{
-			SOUNDMANAGER->play("소환", 4);
+			SOUNDMANAGER->play("소환", _effectVolume);
 			EFFECTMANAGER->play("소환", _x, _y);
 			EFFECTMANAGER->play("소환", _geddy->getX(), _geddy->getY());
 			_liftableActor = _geddy;								// NULL이니까 geddy를 들고있다는것을 알 수 있다.
@@ -848,7 +848,7 @@ void player::frameSetting()
 		if (_index > img[_state]->getMaxFrameX())
 		{
 			if (_state == FLY)	// 날고있을 때 프레임맥스가되면 날개짓소리 나오게하기
-				SOUNDMANAGER->play("날개짓", 1);
+				SOUNDMANAGER->play("날개짓", _effectVolume / 3);
 			if (_state == ATK || _state == ROLL || _state == HIT)
 			{
 				if (_beforeState == JUMP || _beforeState == JUMPFALL)
