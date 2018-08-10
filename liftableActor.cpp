@@ -22,7 +22,6 @@ void liftableActor::render()
 }
 
 
-
 void liftableActor::lifted(player * _player)
 {
 	if (!_isLiftable) return;
@@ -58,67 +57,91 @@ void liftableActor::lifted(player * _player)
 
 void liftableActor::collide()
 {
+	COLORREF color;
+	int r, g, b;
 	//위에 검사
-	//for (int i = _hitBox.top; i < _hitBox.top + 1; i++)
-
-	COLORREF color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.top);
-	int r = GetRValue(color);
-	int g = GetGValue(color);
-	int b = GetBValue(color);
-
-	if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
+	for (int i = _hitBox.top + 5; i >= _hitBox.top; --i)
 	{
-		_y = _hitBox.top + (_hitBox.bottom - _hitBox.top) / 2;
-		//_angle = 3 * PI / 2;
-		_speed = 0;
-		//break;
-	}
+		color = GetPixel(_mapPixel->getMemDC(), _x, i);
+		r = GetRValue(color);
+		g = GetGValue(color);
+		b = GetBValue(color);
 
-	//아래 검사
-	color = GetPixel(_mapPixel->getMemDC(), _x, _hitBox.bottom);
-	r = GetRValue(color);
-	g = GetGValue(color);
-	b = GetBValue(color);
-
-	if (!(r == 255 && g == 0 && b == 255) && _state != HANG)	// 마젠타가 아니면 검사
-	{
-		_y = _hitBox.bottom - (_hitBox.bottom - _hitBox.top) / 2;
-		_state = ON_GROUND;
-		if (_weight >= 50)
+		if ((r == 0 && g == 0 && b == 0)) // 검은색만 검사
 		{
-			CAM->setShakeInfo(10, 10);
+			_y = i + (_hitBox.bottom - _hitBox.top) / 2 + 1;
+			_angle = 2 * PI - _angle;
+			_speed /= 2;
+			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
+			//break;
+		}
+	}
+	//아래 검사
+
+	for (int i = _hitBox.bottom - 5; i <= _hitBox.bottom; ++i)
+	{
+		color = GetPixel(_mapPixel->getMemDC(), _x, i);
+		r = GetRValue(color);
+		g = GetGValue(color);
+		b = GetBValue(color);
+
+		if (!(r == 255 && g == 0 && b == 255) && _state != HANG)	// 마젠타가 아니면 검사
+		{
+			_y = i - (_hitBox.bottom - _hitBox.top) / 2 - 1;
+			_state = ON_GROUND;
+			if (_weight >= 50)
+			{
+				CAM->setShakeInfo(10, 10);
+			}
+			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
+		}
+	}
+	//왼쪽 검사
+
+	for (int i = _hitBox.left + 5; i >= _hitBox.left; --i)
+	{
+		color = GetPixel(_mapPixel->getMemDC(), i, _y);
+		r = GetRValue(color);
+		g = GetGValue(color);
+		b = GetBValue(color);
+
+		if ((r == 0 && g == 0 && b == 0)) // 마젠타가 아니면 검사 였다가 검은색이면 검사
+		{
+			_x = i + (_hitBox.right - _hitBox.left) / 2 + 1;
+			//_angle = PI - _angle;
+			_speed = 0;
+			if (_weight >= 50)
+			{
+				CAM->setShakeInfo(10, 10);
+			}
+			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
+			//break;
 		}
 	}
 
-	//왼쪽 검사
-	color = GetPixel(_mapPixel->getMemDC(), _hitBox.left, _y);
-	r = GetRValue(color);
-	g = GetGValue(color);
-	b = GetBValue(color);
-
-	if ((r == 0 && g == 0 && b == 0)) // 마젠타가 아니면 검사 였다가 검은색이면 검사
-	{
-		_x = _hitBox.left + (_hitBox.right - _hitBox.left) / 2;
-		//_angle = 3 * PI / 2;
-		_speed = 0;
-		//break;
-	}
-
 	//오른쪽 검사
-	color = GetPixel(_mapPixel->getMemDC(), _hitBox.right, _y);
-	r = GetRValue(color);
-	g = GetGValue(color);
-	b = GetBValue(color);
 
-	if ((r == 0 && g == 0 && b == 0))	// 마젠타가 아니면 검사 마젠타를 무시
-										//검은색은 안지나가고 초록색은 지나치게 할려면 
+	for (int i = _hitBox.right - 5; i <= _hitBox.right; ++i)
 	{
-		_x = _hitBox.right - (_hitBox.right - _hitBox.left) / 2;
-		//_angle = 3 * PI / 2;
-		_speed = 0;
-		//break;
-	}
+		color = GetPixel(_mapPixel->getMemDC(), i, _y);
+		r = GetRValue(color);
+		g = GetGValue(color);
+		b = GetBValue(color);
 
+		if ((r == 0 && g == 0 && b == 0))	// 마젠타가 아니면 검사 마젠타를 무시
+											//검은색은 안지나가고 초록색은 지나치게 할려면 
+		{
+			_x = i - (_hitBox.right - _hitBox.left) / 2 - 1;
+			//_angle = PI - _angle;
+			_speed = 0;
+			if (_weight >= 50)
+			{
+				CAM->setShakeInfo(10, 10);
+			}
+			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
+			//break;
+		}
+	}
 }
 
 bool liftableActor::collide(player * _player)

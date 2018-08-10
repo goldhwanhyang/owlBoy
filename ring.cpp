@@ -15,7 +15,7 @@ HRESULT ring::init(float x, float y, int dir)
 	_dir = dir;
 	_dirY = RND->getInt(300) / 10.0f;
 
-	_hitBox = RectMakeCenter(x, y, 20, 20);
+	_hitBox = RectMakeCenter(x, y, 40, 40);
 	_count = 0;
 
 	_alpha = 255;
