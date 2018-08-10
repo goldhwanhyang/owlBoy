@@ -5,7 +5,7 @@
 HRESULT tortoise::init(float x, float y, int dir)
 {	//CHECK ÀÌ¹ÌÁö
 	//==========Ãß°¡ ÀÌ¹ÌÁö
-	IGM->addFrameImage("°ÅºÏÀÌ_ÆäÀÌÁî1_·¹µğ", "Texture/Enemies/Boss1/bossReady_975x246_5x1.bmp", 975, 246, 5, 1);
+	IGM->addFrameImage("°ÅºÏÀÌ_ÆäÀÌÁî1_·¹µğ", "Texture/Enemies/Boss1/bossReady_975x492_5x2.bmp", 975, 492, 5, 2);
 	IGM->addFrameImage("°ÅºÏÀÌ_Á×À½", "Texture/Enemies/Boss1/bossDead_309X504_1x2.bmp", 309, 504, 1, 2);
 	IGM->addFrameImage("°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
 	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_ºÒ¸´Æø¹ß", "°ÅºÏÀÌ_ºÒ¸´Æø¹ßÀÌÆåÆ®", 0.2, 40);
@@ -13,6 +13,7 @@ HRESULT tortoise::init(float x, float y, int dir)
 	IGM->addFrameImage("°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", "Texture/Effect/enemyBossExplode_1600x151_7x1.bmp", 1600, 151, 7, 1);
 	EFFECTMANAGER->addEffect("°ÅºÏÀÌ_Á×À½Æø¹ß", "°ÅºÏÀÌ_Á×À½Æø¹ßÀÌÆåÆ®", 0.3, 7);
 	//====================
+	enemy::init(x, y, dir);
 	_phase1 = new tortoisePhase1;
 	_phase1->init(x, y, dir);
 	_phase1->setPlayerLink(_player);
@@ -62,6 +63,7 @@ void tortoise::update()
 			}
 			else
 			{
+				SOUNDMANAGER->playBgm("´øÀü", _soundVolume);
 				EFFECTMANAGER->play("°ÅºÏÀÌ_Á×À½Æø¹ß", _phase2->getX()-135+RND->getInt(300), _phase2->getY()-100+RND->getInt(300));
 				++_deadCount;
 			}
@@ -78,7 +80,7 @@ void tortoise::render()
 		{
 			_currentPhase->render();
 			//hpBar·»´õ
-			if (_player->getX() < 2000)
+			if (getIsStandby())
 			{
 				_hpBarHead->render(getMemDC(), _hpBar->getRect().left - _hpBarHead->getWidth(),_hpBar->getRect().top-7);
 				_hpBar->render();

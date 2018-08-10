@@ -8,8 +8,6 @@ class bullet : public actor
 	float _range;		// 불릿사거리
 
 	float _fireX, _fireY;
-	
-	bool _isActive;
 public:
 	virtual HRESULT init(float radius, float speed, float power, float range, const char* imageName = "없음");
 	virtual HRESULT init(float radius, float speed, float range, const char* imageName = "없음");
@@ -22,7 +20,7 @@ public:
 
 	void setPixelMap(image* pixelMap) { _pixelMap = pixelMap; }
 	float getRange() { return _range; }
-	bool getIsActive() { return _isActive; }
+	//bool getIsActive() { return _isActive; }
 
 	float getEffectAngle() { return getAnglef(_x, _y, _fireX, _fireY); }
 

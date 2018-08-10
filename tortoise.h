@@ -25,6 +25,9 @@ public:
 	virtual void release();
 	virtual void damaged(actor *e);
 
+	bool getIsStandby() { return _phase1->getIsStandby(); }
+	void setIsStandby(bool standby) { _phase1->setIsStandby(standby); }
+
 	virtual void setShieldLink(tortoiseShield* shield) { _shield = shield; }
 
 	tortoise() {}

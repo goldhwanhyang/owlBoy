@@ -17,7 +17,7 @@ public:
 	void setPlayerLink(player* player) { _player = player; }
 	void setMapPixel(image* map) { _mapPixel = map; }
 	
-	enemy() {}
+	enemy() { _player = NULL; }
 	~enemy() {}
 };
 

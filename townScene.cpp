@@ -8,7 +8,9 @@ HRESULT townScene::init()
 	_backgroundSky = IMAGEMANAGER->findImage("sky");
 	_player = SAVEDATA->getPlayer();
 	_player->init();
-
+	_player->setX(440.f);
+	_player->setY(810.f);
+	
 	//CAM->setRange(_testMap->getWidth(), _testMap->getHeight());
 
 	_TownMap = IMAGEMANAGER->findImage("Town");
@@ -77,6 +79,8 @@ HRESULT townScene::init()
 
 
 	_player->setStuffManager(_stuffManager);
+	_player->setEnemyManager(NULL);
+
 	_player->setGeddy(_geddy);
 
 	UIMANAGER->startingNewScene(_player->getX(), _player->getY());
@@ -96,21 +100,16 @@ void townScene::update()
 {
 	RECT temp;
 
-	if (endScene)
+	if (UIMANAGER->checkEndScene())
 	{
-		if(!UIMANAGER->isChangingScene())
-			SCENEMANAGER->loadScene("dungeonScene");
-		endScene = false;
-
+		SCENEMANAGER->loadScene("dungeonScene");
 		return;
 	}
-	else if (IntersectRect(&temp, &_player->getHitbox(), &portal))
-	{
 
+	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
+	{
 		if (!UIMANAGER->isChangingScene())
 			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
-		endScene = true;
-
 		return;
 	}
 
@@ -121,55 +120,6 @@ void townScene::update()
 	{
 		UIMANAGER->flickering(RGB(255, 0, 0), 10, 1);
 	}
-	
-	/* 
-	if (KEYMANAGER->isStayKeyDown('1'))
-	{
-		RECT temp1;
-
-		_liftingActor = _stuffManager->collide(_player);
-		if (_liftingActor != NULL)
-		{
-			_player->changeState(FLY);
-			_liftingActor->lifted(_player);
-		}
-
-		
-		if (_liftingActor == NULL && IntersectRect(&temp1, &g->getHitbox(), &_player->getHitbox()))
-		{
-			g->lifted(_player);
-			_player->setState(FLY);
-		}
-	}
-	if (_liftingActor != nullptr && _liftingActor->getState() == HANG)
-		_liftingActor->lifted(_player);
-	else if(g->getState() == HANG)
-		g->lifted(_player);
-
-	if (KEYMANAGER->isOnceKeyDown('2'))
-	{
-		if (_liftingActor != nullptr && _liftingActor->getState() == HANG)
-		{
-			_liftingActor->throwed(10, getAngle(_liftingActor->getX() - CAM->getX(), _liftingActor->getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
-		}
-		else if (g->getState() == HANG)
-		{
-			g->throwed(10, getAngle(g->getX() - CAM->getX(), g->getY() - CAM->getY(), _ptMouse.x, _ptMouse.y));
-		}
-	}
-
-	if (g->getState() == HANG && KEYMANAGER->isStayKeyDown(VK_LBUTTON))
-	{
-	tempCount = (tempCount + 1) % 10;
-	if(tempCount == 0)
-	g->attack();
-	}
-
-
-
-	g->update();
-	*/
-	//_geddy->update();
 
 	
 
