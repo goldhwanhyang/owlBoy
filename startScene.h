@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "progressBar.h"
+#include "player.h"
 
 class startScene :
 	public gameNode

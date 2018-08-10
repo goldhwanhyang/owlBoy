@@ -29,6 +29,7 @@ private:
 
 	bool _sceneChanging;
 	bool _startingScene;
+	bool _endScene;
 	int _destX, _destY;
 	int _rcWidth, _rcHeight;
 
@@ -50,6 +51,7 @@ public:
 	void newSceneStart(HDC hdc);
 	void startingNewScene(int x, int y);
 
+	bool checkEndScene() { return _endScene; }
 	bool checkBlocking() { return _isBlockingUI; }
 	bool checkDrawingUI() { return _isDrawUI; }
 	void clear();
@@ -58,7 +60,7 @@ public:
 	bool isChangingScene() { return (_sceneChanging || _startingScene); }
 
 
-	UIManager() : _isBlockingUI(false), _isDrawUI(false) {}
+	UIManager() : _isBlockingUI(false), _isDrawUI(false), _endScene(false) {}
 	~UIManager() {}
 };
 
