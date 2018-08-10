@@ -19,8 +19,8 @@ HRESULT tortoisePhase1::init(float x, float y, int dir)
 
 	enemy::init(x, y, dir);
 	_count = _index = 0;
-	_dir = LEFT;
-	_angle = 180;
+	_dir = RIGHT;
+	_angle = 0;
 	_speed = 2.0f;
 	_tortoiseImage[READY] = IMAGEMANAGER->findImage("거북이_페이즈1_레디");
 	_tortoiseImage[TURN] = IMAGEMANAGER->findImage("거북이_페이즈1_꺽기");
@@ -74,6 +74,8 @@ HRESULT tortoisePhase1::init(float x, float y, int dir)
 
 	_power = 3;
 
+	_isStandby = false;
+
 	return S_OK;
 }
 
@@ -106,11 +108,6 @@ void tortoisePhase1::render()
 {
 	//히트박스와 텍스쳐 위치 맞추기위해 방향에 따라 렌더바꿈
 	//기존의 frameMake를 사용했더니 움찔거림이 생겼기 때문에 currentX , Y에 _index와 _dir을 직접 써넣었다.  //_boss1Image[_state]->setFrameY(_dir);
-
-	if (_isDebug)
-	{
-		_mapPixel->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
-	}
 
 	float tempX, tempY;
 	switch (_state)
@@ -161,10 +158,10 @@ void tortoisePhase1::render()
 
 	if (_isDebug)
 	{
-		char debug[64];
-		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		_stprintf_s(debug, "angle: %f, hp: %d", _angle, _hp);
-		TextOut(getMemDC(), 100, 100, debug, strlen(debug));
+		//char debug[64];
+		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		//_stprintf_s(debug, "angle: %f, hp: %d", _angle, _hp);
+		//TextOut(getMemDC(), 100, 100, debug, strlen(debug));
 		//TextOut(getMemDC(), _x, _y, "X", strlen("X"));
 	}
 }
@@ -509,8 +506,8 @@ void tortoisePhase1::stateUpdate()
 	bool aniDone = false;
 	if (READY == _state)
 	{
-		if (_playerX < 980) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
-		//TODO : 조건은 임시임 , 시간나면 석상 흔들기도 하자
+		if(_isStandby) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 40);
+		//TODO : 시간나면 석상 흔들기도 하자
 	}
 	else if (TURN != _state || OFF_SHIELD != _state || OFF_TURN != _state || OFF_STUN != _state) aniDone = frameMake(_tortoiseImage[_state], _count, _index, 7);
 	else aniDone = frameMake(_tortoiseImage[_state], _count, _index, 12);
@@ -518,7 +515,11 @@ void tortoisePhase1::stateUpdate()
 	switch (_state)
 	{
 	case READY:
-		if (aniDone) _state = WALK;
+		if (aniDone) 
+		{
+			SOUNDMANAGER->playBgm("보스_페이즈1",_soundVolume);
+			_state = WALK;
+		}
 		break;
 	case TURN:					//꺽기
 		if (aniDone) turn();	//TURN상태가 되면 이미지프레임이 돌고 다돌고나면(aniDone==true) 방향바꿈

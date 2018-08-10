@@ -51,6 +51,8 @@ private:
 	int _alphaCount;
 	bool _isAlpha;
 
+	bool _isStandby;
+
 	tortoiseShield* _shield;			//방패
 
 	float _offSpeed;					//방패없을때 보스의 속도
@@ -81,6 +83,9 @@ public:
 
 	void alphaInit();
 	void alphaUpdate();
+
+	bool getIsStandby() { return _isStandby; }
+	void setIsStandby(bool standby) { _isStandby = standby; }
 
 	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();

@@ -148,10 +148,10 @@ void tortoisePhase2::render()
 
 	if (_isDebug)
 	{
-		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		_stprintf_s(_debug, "angle: %f, offSpeed: %f", _angle, _offSpeed);
-		TextOut(getMemDC(), 100, 100, _debug, strlen(_debug));
-		TextOut(getMemDC(), _x, _y, "X", strlen("X"));
+		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
+		//_stprintf_s(_debug, "angle: %f, offSpeed: %f", _angle, _offSpeed);
+		//TextOut(getMemDC(), 100, 100, _debug, strlen(_debug));
+		//TextOut(getMemDC(), _x, _y, "X", strlen("X"));
 	}
 }
 
@@ -397,6 +397,7 @@ void tortoisePhase2::stateUpdate()
 	{
 		if (aniDone)
 		{
+			SOUNDMANAGER->playBgm("보스_페이즈2", _soundVolume);
 			_state = FLY;
 			_gravity = 0;
 		}

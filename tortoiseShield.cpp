@@ -48,15 +48,13 @@ void tortoiseShield::update()
 
 void tortoiseShield::render()
 {
-	//if (_isActive)
-	//{
-		_image->frameRender(getMemDC(), _x - 95 - CAM->getX(), _y - 50 - CAM->getY(), _index, _dir);
-	//}
+	_image->frameRender(getMemDC(), _x - 95 - CAM->getX(), _y - 50 - CAM->getY(), _index, _dir);
+
 	if (_isDebug)
 	{
-		TextOut(getMemDC(), 140, 120, "规菩", strlen("规菩"));
-		_stprintf_s(_debug, "angle: %f, speed: %f, gravity: %f", _angle, _speed, _gravity);
-		TextOut(getMemDC(), 140, 140, _debug, strlen(_debug));
+		//TextOut(getMemDC(), 140, 120, "规菩", strlen("规菩"));
+		//_stprintf_s(_debug, "angle: %f, speed: %f, gravity: %f", _angle, _speed, _gravity);
+		//TextOut(getMemDC(), 140, 140, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
 	if (_state == HANG)
