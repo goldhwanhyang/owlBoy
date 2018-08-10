@@ -15,8 +15,8 @@
 */
 
 /*
-	코인 이미지
-
+	마우스 우클릭을 누르고있으면 포물선을 그려주는것
+	구르기만 속도 빠르게
 */
 
 HRESULT player::init()
@@ -33,6 +33,13 @@ HRESULT player::init()
 	img[HIT] = IMAGEMANAGER->findImage("DAMAGED");									// 오터스 맞는모션 
 	img[DEAD] = IMAGEMANAGER->findImage("DEAD");
 	img[LIFT] = IMAGEMANAGER->findImage("LIFT");									// 들어올리는 모션 나오게, 우클릭 상태로 날아다니기 ( 이거는 물체 뒤에서 잡고있는 프레임 )
+	for (int i = 0; i < STATE_MAX; ++i)
+	{
+		_frameCount[i] = 7;
+	}
+	_frameCount[ROLL] = 5;
+	_frameCount[ATK] = 5;
+	_frameCount[FLY] = 8;
 	_liftImg = IMAGEMANAGER->findImage("LIFT2");									//	(물체 앞에서 잡고있는 프레임)
 
 	//hp바
@@ -46,6 +53,11 @@ HRESULT player::init()
 		_hpBar->setGauge(_hp, _maxHp);
 
 	}
+	//코인
+	//IMAGEMANAGER->addFrameImage("number", "Texture/UI/number_220x36_10x1.bmp", 220, 36, 10, 1, true, RGB(255, 0, 255));
+	_maxCoin = 9999;
+	_coin = 0;
+
 	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
 	_isFly = false;																	// 날고있는지 아닌지
@@ -75,7 +87,7 @@ HRESULT player::init()
 	_beforeState = _state;															// 이전 상태에 현재 상태를 저장
 	_oldX = 0;																		// 이전 X위치
 	_oldY = 0;																		// 이전 Y위치
-	_coin = 0;
+
 
 	_enemyManager = NULL;															// townScene에 들어갔을 땐 0으로 만들어준다. 초기화해준다. (안해주면 쓰레기값을 가져와서 터짐)
 	_liftableActor = NULL;															// 초기화 ( 안해주면 터짐 )
@@ -151,23 +163,42 @@ void player::render()
 	}
 	if (_state == ATK)	// 렉트가 공격할때만 나타나게
 	{
-		Rectangle(getMemDC(), _spinHitBox.left - CAM->getX(), _spinHitBox.top - CAM->getY(), _spinHitBox.right - CAM->getX(), _spinHitBox.bottom - CAM->getY());
+		//Rectangle(getMemDC(), _spinHitBox.left - CAM->getX(), _spinHitBox.top - CAM->getY(), _spinHitBox.right - CAM->getX(), _spinHitBox.bottom - CAM->getY());
 	}
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 
 	char str[128];
 	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
-
+	
 	if (_liftableActor != NULL)
 	{
 		_liftableActor->render();
 		_liftImg->setFrameX(img[_state]->getFrameX());
 		_liftImg->setFrameY(img[_state]->getFrameY());
+		_liftImg->setX(_x);
+		_liftImg->setY(_y);
 	}
 
 	_hpBar->render();
 	friendsFace->render(getMemDC(), 50, 50);
+
+	//천의자리 
+	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
+
+	//백의자리
+	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 1000);
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
+
+	//십의자리
+	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 10);
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 90, 150);
+
+	//일의자리
+	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 10);
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 110, 150);
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
@@ -181,12 +212,14 @@ void player::groundInputKey()
 	{
 		changeState(ROLL);
 		if (_state == ROLL)
-		{
+		{			
 			if (_isLeft)
 				EFFECTMANAGER->play("구르기왼쪽", _x, _y);							// 내가 왼쪽으로 구르면 왼쪽 이펙트
 			else
-				EFFECTMANAGER->play("구르기오른쪽", _x, _y);							// 내가 왼쪽으로 구르면 왼쪽 이펙트			
-		}			
+				EFFECTMANAGER->play("구르기오른쪽", _x, _y);							// 내가 왼쪽으로 구르면 왼쪽 이펙트		
+
+			SOUNDMANAGER->play("구르기", _soundVolume);
+		}
 		_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
 	}
 	if (KEYMANAGER->isStayKeyDown('A'))	
@@ -320,11 +353,9 @@ void player::flyInputKey()
 	if (_state != ROLL)																		// 구르기 상태가 아닐 때는 _FX를 NONE으로 해준다. 
 		_FX = FLY_N;			
 
-	
 	if (_FX == NONE && _FY == NONE && _state != ATK && _state != ROLL && _state != LIFT)	//_FX,_FY가 NONE이고 _state가 공격,구르기,들고있는 상태가 아닐 때 FLY
 		changeState(FLY);																	// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 
-	
 	
 	if (KEYMANAGER->isStayKeyDown('A'))														// 대쉬 한 후에 느려지고 날라가는거 유지
 	{
@@ -381,12 +412,13 @@ void player::flyInputKey()
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE) && _state != ROLL)								// 구르는 도중에 다시구르기 안하게 걸어준다.
 	{
 		changeState(ROLL);
+		SOUNDMANAGER->play("구르기", 4);
 		if (_FY == NONE && _liftableActor == NULL)																	// 위아래로 날때는 구르는이펙트가 안나오게 해준다.
-		{
+		{			
 			if (_isLeft)
 				EFFECTMANAGER->play("구르기왼쪽", _x, _y);									// 내가 왼쪽으로 구르면 왼쪽 이펙트
 			else
-				EFFECTMANAGER->play("구르기오른쪽", _x, _y);									// 내가 왼쪽으로 구르면 왼쪽 이펙트
+				EFFECTMANAGER->play("구르기오른쪽", _x, _y);									// 내가 왼쪽으로 구르면 왼쪽 이펙트		
 		}
 	}
 }
@@ -484,7 +516,8 @@ void player::changeState(int state)									// 상태(스테이트)가 바뀔때 마다 inde
 void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키 입력
 {																					
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
-	{																				
+	{							
+		SOUNDMANAGER->play("공격", 4);
 		if (_liftableActor == NULL)													// _liftableActor가 NULL이면 오터스가 아무것도 안들고 있는 상태이기때문에 오터스가 공격한다.											
 		{																			
 			changeState(ATK);														 // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
@@ -502,6 +535,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 		{
 			//내 마우스와 오투스사이의 각도를 구해서 던지고 손에 아무것도 없다는것을 알리기위해 NULL로 바꿔주고 상태도 FLY로 바꿔준다.
 			_liftableActor->throwed(10, getAnglef(_x - CAM->getX(),_y - CAM->getY() , _ptMouse.x, _ptMouse.y));
+			SOUNDMANAGER->play("던지기", 4);
 			_liftableActor = NULL;
 			changeState(FLY);
 		}
@@ -511,18 +545,28 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			if (_liftableActor != NULL)
 			{
 				changeState(LIFT);
+				SOUNDMANAGER->play("소환", 4);
 				EFFECTMANAGER->play("들기", _x, _y);
 				_liftableActor->lifted(this);
 			}
+		}
+	}
+	else if (KEYMANAGER->isStayKeyDown(VK_RBUTTON))	// 우클릭을 누르고있을 때 포물선 그려주기
+	{
+		if (_liftableActor != NULL)
+		{
+
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown('Q'))	// 게디 소환
 	{
 		if (_liftableActor == NULL) 
 		{
+			SOUNDMANAGER->play("소환", 4);
 			EFFECTMANAGER->play("소환", _x, _y);
 			EFFECTMANAGER->play("소환", _geddy->getX(), _geddy->getY());
 			_liftableActor = _geddy;								// NULL이니까 geddy를 들고있다는것을 알 수 있다.
+			_liftableActor->setIsActive(TRUE);
 		}			
 	}
 }
@@ -542,8 +586,19 @@ void player::collideMap()
 	int r;
 	int g;
 	int b;
+	/*
+		_hitBox.top = _y - (OTUS_HEIGHT / 2)
+		_hitBox.bottp = _y + (OTUS_HEIGHT / 2)
+			
+		_y = _hitBox.top + (OTUS_HEIGHT / 2)
+			 _hitBox.bottop - (OTUS_HEIGHT / 2)
+
+		_y = __hitBox.top  
+	*/
+
 	//위에 검사
-	for (int i = _hitBox.top + _speed; i >= _hitBox.top; i--)
+	//for (int i = _hitBox.top + _speed; i >= _hitBox.top; i--)
+	for (int i = _y - (OTUS_HEIGTH / 2) + _speed; i >= _y - (OTUS_HEIGTH / 2); i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);
 		r = GetRValue(color);
@@ -555,13 +610,14 @@ void player::collideMap()
 			if (!_isFly)
 				_x = _oldX;
 			_y = i + (OTUS_HEIGTH / 2);
-			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+			//_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 			upCollision = true;
 			break;
 		}
 	}
 	//아래 검사
-	for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
+	//for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
+	for (int i = _y + (OTUS_HEIGTH /2) - _speed; i <= _y + (OTUS_HEIGTH / 2); i++)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);	// for문을 돌면서 _y를 i로 검사
 		r = GetRValue(color);
@@ -573,7 +629,7 @@ void player::collideMap()
 			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
 				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
-				_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+				//_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
 				_gravity = 0.f;				// 중력을 0으로 바꿔주고		
 				_axisY = NONE;	// 계속 점프하는것을 방지
@@ -598,7 +654,7 @@ void player::collideMap()
 			if (r == 0 && g == 0 && b == 0)	// 마젠타가 아니면 검사
 			{
 				_y = i - (OTUS_HEIGTH / 2);	// _y는 i로 검사한 지점부터 오터스의 세로/2만큼 올려준다.
-				_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+				//_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
 				_gravity = 0.f;				// 중력을 0으로 바꿔주고		
 				_axisY = NONE;	// 계속 점프하는것을 방지
@@ -614,11 +670,10 @@ void player::collideMap()
 				break;
 			}
 		}
-
-
 	}
 	//왼쪽 검사
-	for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
+	//for (int i = _hitBox.left + _speed; i >= _hitBox.left; i--)
+	for (int i = _x - (OTUS_WIDTH/2)+_speed; i>= _x -(OTUS_WIDTH/2); i--)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), i, _y);	// for문을 돌면서 _x를 i로 검사 
 		r = GetRValue(color);
@@ -628,13 +683,14 @@ void player::collideMap()
 		if ((r == 0 && g == 0 && b == 0)) // 검은색이면 검사, 검은색만 검사
 		{
 			_x = i + (OTUS_WIDTH / 2);
-			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+			//_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
 			break;
 		}
 	}
 	//오른쪽 검사
-	for (int i = _hitBox.right - _speed; i <= _hitBox.right; i++)
+	//for (int i = _hitBox.right - _speed; i <= _hitBox.right; i++)
+	for (int i = _x + (OTUS_WIDTH/2)- _speed; i <= _x + (OTUS_WIDTH/2); i++)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), i, _y);
 		r = GetRValue(color);
@@ -643,7 +699,7 @@ void player::collideMap()
 		if ((r == 0 && g == 0 && b == 0))	// 마젠타가 아니면 검사 마젠타를 무시
 		{
 			_x = i - (OTUS_WIDTH / 2);
-			_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
+			//_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);
 
 			break;
 		}
@@ -787,11 +843,13 @@ void player::frameSetting()
 	else if (!_isLeft)		// 오른쪽
 		img[_state]->setFrameY(0);
 
-	if (_count % 7 == 0)
+	if (_count % _frameCount[_state] == 0)
 	{
 		_index++;
 		if (_index > img[_state]->getMaxFrameX())
 		{
+			if (_state == FLY)	// 날고있을 때 프레임맥스가되면 날개짓소리 나오게하기
+				SOUNDMANAGER->play("날개짓", 1);
 			if (_state == ATK || _state == ROLL || _state == HIT)
 			{
 				if (_beforeState == JUMP || _beforeState == JUMPFALL)
