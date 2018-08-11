@@ -54,7 +54,13 @@ liftableActor* fruit::use(actor * _player)
 	if (temp > _player->getMaxHp())
 		temp = _player->getMaxHp();
 	_player->setHp(temp);
-
+	//오투스의 위치에 랜덤하게 5~6개 뿌린다.
+	RECT _playerRC = _player->getHitbox();
+	for (int i = 0; i < 15; i++)
+	{
+		EFFECTMANAGER->play("오투스_음식회복", RND->getFromIntTo(_playerRC.left, _playerRC.right), RND->getFromIntTo(_playerRC.top, _playerRC.bottom));
+	}
+	
 	_isActive = false;
 
 	return NULL;
