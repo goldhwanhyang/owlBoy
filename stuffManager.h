@@ -32,6 +32,8 @@ public:
 	void addStuff(liftableActor *stuff) { _vStuff.push_back(stuff); }
 	void addFruit(int type, float x, float y);
 	void addStuff(int type, float x, float y);
+	void addStuff(int type, float x, float y, image * mapPixel);
+	void addFruit(int type, float x, float y, image * mapPixel);
 	
 	void removeFruit(int index);
 

@@ -40,8 +40,21 @@ HRESULT dungeonScene::init()
 	_stuffManager->init();
 	_shield->setMapPixel(_stagePixel);
 	_stuffManager->addStuff(_shield);
+	_stuffManager->setEnemyManager(_enemyManager);
 
 	_stuffManager->addStuff(_geddy);
+
+	/////////////////////////
+
+
+	_stuffManager->addStuff(0, 8960, 584 + 60, _stagePixel);
+
+	_stuffManager->addFruit(0, 8860, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8760, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8660, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8560, 584 + 50, _stagePixel);
+
+	/////////////////////////
 
 	_player->setStuffManager(_stuffManager);
 	_player->setGeddy(_geddy);

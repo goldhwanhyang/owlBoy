@@ -31,6 +31,8 @@ void stuffManager::update()
 		{
 			_vStuff[i]->update();
 
+			if (_vStuff[i]->getState() != ON_AIR) continue;
+
 			for (int j = 0; j < em.size(); ++j)
 			{
 				if (_vStuff[i]->collide(em[j]))
@@ -104,6 +106,31 @@ void stuffManager::addStuff(int type, float x, float y)
 	temp->setY(y);
 
 	_vStuff.push_back(temp);
+}
+
+void stuffManager::addStuff(int type, float x, float y, image * mapPixel)
+{
+	liftableActor * temp;
+	temp = new ironWeight;
+	temp->init();
+	temp->setX(x);
+	temp->setY(y);
+	temp->setMapPixel(mapPixel);
+
+	_vStuff.push_back(temp);
+}
+
+void stuffManager::addFruit(int type, float x, float y, image * mapPixel)
+{
+
+	liftableActor * temp;
+	temp = new fruit();
+	temp->init();
+	temp->setX(x);
+	temp->setY(y);
+	temp->setMapPixel(mapPixel);
+
+	_vFruit.push_back(temp);
 }
 
 void stuffManager::removeFruit(int index)

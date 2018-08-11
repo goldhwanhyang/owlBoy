@@ -23,6 +23,7 @@ HRESULT geddy::init()
 		_bullet[i].init(5, 20, 10, 500, "GEDDY_BULLET");
 	}
 
+	_power = -1;
 	_x = 440.f;			// 플레이어 x좌표
 	_y = 810.f;			// 플레이어 y좌표
 	_z = 9;
