@@ -62,8 +62,8 @@ HRESULT player::init()
 	_isFly = false;																	// 날고있는지 아닌지
 	_isKnockBack = false;															// 넉백인지 아닌지
 	_isBack = false;																// 공격하고 뒤로밀려나기
-	_x = 440.f;																		// 플레이어 x좌표
-	_y = 810.f;																		// 플레이어 y좌표
+	_x = 0.f;																		// 플레이어 x좌표
+	_y = 0.f;																		// 플레이어 y좌표
 	_z = 10;
 	_power = 0;																		// 오터스의 파워 초기화
 	_speed = 7.0f;																	// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )	
@@ -72,7 +72,7 @@ HRESULT player::init()
 	_flySpeed = 9.f;																// 날기 속도
 	_rollSpeed = 15.f;																// 구르기 속도
 	_knockBackSpeed = 10.f;															// 뒤로 밀려나는(넉백)속도
-	_backSpeed = 0.7f;																// 뒤로 밀려나는 속도
+	_backSpeed = 20.0f;																// 뒤로 밀려나는 속도
 	_angle = PI / 2;																// 플레이어 각도
 	_gravity = 0;																	// 플레이어 중력
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);						//오터스의 몸통히트박스
@@ -748,6 +748,7 @@ void player::collideActor()
 				{
 					_enemyManager->getVEnemy()[i]->damaged(this);	// 에너미매니져야 i번째의 에너미에게 플레이어의 정보를 넘겨줘라
 					_isBack = true;
+					_backSpeed = 20;
 				}
 			}
 			else if (_state == ROLL)
@@ -756,14 +757,8 @@ void player::collideActor()
 				{
 					_enemyManager->getVEnemy()[i]->damaged(this);
 					_isBack = true;
+					_backSpeed = 20;
 					changeState(ATK);
-				}
-			}
-			if (_state != HIT && _state != ATK && _state != ROLL)
-			{
-				if (IntersectRect(&temp, &_hitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))
-				{
-
 				}
 			}
 			//HIT상태가 아니고 _state가 공격이아니고 구르기가 아닐때만 HIT가 되어야 한다. HIT상태에서 계속 맞지 않게 HIT가 아닐때만 HIT
@@ -785,30 +780,38 @@ void player::collideActor()
 				else
 					_x -= _speed;
 			}*/
-			if (_isBack == true)
-			{
-				//나중에 밀려나는 모션 추가하던가 하기
-				//changeState(_beforeState);
-				_speed = _backSpeed;
-				if (_isLeft)
-					_x += _speed;
-				else
-					_x -= _speed;
-			}
+			
 		}
 	}
-
 	if (_isKnockBack == true)
 	{
+		_knockBackSpeed -= 0.5f;
+		if (_knockBackSpeed < 0)
+			_knockBackSpeed = 0;
+
 		_speed = _knockBackSpeed;
 		if (_isLeft)
 			_x += _speed;
 		else
 			_x -= _speed;
 	}
-	_knockBackSpeed -= 0.5f;
-	if (_knockBackSpeed < 0)
-		_knockBackSpeed = 0;
+
+	if (_isBack == true)
+	{
+		//나중에 밀려나는 모션 추가하던가 하기
+		//changeState(_beforeState);
+
+		_backSpeed -= 1.0f;
+		if (_backSpeed < 0)
+			_backSpeed = 0;
+
+		_speed = _backSpeed;
+		if (_isLeft)
+			_x += _speed;
+		else
+			_x -= _speed;
+	}
+	
 }
 
 void player::collideStuff()
@@ -852,6 +855,7 @@ void player::damaged(actor * e)
 		_hpBar->setGauge(_hp, _maxHp);
 		_isKnockBack = true;
 		_knockBackSpeed = 10.f;
+		
 		if (_liftableActor != NULL && (_state == HIT || _state == DEAD))
 		{
 			_liftableActor->setState(ON_AIR);
@@ -879,6 +883,8 @@ void player::frameSetting()
 				SOUNDMANAGER->play("날개짓", _effectVolume / 3);
 			if (_state == ATK || _state == ROLL || _state == HIT)
 			{
+				_isBack = false;
+
 				if (_beforeState == JUMP || _beforeState == JUMPFALL)
 				{
 					changeState(FLY);
@@ -899,7 +905,6 @@ void player::frameSetting()
 			{
 				_index = 0;
 				_isKnockBack = false;
-				_isBack = false;
 			}
 		}
 		img[_state]->setFrameX(_index);
