@@ -11,6 +11,8 @@ HRESULT ironWeight::init()
 	_img[HANG] = IMAGEMANAGER->findImage("무게추");
 	_img[ON_AIR] = IMAGEMANAGER->findImage("무게추공중");
 
+	_lifted = IMAGEMANAGER->findImage("LIFT2");
+
 	_state = BURIED;
 	_height = _img[HANG]->getFrameHeight() / 2;
 	_maxHeight = _img[HANG]->getFrameHeight() - 30;
@@ -67,6 +69,11 @@ void ironWeight::render()
 		_img[_state]->render(getMemDC(),
 			_x - _img[_state]->getWidth() / 2 - CAM->getX(),
 			_y - _img[_state]->getHeight() / 2 - CAM->getY());
+	}
+	if (_state == HANG)
+	{
+		_lifted->frameRender(getMemDC(), _lifted->getX() - _lifted->getFrameWidth() / 2 - CAM->getX(), _lifted->getY() - _lifted->getFrameHeight() / 2 - CAM->getY());
+
 	}
 
 	if (KEYMANAGER->isToggleKey(VK_F1))

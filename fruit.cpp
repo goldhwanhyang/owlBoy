@@ -10,6 +10,7 @@ HRESULT fruit::init()
 	else
 		_img = IMAGEMANAGER->findImage("과일2");
 
+	_lifted = IMAGEMANAGER->findImage("LIFT2");
 
 	_state = BURIED;
 	_height = _img->getHeight() / 2;
@@ -32,7 +33,7 @@ void fruit::update()
 		_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
 		collide();
 	}//아래 검사
-	
+
 }
 
 void fruit::render()
@@ -40,6 +41,11 @@ void fruit::render()
 	_img->render(getMemDC(), _x - _img->getWidth() / 2 - CAM->getX(),
 		_y - _img->getHeight() / 2 - CAM->getY(),
 		0, 0, _img->getWidth(), _height);
+
+	if (_state == HANG)
+	{
+		_lifted->frameRender(getMemDC(), _lifted->getX() - _lifted->getFrameWidth()/2 - CAM->getX(), _lifted->getY() - _lifted->getFrameHeight() / 2 - CAM->getY());
+	}
 }
 
 liftableActor* fruit::use(actor * _player)

@@ -3,10 +3,6 @@
 
 HRESULT dungeonScene::init()
 {
-	IGM->addImage("던전맵", "Texture/Maps/Boss1/dungeonMap_9235x1080.bmp", 9235, 1080);
-	IGM->addImage("던전맵픽셀", "Texture/Maps/Boss1/dungeonMapPixel_9235_1080.bmp", 9235, 1080);
-	IGM->addImage("던전맵터널", "Texture/Maps/Boss1/tunnel_658_420.bmp", 658, 420, true, MAGENTA);
-
 	_player = SAVEDATA->getPlayer();
 	_player->init();
 	_player->setX(8960);
@@ -14,7 +10,13 @@ HRESULT dungeonScene::init()
 
 	_stage = IMAGEMANAGER->findImage("던전맵");
 	_stagePixel = IMAGEMANAGER->findImage("던전맵픽셀");
-	_stageTunnel = IMAGEMANAGER->findImage("던전맵터널");
+	_stageTunnel = new image;
+	_stageTunnel->init("Texture/Maps/Boss1/tunnel_658_420.bmp", 658, 420, true, MAGENTA);
+	//플레이어가 보스방으로 넘어간뒤에 터널이미지를 마젠타로 칠하면 런타임중 다시 init할때 터널이미지가 초기화 되지 않는다.
+	//그걸 방지하기 위해서 비트맵 이미지를 새롭게 불러온다.
+
+	RECT paintingRc = { 1778,488,2394,710 };
+	painting(_stagePixel->getMemDC(), paintingRc, 255, 0, 255);
 
 	_player->setMap(_stage);
 	_player->setMapPixel(_stagePixel);
@@ -55,6 +57,8 @@ HRESULT dungeonScene::init()
 	_enterBossDelay = 0;
 	_isEnterBoss = false;
 
+	_portal = RectMake(9000, 100, 200, 600);
+
 	return S_OK;
 }
 
@@ -66,12 +70,13 @@ void dungeonScene::update()
 		return;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown('1'))
+	if(!_tortoise->getIsActive())
 	{
 		if (!UIMANAGER->isChangingScene())
 			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
 		return;
 	}
+
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
 		SCENEMANAGER->initScene();
@@ -92,9 +97,11 @@ void dungeonScene::render()
 	_enemyManager->render();
 	_stuffManager->render();
 	_player->render();
-	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
 
 	RENDERMANAGER->render(getMemDC());
+
+	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
+	//Rectangle(getMemDC(), _portal.left - CAM->getX(), _portal.top - CAM->getY(), _portal.right - CAM->getX(), _portal.bottom - CAM->getY());
 }
 
 void dungeonScene::release()
@@ -104,6 +111,8 @@ void dungeonScene::release()
 	SAFE_DELETE(_enemyManager);
 	_stuffManager->release();
 	SAFE_DELETE(_stuffManager);
+	_stageTunnel->release();
+	SAFE_DELETE(_stageTunnel);
 }
 
 void dungeonScene::initTortoise()
@@ -138,30 +147,10 @@ void dungeonScene::enterBossRoom()
 	}
 	if (_player->getX() < 1750 && _tortoise->getIsStandby())
 	{
-		HPEN myPen, oldPen;
-		HBRUSH myBrush, oldBrush;
-		myBrush = CreateSolidBrush(RGB(0, 0, 0));
-		oldBrush = (HBRUSH)SelectObject(_stagePixel->getMemDC(), myBrush);
-		myPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-		oldPen = (HPEN)SelectObject(_stagePixel->getMemDC(), myPen);
-
-		Rectangle(_stagePixel->getMemDC(), 1778,488,2394,710);
-		SelectObject(_stagePixel->getMemDC(), oldBrush);
-		SelectObject(_stagePixel->getMemDC(), oldPen);
-		
-		myBrush = CreateSolidBrush(RGB(255, 0, 255));
-		oldBrush = (HBRUSH)SelectObject(_stageTunnel->getMemDC(), myBrush);
-		myPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 255));
-		oldPen = (HPEN)SelectObject(_stageTunnel->getMemDC(), myPen);
-
-		Rectangle(_stageTunnel->getMemDC(), 0, 0, 100, 420);
-		SelectObject(_stageTunnel->getMemDC(), oldBrush);
-		SelectObject(_stageTunnel->getMemDC(), oldPen);
-		
-		DeleteObject(myBrush);
-		DeleteObject(oldBrush);
-		DeleteObject(myPen);
-		DeleteObject(oldPen);
+		RECT paintingRc = { 1778,488,2394,710 };
+		painting(_stagePixel->getMemDC(), paintingRc, 0, 0, 0);
+		paintingRc = { 0,0,100,420 };
+		painting(_stageTunnel->getMemDC(), paintingRc, 255, 0, 255);
 	}
 }
 
@@ -197,4 +186,23 @@ void dungeonScene::initMonster()
 	_enemyManager->setPostion(4, 8428, 578, RIGHT);
 
 	initTortoise();
+}
+
+void dungeonScene::painting(HDC memDC, RECT location, int r, int g, int b)
+{
+	HPEN myPen, oldPen;
+	HBRUSH myBrush, oldBrush;
+	myBrush = CreateSolidBrush(RGB(r, g, b));
+	oldBrush = (HBRUSH)SelectObject(memDC, myBrush);
+	myPen = CreatePen(PS_SOLID, 1, RGB(r, g, b));
+	oldPen = (HPEN)SelectObject(memDC, myPen);
+
+	Rectangle(memDC, location);
+	SelectObject(memDC, oldBrush);
+	SelectObject(memDC, oldPen);
+
+	DeleteObject(myBrush);
+	DeleteObject(oldBrush);
+	DeleteObject(myPen);
+	DeleteObject(oldPen);
 }

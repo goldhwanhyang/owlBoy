@@ -25,10 +25,10 @@ void liftableActor::render()
 void liftableActor::lifted(player * _player)
 {
 	if (!_isLiftable) return;
+	_z = 15;
 
 	if (_state == BURIED)
 	{ 
-		_z = 15;
 		_player->setX(_x);
 		_player->setY(_hitBox.top);
 		//_player->setState(FLY);
@@ -93,6 +93,7 @@ void liftableActor::collide()
 			{
 				CAM->setShakeInfo(10, 10);
 			}
+			_z = 9;
 			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);
 		}
 	}

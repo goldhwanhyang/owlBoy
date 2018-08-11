@@ -60,7 +60,7 @@ void tortoiseShield::render()
 	if (_state == HANG)
 	{
 		image *temp = IMAGEMANAGER->findImage("LIFT2");
-		temp->frameRender(getMemDC(), temp->getX(), temp->getY());
+		temp->frameRender(getMemDC(), temp->getX()-120 - CAM->getX(), temp->getY()-115 - CAM->getY());
 	}
 }
 
@@ -77,7 +77,7 @@ void tortoiseShield::damaged(actor * e)
 void tortoiseShield::move()
 {
 	_gravity += 0.05f;
-	//if (310 < _x && _x < IMAGEMANAGER->findImage("º¸½º¹æ1")->getWidth() - 310)
+	//if (310 < _x && _x < 1920 - 310)
 	{
 		_x += _speed * cos(_angle);
 	}

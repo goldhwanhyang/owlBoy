@@ -9,6 +9,7 @@ class ironWeight :
 	public liftableActor
 {
 	image * _img[MAX_WEIGHT_STATE];
+	image * _lifted;
 	int _hitBoxWidth, _hitBoxHeight;
 
 public:

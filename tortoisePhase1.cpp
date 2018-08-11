@@ -52,7 +52,7 @@ HRESULT tortoisePhase1::init(float x, float y, int dir)
 	_offSpeed = PHASE1_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
-	blt.init(10, 5, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
+	blt.init(10, 5, 5, 1920, "거북이_불릿");
 	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -204,7 +204,7 @@ void tortoisePhase1::move()
 	if (_dir == RIGHT)
 	{
 		//턴상태가 될때 index와 count를 0으로해야 Trun의 프레임이 작동한다.
-		if (_x > IGM->findImage("보스방1")->getWidth() - 310)
+		if (_x > 1920 - 310)
 		{
 			_state = TURN;
 			_index = 0;
@@ -268,7 +268,7 @@ void tortoisePhase1::shieldOff()
 {
 	_gravity += 0.05;
 	float temp = utl::getAngle(_playerX, _playerY, _x, _y);
-	if (301 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+	if (301 < _x && _x < 1920 - 310)
 	{
 		_x += 3 * cosf(temp);
 	}
@@ -378,7 +378,7 @@ void tortoisePhase1::damaged(actor * e)
 			//{
 			//	_gravity += 0.05;
 			//	float temp = utl::getAngle(_playerX, _playerY, _x, _y);
-			//	if (301 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+			//	if (301 < _x && _x < 1920 - 310)
 			//	{
 			//		_x += 3 * cosf(temp);
 			//	}
