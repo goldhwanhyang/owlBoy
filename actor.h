@@ -78,7 +78,7 @@ public:		// ¸â¹ö ÇÔ¼ö
 	int getIndex() { return _index; }
 	RECT getRect() { return _hitBox; }
 
-	bool collide(actor* a);
+	virtual bool collide(actor* a);
 
 	virtual HRESULT init();
 	virtual void update();

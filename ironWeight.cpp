@@ -18,6 +18,8 @@ HRESULT ironWeight::init()
 	_maxHeight = _img[HANG]->getFrameHeight() - 30;
 	_maxWidth = _img[HANG]->getFrameWidth() - 20;
 
+	_power = 100;
+
 
 
 	return S_OK;
