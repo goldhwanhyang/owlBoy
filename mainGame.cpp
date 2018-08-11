@@ -10,6 +10,9 @@ HRESULT mainGame::init()
 {
 	gameNode::init(TRUE);
 
+	//글자배경모드
+	SetBkMode(getMemDC(), TRANSPARENT);
+
 	_soundVolume = INIDATA->loadDataFloat("Data/setting", "Sound", "master");
 	_effectVolume = INIDATA->loadDataFloat("Data/setting", "Sound", "effect");
 

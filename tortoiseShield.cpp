@@ -60,7 +60,7 @@ void tortoiseShield::render()
 	if (_state == HANG)
 	{
 		image *temp = IMAGEMANAGER->findImage("LIFT2");
-		temp->frameRender(getMemDC(), temp->getX()-120 - CAM->getX(), temp->getY()-115 - CAM->getY());
+		temp->frameRender(getMemDC(), temp->getX()- temp->getFrameWidth()/2- CAM->getX(), temp->getY() - temp->getFrameHeight()/2 - CAM->getY());
 	}
 }
 
