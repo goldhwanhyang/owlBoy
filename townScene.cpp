@@ -178,6 +178,8 @@ HRESULT townScene::init()
 	_stuffManager = new stuffManager;
 	_stuffManager->init();
 	_stuffManager->addStuff(_geddy);
+	_enemyManager = new enemyManager;
+	_stuffManager->setEnemyManager(_enemyManager);
 
 	
 	_stuffManager->addStuff(0, 1571 + RND->getFromIntTo(100, 300), 644 + 40);
@@ -224,6 +226,9 @@ void townScene::release()
 
 	_stuffManager->release();
 	SAFE_DELETE(_stuffManager);
+
+	_enemyManager->release();
+	SAFE_DELETE(_enemyManager);
 }
 
 void townScene::update()

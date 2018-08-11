@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "stuffManager.h"
 #include "player.h"
+#include "enemyManager.h"
 
 HRESULT stuffManager::init()
 {
@@ -23,13 +24,31 @@ void stuffManager::release()
 
 void stuffManager::update()
 {
+	vector<enemy *> em = _enemyManager->getVEnemy();
 	for (int i = 0; i < _vStuff.size(); ++i)
 	{
-		_vStuff[i]->update();
+		if (_vStuff[i]->getIsActive())
+		{
+			_vStuff[i]->update();
+
+			if (_vStuff[i]->getState() != ON_AIR) continue;
+
+			for (int j = 0; j < em.size(); ++j)
+			{
+				if (_vStuff[i]->collide(em[j]))
+				{
+					em[j]->damaged(_vStuff[i]);
+					break;
+				}
+			}
+		}
 	}
 	for (int i = 0; i < _vFruit.size(); ++i)
 	{
-		_vFruit[i]->update();
+		if (_vFruit[i]->getIsActive())
+		{
+			_vFruit[i]->update();
+		}
 	}
 }
 
@@ -87,6 +106,31 @@ void stuffManager::addStuff(int type, float x, float y)
 	temp->setY(y);
 
 	_vStuff.push_back(temp);
+}
+
+void stuffManager::addStuff(int type, float x, float y, image * mapPixel)
+{
+	liftableActor * temp;
+	temp = new ironWeight;
+	temp->init();
+	temp->setX(x);
+	temp->setY(y);
+	temp->setMapPixel(mapPixel);
+
+	_vStuff.push_back(temp);
+}
+
+void stuffManager::addFruit(int type, float x, float y, image * mapPixel)
+{
+
+	liftableActor * temp;
+	temp = new fruit();
+	temp->init();
+	temp->setX(x);
+	temp->setY(y);
+	temp->setMapPixel(mapPixel);
+
+	_vFruit.push_back(temp);
 }
 
 void stuffManager::removeFruit(int index)

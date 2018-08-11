@@ -364,7 +364,9 @@ void tortoisePhase1::damaged(actor * e)
 		if (e->getPower() == 100)
 		{
 			_hp -= 100; //무게추공격은 실드관계없이 한방에
-			_isActive = false; //실드를 줍는동작없이 페이즈 넘김
+			//_isActive = false; //실드를 줍는동작없이 페이즈 넘김
+			_state = OFF_SHIELD;
+			_shield->setIsActive(true);
 		}
 		else if (_isActiveShield && e->getPower() == 0)
 		{

@@ -8,6 +8,7 @@
 #include "geddy.h"
 #include "ring.h"
 #include "stuffManager.h"
+#include "enemyManager.h"
 
 #define MAX_FRAME_3 20
 #define MAX_FRAME_10 7
@@ -32,6 +33,7 @@ private:
 	bool endScene;
 
 	stuffManager * _stuffManager;
+	enemyManager * _enemyManager;
 	vector<ring *> _vRing;
 
 	struct backObject

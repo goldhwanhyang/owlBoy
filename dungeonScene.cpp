@@ -40,8 +40,21 @@ HRESULT dungeonScene::init()
 	_stuffManager->init();
 	_shield->setMapPixel(_stagePixel);
 	_stuffManager->addStuff(_shield);
+	_stuffManager->setEnemyManager(_enemyManager);
 
 	_stuffManager->addStuff(_geddy);
+
+	/////////////////////////
+
+
+	_stuffManager->addStuff(0, 8960, 584 + 60, _stagePixel);
+
+	_stuffManager->addFruit(0, 8860, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8760, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8660, 584 + 50, _stagePixel);
+	_stuffManager->addFruit(0, 8560, 584 + 50, _stagePixel);
+
+	/////////////////////////
 
 	_player->setStuffManager(_stuffManager);
 	_player->setGeddy(_geddy);
@@ -57,7 +70,7 @@ HRESULT dungeonScene::init()
 	_enterBossDelay = 0;
 	_isEnterBoss = false;
 
-	_portal = RectMake(9000, 100, 200, 600);
+	_portal = RectMake(9000, 100, 100, 600);
 
 	return S_OK;
 }
@@ -68,11 +81,18 @@ void dungeonScene::update()
 	{
 		if (!_tortoise->getIsActive())
 			SCENEMANAGER->loadScene("endScene");
-		else
+		else if(_player->getState() == DEAD)
 		{
 			SCENEMANAGER->initScene();
 			_player->setHp(_player->getMaxHp());
 			_player->changeState(IDLE);
+		}
+		else
+		{
+			SCENEMANAGER->loadScene("townScene");
+			_player->setX(2500);
+			_player->setY(400);
+			_player->changeState(FLY);
 		}
 		return;
 	}
@@ -85,6 +105,14 @@ void dungeonScene::update()
 	}
 
 	if(!_tortoise->getIsActive())
+	{
+		if (!UIMANAGER->isChangingScene())
+			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
+		return;
+	}
+
+	RECT tempRc;
+	if (IntersectRect(&tempRc, &_player->getHitbox(), &_portal))
 	{
 		if (!UIMANAGER->isChangingScene())
 			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
@@ -115,7 +143,7 @@ void dungeonScene::render()
 	RENDERMANAGER->render(getMemDC());
 
 	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
-	//Rectangle(getMemDC(), _portal.left - CAM->getX(), _portal.top - CAM->getY(), _portal.right - CAM->getX(), _portal.bottom - CAM->getY());
+	Rectangle(getMemDC(), _portal.left - CAM->getX(), _portal.top - CAM->getY(), _portal.right - CAM->getX(), _portal.bottom - CAM->getY());
 }
 
 void dungeonScene::release()
