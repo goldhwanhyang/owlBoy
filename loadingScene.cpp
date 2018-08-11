@@ -286,8 +286,8 @@ void loadingScene::loadingImage()
 
 	// map
 	_loading->loadImage("sky", "Texture/background/sky_1920x1080.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadImage("º¸½º¹æ1", "Texture/Maps/Boss1/Map.bmp", 1920, 1080);
-	_loading->loadImage("º¸½º¹æ1ÇÈ¼¿", "Texture/Maps/Boss1/MapPixel.bmp", 1920, 1080);
+	_loading->loadImage("´øÀü¸Ê", "Texture/Maps/Boss1/dungeonMap_9235x1080.bmp", 9235, 1080);
+	_loading->loadImage("´øÀü¸ÊÇÈ¼¿", "Texture/Maps/Boss1/dungeonMapPixel_9235_1080.bmp", 9235, 1080);
 
 	_loading->loadImage("Town", "Texture/Maps/Town/townMap_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
 	_loading->loadImage("TownPixel", "Texture/Maps/Town/townMapPixelCollision_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
