@@ -66,7 +66,7 @@ void mainGame::update()
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F6))
 	{
-		SCENEMANAGER->loadScene("dungeonScene");
+		SCENEMANAGER->loadScene("endScene");
 	}
 
 }

@@ -7,6 +7,8 @@ HRESULT endScene::init()
 	_y = WINSIZEY;
 	_count = _index[0] = _index[1] = _currentNum[0] = _currentNum[1] = 0;
 
+	//_backGround = IMAGEMANAGER->findImage("endingBack");
+
 	_leftFrame[0] = IMAGEMANAGER->findImage("IDLE");
 	_leftFrame[1] = IMAGEMANAGER->findImage("Walk");
 	_leftFrame[2] = IMAGEMANAGER->findImage("Jump");
@@ -38,41 +40,24 @@ void endScene::release()
 
 void endScene::update()
 {
-	_y -= 1;
+	//_y -= 1;
 	if (_y < -700)
 	{
-		_y -= 1;
 	}
 	else
 	{
+		_y -= 1;
 		//TODO 엔딩이미지
 	}
 }
 
 void endScene::render()
 {
+	_count = (_count + 1) % 15;
+	creditsAni(_leftFrame, WINSIZEX / 6, 0);
+	creditsAni(_rightFrame, WINSIZEX - 147, 1);
 	creditsText();
-	_count = (_count + 1) % 10;
-	if (_count == 0)
-	{
-		++_index[0];
-		++_index[1];
-	}
 
-	if (_index[0] > _leftFrame[_currentNum[0]]->getMaxFrameX())
-	{
-		_index[0] = 0;
-		++_currentNum[0];
-	}
-
-	if (_index[1] > _rightFrame[_currentNum[1]]->getMaxFrameX())
-	{
-		_index[1] = 0;
-		++_currentNum[1];
-	}
-
-	_leftFrame[_currentNum[0]]->frameRender(getMemDC(), _leftFrame[_currentNum[0]]->getFrameWidth()/2, WINSIZEY - _leftFrame[_currentNum[0]]->getFrameHeight()/2, _index[0], 0);
-	_rightFrame[_currentNum[1]]->frameRender(getMemDC(), WINSIZEX - _rightFrame[_currentNum[1]]->getFrameWidth()/2, WINSIZEY - _rightFrame[_currentNum[1]]->getFrameHeight()/2, _index[1], 1);
 }
 
 void endScene::creditsText()
@@ -97,25 +82,50 @@ void endScene::creditsText()
 	oldFont = (HFONT)SelectObject(getMemDC(), font);
 	char str[128];
 
-	sprintf_s(str, "OwlBoy 팀 포트폴리오를 플레이 해주셔서 감사합니다.");
+	sprintf_s(str, "팀 포트폴리오 [모작] 아울보이를 플레이 해주셔서 감사합니다.");
 	SetTextAlign(getMemDC(), TA_CENTER); //텍스트 중앙정렬
 	TextOut(getMemDC(), WINSIZEX / 2, _y, str, strlen(str));
 
+	sprintf_s(str, "[TEAM] 왜 우리만 셋이조");
+	SetTextAlign(getMemDC(), TA_RIGHT); //텍스트 오른쪽정렬
+	TextOut(getMemDC(), WINSIZEX-140, _y+35, str, strlen(str));
+
 	sprintf_s(str, "제작자");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 100, str, strlen(str));
+	SetTextAlign(getMemDC(), TA_CENTER); //텍스트 중앙정렬
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 135, str, strlen(str));
 
 	sprintf_s(str, "이재영 팀장");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 200, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 235, str, strlen(str));
 
 	sprintf_s(str, "김상균");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 300, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 335, str, strlen(str));
 
 	sprintf_s(str, "박동건");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 400, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 435, str, strlen(str));
 
 	sprintf_s(str, "박성우 선생님 감사합니다.");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 600, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 635, str, strlen(str));
 
 	SelectObject(getMemDC(), oldFont);
 	DeleteObject(font);
+}
+
+void endScene::creditsAni(image** ani, int x, int index)
+{
+	if (_count == 0)
+	{
+		++_index[index];
+	}
+
+	if (_index[index] > _leftFrame[_currentNum[index]]->getMaxFrameX())
+	{
+		_index[index] = 0;
+		++_currentNum[index];
+		if (_currentNum[index] > 9) _currentNum[index] = 0;
+	}
+
+	ani[_currentNum[index]]->frameRender(getMemDC(),
+		x - ani[_currentNum[index]]->getFrameWidth()/2, 
+		WINSIZEY  - ani[_currentNum[index]]->getFrameHeight()/2 - 297,
+		_index[index], index);
 }
