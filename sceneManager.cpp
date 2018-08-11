@@ -77,3 +77,9 @@ HRESULT sceneManager::loadScene(string sceneName)
 	
 	return E_FAIL;
 }
+
+HRESULT sceneManager::initScene()
+{
+	_currentScene->init();
+	return S_OK;
+}

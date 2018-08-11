@@ -27,7 +27,7 @@ public:
 	void setMapPixel(image* mapPixel) { _mapPixel = mapPixel; }
 
 	virtual void attack() {}
-	virtual void use(actor *e) {}
+	virtual liftableActor* use(actor *e) { return this; }
 	virtual void damaged(actor *e) {}
 	virtual void trampled(float weight) {}
 	//virtual void used(player* _player) {}

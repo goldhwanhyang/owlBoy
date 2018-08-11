@@ -60,6 +60,23 @@ HRESULT dungeonScene::init()
 
 void dungeonScene::update()
 {
+	if (UIMANAGER->checkEndScene())
+	{
+		SCENEMANAGER->loadScene("endScene");
+		return;
+	}
+
+	if (KEYMANAGER->isOnceKeyDown('1'))
+	{
+		if (!UIMANAGER->isChangingScene())
+			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
+		return;
+	}
+	if (KEYMANAGER->isOnceKeyDown('2'))
+	{
+		SCENEMANAGER->initScene();
+	}
+
 	_enemyManager->update();
 	_stuffManager->update();
 	_player->update();

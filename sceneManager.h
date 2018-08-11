@@ -31,6 +31,9 @@ public:
 	//씬변경 (해당씬 로드)
 	HRESULT loadScene(string sceneName);
 
+	// 현재 씬 초기화
+	HRESULT initScene();
+
 	sceneManager() : _currentScene(NULL) {}
 	~sceneManager() {}
 };

@@ -19,6 +19,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("townScene", new townScene);
 	SCENEMANAGER->addScene("dungeonScene", new dungeonScene);
 	SCENEMANAGER->addScene("startScene", new startScene);
+	SCENEMANAGER->addScene("endScene", new endScene);
 
 	SCENEMANAGER->loadScene("로딩화면");
 

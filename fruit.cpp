@@ -42,10 +42,14 @@ void fruit::render()
 		0, 0, _img->getWidth(), _height);
 }
 
-void fruit::use(actor * _player)
+liftableActor* fruit::use(actor * _player)
 {
 	int temp = _player->getHp() + 5;
 	if (temp > _player->getMaxHp())
 		temp = _player->getMaxHp();
 	_player->setHp(temp);
+
+	_isActive = false;
+
+	return NULL;
 }
