@@ -70,6 +70,12 @@ void dungeonScene::update()
 		return;
 	}
 
+	if (KEYMANAGER->isOnceKeyDown('1'))
+	{
+		SCENEMANAGER->loadScene("endScene");
+		return;
+	}
+
 	if(!_tortoise->getIsActive())
 	{
 		if (!UIMANAGER->isChangingScene())
