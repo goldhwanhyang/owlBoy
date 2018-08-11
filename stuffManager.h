@@ -5,6 +5,7 @@
 #include "ironWeight.h"
 
 class player;
+class enemyManager;
 
 class stuffManager : public gameNode
 {
@@ -13,13 +14,16 @@ private:
 	vector<liftableActor *> _vFruit;
 
 	player * _player;
+	enemyManager * _enemyManager;
 
 public:
 	HRESULT init();
 	void release();
 	void update();
 	void render();
+
 	liftableActor* collide(player * _player);
+	void setEnemyManager(enemyManager * em) { _enemyManager = em; }
 
 	vector<liftableActor *>& getVStuff() { return _vStuff; }
 

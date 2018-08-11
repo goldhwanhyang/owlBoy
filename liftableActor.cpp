@@ -145,7 +145,7 @@ void liftableActor::collide()
 	}
 }
 
-bool liftableActor::collide(player * _player)
+bool liftableActor::collide(actor * _player)
 {
 	RECT temp;
 	if (IntersectRect(&temp, &_player->getHitbox(), &_hitBox))
