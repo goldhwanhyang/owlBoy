@@ -15,11 +15,12 @@
 */
 
 /*
-	마우스 우클릭을 누르고있으면 포물선을 그려주는것
-	WALK일 때 대각선으로 내려가는거
-	
+	영상 찍을 때 
+	마을에서
+	앞으로 출력되는 순서
+	오투스가 게디나 과일을 들면 제일 뒤로 가고
+	제트오더에 대해 설명하고
 */
-
 HRESULT player::init()
 {
 	//플레이어 상태 (로딩씬에 이미지 들어가있음)
@@ -122,7 +123,6 @@ void player::update()
 			flyAngle(_FX, _FY);														// 입력받은 키에 따라 각도 설정해주기
 			flyMove();																// 설정된 각도에 따라 움직인다.
 		}
-
 		else																		// 땅에 있을 때
 		{
 			_speed = 7.0f;															// 땅에 있을 때 스피드 7.0f
@@ -560,10 +560,10 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			if (_liftableActor != NULL)
 			{
 				changeState(LIFT);
+				EFFECTMANAGER->play("들기", _x, _y);
 				if (_liftableActor == _geddy)	// 게디일때만 소환사운드, 들기 이펙트 
 				{
 					SOUNDMANAGER->play("소환", _effectVolume);
-					EFFECTMANAGER->play("들기", _x, _y);
 				}				
 
 				_liftableActor->lifted(this);
@@ -742,6 +742,8 @@ void player::collideActor()
 		for (int i = 0; i < _enemyManager->getVEnemy().size(); i++)						// 반복문을 돌고
 		{
 			RECT temp;
+			if(!_enemyManager->getVEnemy()[i]->getIsActive()) continue;
+
 			if (_state == ATK)	// 공격 상태일 때는 오투스가 넉백당하는걸 검사하면안된다. 공격을 하고 뒤로 밀려난다.
 			{
 				if (IntersectRect(&temp, &_spinHitBox, &_enemyManager->getVEnemy()[i]->getHitbox()))	// 플레이어의 공격 렉트와 i번째 에너미의 히트박스를 검사한다.
