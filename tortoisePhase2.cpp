@@ -40,7 +40,7 @@ HRESULT tortoisePhase2::init(float x, float y, int dir)
 	_offSpeed = PHASE2_CONST::DEFAULT_OFF_SPEED;
 
 	bullet blt;
-	blt.init(10, 5, 5, IGM->findImage("보스방1")->getWidth(), "거북이_불릿");
+	blt.init(10, 5, 5, 1920, "거북이_불릿");
 	for (int i = 0; i < 16; ++i)
 	{
 		_vBullet.push_back(blt);
@@ -90,11 +90,6 @@ void tortoisePhase2::render()
 {
 	//히트박스와 텍스쳐 위치 맞추기위해 방향에 따라 렌더바꿈
 	//기존의 frameMake를 사용했더니 움찔거림이 생겼기 때문에 currentX , Y에 _index와 _dir을 직접 써넣었다.  //_boss1Image[_state]->setFrameY(_dir);
-
-	if (_isDebug)
-	{
-		IMAGEMANAGER->findImage("보스방1픽셀")->render(getMemDC(), 0, 0, CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
-	}
 
 	float tempX, tempY;
 	switch (_state)
@@ -200,7 +195,7 @@ void tortoisePhase2::shieldOff()
 {
 	_gravity += 0.05;
 	float temp = utl::getAngle(_playerX, _playerY, _x, _y);
-	if (301 < _x && _x < IMAGEMANAGER->findImage("보스방1")->getWidth() - 310)
+	if (301 < _x && _x < 1920 - 310)
 	{
 		_x += 3 * cosf(temp);
 	}

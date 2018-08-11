@@ -80,6 +80,7 @@ HRESULT sceneManager::loadScene(string sceneName)
 
 HRESULT sceneManager::initScene()
 {
+	_currentScene->release();
 	_currentScene->init();
 	return S_OK;
 }

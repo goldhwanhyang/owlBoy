@@ -20,6 +20,8 @@ class dungeonScene : public gameNode
 	tortoise * _tortoise;
 	tortoiseShield* _shield;
 
+	RECT _portal;
+
 	int _enterBossDelay;
 	bool _isEnterBoss;
 public:
@@ -34,6 +36,7 @@ public:
 	void enterBossRoom();
 
 	void initMonster();
+	void painting(HDC memDC, RECT location, int r, int g, int b);
 
 	dungeonScene() {}
 	~dungeonScene() {}
