@@ -17,6 +17,8 @@
 /*
 	마우스 우클릭을 누르고있으면 포물선을 그려주는것
 	WALK일 때 대각선으로 내려가는거
+	coin
+
 */
 
 HRESULT player::init()
@@ -54,7 +56,7 @@ HRESULT player::init()
 	}
 	//코인
 	_maxCoin = 9999;
-	_coin = 0;
+	_coin = 1111;
 
 	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
@@ -182,17 +184,17 @@ void player::render()
 	friendsFace->render(getMemDC(), 50, 50);
 
 	//천의자리 
-	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
-
-	//백의자리
-	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 1000);
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
-
-	//십의자리
+	//IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
+	//IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
+	//
+	////백의자리
+	//IMAGEMANAGER->findImage("number")->setFrameX(_coin % 1000);
+	//IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
+	//
+	////십의자리
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 10);
 	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 90, 150);
-
+	
 	//일의자리
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 10);
 	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 110, 150);
@@ -278,7 +280,7 @@ void player::groundAxis(WAY axisX, WAY axisY)										// 키 입력으로 바꿔준 상�
 	//위아래가 동시에 충돌했을때  , _oldX = _x 이전위치x에 현재위치 X를 대입하고 
 	_oldX = _x;
 	_oldY = _y;									// 이전 위치(_oldY)에 현재위치(_y)를 저장한다.
-	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL && _state != LIFT)		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
+	if (_axisX == NONE && _axisY == NONE && _state != ATK && _state != ROLL && _state != JUMPFALL && _state != LIFT && _state != HIT && _state != DEAD )		// X,Y 키가 둘 다 NONE이면 _state = IDLE 상태이다.
 		_state = IDLE;
 
 	/*
@@ -526,6 +528,8 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 		else
 		{
 			_liftableActor->attack();												 // _liftableActor가NULL이 아니면 게디가? 들고있는 대상이? 공격한다.
+			_liftableActor = _liftableActor->use(this);
+			changeState(FLY);
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
@@ -533,8 +537,9 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 		if (_liftableActor != NULL)													// _liftableActor가 NULL이 아니면 오터스가 뭔가 들고있는 상태이다.
 		{
 			//내 마우스와 오투스사이의 각도를 구해서 던지고 손에 아무것도 없다는것을 알리기위해 NULL로 바꿔주고 상태도 FLY로 바꿔준다.
+			SOUNDMANAGER->play("던지기", _effectVolume);	
 			_liftableActor->throwed(10, getAnglef(_x - CAM->getX(),_y - CAM->getY() , _ptMouse.x, _ptMouse.y));
-			SOUNDMANAGER->play("던지기", _effectVolume);
+
 			_liftableActor = NULL;
 			changeState(FLY);
 		}
@@ -544,8 +549,12 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 			if (_liftableActor != NULL)
 			{
 				changeState(LIFT);
-				SOUNDMANAGER->play("소환", _effectVolume);
-				EFFECTMANAGER->play("들기", _x, _y);
+				if (_liftableActor == _geddy)	// 게디일때만 소환사운드, 들기 이펙트 
+				{
+					SOUNDMANAGER->play("소환", _effectVolume);
+					EFFECTMANAGER->play("들기", _x, _y);
+				}				
+
 				_liftableActor->lifted(this);
 			}
 		}
@@ -559,7 +568,7 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 	}
 	if (KEYMANAGER->isOnceKeyDown('Q'))	// 게디 소환
 	{
-		if (_liftableActor == NULL) 
+		if (_liftableActor == NULL ) 
 		{
 			SOUNDMANAGER->play("소환", _effectVolume);
 			EFFECTMANAGER->play("소환", _x, _y);
@@ -623,7 +632,7 @@ void player::collideMap()
 		g = GetGValue(color);
 		b = GetBValue(color);
 
-		if (_state == JUMPFALL || _state == FLYDOWN || _state == WALK || _state == ROLL || _state == ATK || _state == IDLE)	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
+		if (_state == JUMPFALL || _state == FLYDOWN || _state == WALK || _state == ROLL || _state == ATK || _state == IDLE )	// 아래에서 위로 올라갈때 검사하면 안되니까 isFly가 false이거나 아래로 내려올때만 검사 한다.
 		{
 			if (!(r == 255 && g == 0 && b == 255))	// 마젠타가 아니면 검사
 			{
@@ -637,7 +646,7 @@ void player::collideMap()
 				_isFly = false;	// 날지 않는 상태라는걸 바꿔주기
 				if (_state != ROLL)
 					_speed = 7;
-				if (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT)	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
+				if (isChangableToIdle())	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
 				{
 					_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
 				}
@@ -662,7 +671,8 @@ void player::collideMap()
 				_isFly = false;	// 날지 않는 상태라는걸 바꿔주기
 				if (_state != ROLL)
 					_speed = 7;
-				if (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT)	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
+
+				if (isChangableToIdle())	// 뛰는상태가 아니고 공격상태가 아니면 IDLE
 				{
 					_state = IDLE;	// 언제 IDLE이여야 하는지 , 아니면 언제 IDLE로 바뀌면 안되는지 생각해보기
 				}

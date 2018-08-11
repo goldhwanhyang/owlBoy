@@ -104,6 +104,7 @@ public:
 	// 코인 함수 증가시키기 숫자넣으면 코인의값을 증가시키는 함수
 	int sumCoin(int coin);
 
+	bool isChangableToIdle() { return (_state != WALK && _state != ATK && _state != ROLL && _state != LIFT && _state != HIT && _state != DEAD); };
 
 	// 예시 ) 컵에 물을 따르려면 가만히두면 물이 안따라지니까 손이라는 도구를 사용해서 물을 따른다
 	// 컵 = 틀 , 물 = 알맹이, 손 = set함수
