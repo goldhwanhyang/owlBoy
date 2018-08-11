@@ -56,8 +56,6 @@ void tortoise::update()
 			}
 			else
 			{
-				SOUNDMANAGER->play("º¸½ºÆø¹ß", _effectVolume);
-				SOUNDMANAGER->playBgm("´øÀü", _soundVolume);
 				EFFECTMANAGER->play("°ÅºÏÀÌ_Á×À½Æø¹ß", _phase2->getX()-135+RND->getInt(300), _phase2->getY()-100+RND->getInt(300));
 				++_deadCount;
 			}

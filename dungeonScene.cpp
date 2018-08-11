@@ -64,6 +64,7 @@ HRESULT dungeonScene::init()
 	CAM->setPosition(_player->getX(), _player->getY());
 
 	SOUNDMANAGER->playBgm("던전", _soundVolume);
+	SOUNDMANAGER->stop("던전");
 
 	UIMANAGER->startingNewScene(_player->getX(), _player->getY());
 

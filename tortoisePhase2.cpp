@@ -60,6 +60,10 @@ void tortoisePhase2::update()
 {
 	if (_hp <= 0)
 	{
+		if (_isActive)
+		{
+			SOUNDMANAGER->play("º¸½ºÆø¹ß", _effectVolume);
+		}
 		_isActive = false;
 	}
 
