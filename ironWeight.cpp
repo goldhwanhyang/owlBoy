@@ -72,7 +72,7 @@ void ironWeight::render()
 			_x - _img[_state]->getWidth() / 2 - CAM->getX(),
 			_y - _img[_state]->getHeight() / 2 - CAM->getY());
 	}
-	if (_state == HANG)
+	if (_state == HANG && _lifted->getX() != -1)
 	{
 		_lifted->frameRender(getMemDC(), _lifted->getX() - _lifted->getFrameWidth() / 2 - CAM->getX(), _lifted->getY() - _lifted->getFrameHeight() / 2 - CAM->getY());
 

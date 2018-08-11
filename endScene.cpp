@@ -32,6 +32,8 @@ HRESULT endScene::init()
 	_rightFrame[8] = IMAGEMANAGER->findImage("나무2");
 	_rightFrame[9] = IMAGEMANAGER->findImage("무게추");
 
+	SOUNDMANAGER->playBgm("시작", _soundVolume);
+
 	return S_OK;
 }
 
@@ -69,24 +71,17 @@ void endScene::update()
 
 void endScene::render()
 {
-	if (_y < -800)
-	{
-		if (_alpha >= 255)
-			_backGround->frameRender(getMemDC(), 0, 0, _backindex, 0);
-		else
-		{
-			creditsAni(_leftFrame, WINSIZEX / 6, 0);
-			creditsAni(_rightFrame, WINSIZEX - 147, 1);
-			_backGround->alphaFrameRender(getMemDC(), 0, 0, _backindex, 0, _alpha);
-		}
-	}
+	if (_alpha >= 255)
+		_backGround->frameRender(getMemDC(), 0, 0, _backindex, 0);
 	else
 	{
 		_count = (_count + 1) % 15;
 		creditsAni(_leftFrame, WINSIZEX / 6, 0);
 		creditsAni(_rightFrame, WINSIZEX - 147, 1);
 		creditsText();
+		_backGround->alphaFrameRender(getMemDC(), 0, 0, _backindex, 0, _alpha);
 	}
+
 }
 
 void endScene::creditsText()
@@ -127,11 +122,16 @@ void endScene::creditsText()
 	sprintf_s(str, "박동건");
 	TextOut(getMemDC(), WINSIZEX / 2, _y + 435, str, strlen(str));
 
+	int y = _y + 635;
+	if (y <= WINSIZEY / 2)
+	{
+		y = WINSIZEY/2;
+	}
 	sprintf_s(str, "팀 포트폴리오 [모작] 아울보이를 플레이 해주셔서 감사합니다.");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 635, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, y, str, strlen(str));
 
 	sprintf_s(str, "박성우 선생님 감사합니다.");
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 670, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, y + 35, str, strlen(str));
 
 	SelectObject(getMemDC(), oldFont);
 	DeleteObject(font);

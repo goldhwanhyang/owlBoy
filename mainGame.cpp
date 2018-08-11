@@ -95,7 +95,7 @@ void mainGame::render() //이제 이미지매니저를 추가했고 gameNode를 수정해서 HDC매
 
 	}
 	_isDebug = FALSE; //모든 클래스 디버그모드 끄기
-	TIMEMANAGER->render(getMemDC());
+	//TIMEMANAGER->render(getMemDC());
 
 	UIMANAGER->render(getMemDC());
 

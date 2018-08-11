@@ -13,6 +13,7 @@ class endScene :
 	int _backCount, _backindex;
 
 	int _alpha;
+
 public:
 	virtual HRESULT init();				//void로 써도되는데 초기화에 문제가 생기면 바로 알려줌
 	virtual void release();

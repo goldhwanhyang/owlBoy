@@ -42,7 +42,7 @@ void fruit::render()
 		_y - _img->getHeight() / 2 - CAM->getY(),
 		0, 0, _img->getWidth(), _height);
 
-	if (_state == HANG)
+	if (_state == HANG && _lifted->getX() != -1)
 	{
 		_lifted->frameRender(getMemDC(), _lifted->getX() - _lifted->getFrameWidth()/2 - CAM->getX(), _lifted->getY() - _lifted->getFrameHeight() / 2 - CAM->getY());
 	}

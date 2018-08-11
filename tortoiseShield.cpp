@@ -10,6 +10,7 @@ HRESULT tortoiseShield::init(float x, float y)
 	_z = 10;
 
 	_image = IGM->findImage("°ÅºÏÀÌ_¶³¾îÁø¹æÆÐ");
+	_lifted = IMAGEMANAGER->findImage("LIFT2");
 	_isActive = false;
 	_gravity = 0;
 	_index = _count = 0;
@@ -59,10 +60,9 @@ void tortoiseShield::render()
 		//TextOut(getMemDC(), 140, 140, _debug, strlen(_debug));
 		//Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
 	}
-	if (_state == HANG)
+	if (_state == HANG && _lifted->getX() != -1)
 	{
-		image *temp = IMAGEMANAGER->findImage("LIFT2");
-		temp->frameRender(getMemDC(), temp->getX()- temp->getFrameWidth()/2- CAM->getX(), temp->getY() - temp->getFrameHeight()/2 - CAM->getY());
+		_lifted->frameRender(getMemDC(), _lifted->getX()- _lifted->getFrameWidth()/2- CAM->getX(), _lifted->getY() - _lifted->getFrameHeight()/2 - CAM->getY());
 	}
 }
 

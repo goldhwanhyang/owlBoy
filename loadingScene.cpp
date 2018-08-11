@@ -286,8 +286,8 @@ void loadingScene::loadingImage()
 
 	// map
 	_loading->loadImage("sky", "Texture/background/sky_1920x1080.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadImage("던전맵", "Texture/Maps/Boss1/dungeonMap_9235x1080.bmp", 9235, 1080);
-	_loading->loadImage("던전맵픽셀", "Texture/Maps/Boss1/dungeonMapPixel_9235_1080.bmp", 9235, 1080);
+	_loading->loadImage("던전맵", "Texture/Maps/Boss1/dungeonMap_9235x1080.bmp", 9235, 1080, true, RGB(255, 0, 255));
+	_loading->loadImage("던전맵픽셀", "Texture/Maps/Boss1/dungeonMapPixel_9235_1080.bmp", 9235, 1080, true, RGB(255, 0, 255));
 
 	_loading->loadImage("Town", "Texture/Maps/Town/townMap_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
 	_loading->loadImage("TownPixel", "Texture/Maps/Town/townMapPixelCollision_5000x8000.bmp", 5000, 8000, true, RGB(255, 0, 255));
@@ -338,7 +338,7 @@ void loadingScene::loadingSound()
 
 void loadingScene::loadingEffect()
 {
-	EFFECTMANAGER->addEffect("들기", "친구들기이펙트", 0.5, 5);
+	EFFECTMANAGER->addEffect("들기", "친구들기이펙트", 0.2, 5);
 	EFFECTMANAGER->addEffect("총알폭발", "총알폭발이펙트", 0.2, 20);
 	EFFECTMANAGER->addEffect("소환", "친구소환이펙트", 0.2, 5);
 	EFFECTMANAGER->addEffect("구르기먼지", "구르기먼지이펙트", 0.5, 10);

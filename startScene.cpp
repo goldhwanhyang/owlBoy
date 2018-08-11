@@ -13,6 +13,9 @@ HRESULT startScene::init()
 
 	player * _player= SAVEDATA->getPlayer();
 	_player->init();
+	// ¸¶À» ¾ÀÀÇ ÁÂÇ¥
+	_player->setX(1963.f);
+	_player->setY(7121.f);
 
 	_maxOption = 3;
 

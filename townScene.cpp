@@ -90,8 +90,6 @@ HRESULT townScene::init()
 	_topCloud = IMAGEMANAGER->findImage("마을_천장");
 	_player = SAVEDATA->getPlayer();
 	_player->init();
-	_player->setX(1963.f);
-	_player->setY(7121.f);
 	
 	//CAM->setRange(_testMap->getWidth(), _testMap->getHeight());
 
@@ -125,9 +123,6 @@ HRESULT townScene::init()
 	
 	SOUNDMANAGER->playBgm("마을",_soundVolume);
 
-/*
-	tR.init(_player->getX() + 500, _player->getY() - 300, 1);
-	*/
 
 	//////////////////////////
 	ring *temp_ring[20];
@@ -152,16 +147,16 @@ HRESULT townScene::init()
 	temp_ring[8]->init(_TownMap->getWidth() / 2, 400, 1);
 	temp_ring[9]->init(_TownMap->getWidth() / 2, 600, 1);
 	temp_ring[10]->init(_TownMap->getWidth() / 2, 800, 1);
-	temp_ring[11]->init(_TownMap->getWidth() / 2, 1000, 1);
 
 	temp_ring[12]->init(3100, 5000, 1);
 	temp_ring[13]->init(3200, 5750, 0);
-	temp_ring[14]->init(2400, 6000, 2);
+	temp_ring[14]->init(2600, 5800, 2);
 	temp_ring[15]->init(2400, 6300, 1);
-	temp_ring[16]->init(2400, 6800, 3);
+	temp_ring[16]->init(2600, 6800, 3);
 	temp_ring[17]->init(3300, 6800, 0);
 	temp_ring[18]->init(3900, 6700, 2);
-	temp_ring[19]->init(3900, 5450, 1);
+	temp_ring[11]->init(4000, 6300, 1);
+	temp_ring[19]->init(3900, 5800, 3);
 
 	for (int i = 0; i < 20; ++i)
 	{
@@ -199,13 +194,9 @@ HRESULT townScene::init()
 	_stuffManager->addFruit(0, 1571 + RND->getFromIntTo(400, 600), 644 +  30);
 	_stuffManager->addFruit(0, 2433 + RND->getFromIntTo(400, 600), 2052 + 30);
 	_stuffManager->addFruit(0, 773 + RND->getFromIntTo(400,  600), 2946 + 30);
-	//_stuffManager->addFruit(0, 1809 + RND->getFromIntTo(500, 700), 3049 + 30);
 	_stuffManager->addFruit(0, 2560 + RND->getFromIntTo(400, 600), 3815 + 30);
 	_stuffManager->addFruit(0, 1419 + RND->getFromIntTo(400, 600), 5223 + 30);
-	//_stuffManager->addFruit(0, 1678 + RND->getFromIntTo(500, 700), 5123 + 30);
 	_stuffManager->addFruit(0, 2644 + RND->getFromIntTo(400, 600), 6331 + 30);
-	//_stuffManager->addFruit(0, 2910 + RND->getFromIntTo(500, 700), 6085 + 30);
-	//_stuffManager->addFruit(0, 3320 + RND->getFromIntTo(500,  700), 6189 + 30);
 	_stuffManager->addFruit(0, 1531 + RND->getFromIntTo(400, 600), 7147 + 30);
 	_stuffManager->addFruit(0, 3191 + RND->getFromIntTo(400, 600), 7287 + 30);
 
@@ -237,14 +228,24 @@ void townScene::update()
 
 	if (UIMANAGER->checkEndScene())
 	{
+		// 던전씬의 플레이어 좌표
+		_player->setX(8960);
+		_player->setY(584);
 		SCENEMANAGER->loadScene("dungeonScene");
 		return;
 	}
 
 	if (IntersectRect(&temp, &_player->getHitbox(), &portal))
 	{
+		_player->frameSetting();
 		if (!UIMANAGER->isChangingScene())
 			UIMANAGER->startingSceneChange(_player->getX(), _player->getY());
+		return;
+	}
+	if (UIMANAGER->isChangingScene())
+	{
+		_player->frameSetting();
+		CAM->videoShooting(_player->getX(), _player->getY());
 		return;
 	}
 

@@ -11,6 +11,7 @@ class tortoiseShield : public liftableActor
 	enum {IDLE, HANG = 2};
 private:
 	image* _image;					//떨어진 방패 이미지
+	image* _lifted;
 
 	char _debug[64];
 public:

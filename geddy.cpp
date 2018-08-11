@@ -132,10 +132,6 @@ void geddy::render()
 				_curFrameX = (_curFrameX + 1) % (_img[_state]->getMaxFrameX()+1);
 		}
 	}
-
-	IMAGEMANAGER->findImage("HP_BACK")->render(UIMANAGER->getUIDC(), 620, 63);
-	IMAGEMANAGER->findImage("HP_FRONT")->render(UIMANAGER->getUIDC(), 620, 66);
-	IMAGEMANAGER->findImage("FRIEND_UI")->render(UIMANAGER->getUIDC(), 550, 50);
 }
 
 int geddy::convertDir()

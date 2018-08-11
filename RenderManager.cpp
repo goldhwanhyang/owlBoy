@@ -51,8 +51,6 @@ void RenderManager::backgroundRender(HDC hdc)
 
 			x = WINSIZEX / 2 + (iter->second->getX() - centerX) / (5 - z);
 			y = WINSIZEY / 2 + (iter->second->getY() - centerY) / (5 - z);
-			//x = (iter->second->getX() - CAM->getX());
-			//y = iter->second->getY() - CAM->getY();
 			if (0 < x + width && x < WINSIZEX &&
 				0 < y + height && y < WINSIZEY)
 			{

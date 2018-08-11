@@ -5,8 +5,6 @@ HRESULT dungeonScene::init()
 {
 	_player = SAVEDATA->getPlayer();
 	_player->init();
-	_player->setX(8960);
-	_player->setY(584);
 
 	_stage = IMAGEMANAGER->findImage("´øÀü¸Ê");
 	_stagePixel = IMAGEMANAGER->findImage("´øÀü¸ÊÇÈ¼¿");
@@ -90,9 +88,10 @@ void dungeonScene::update()
 		}
 		else
 		{
-			SCENEMANAGER->loadScene("townScene");
+			// ´øÀü ¾À¿¡¼­ ¸¶À» ¾ÀÀ¸·Î ÀÌµ¿ÇÒ ¶§ÀÇ ÁÂÇ¥
 			_player->setX(2500);
 			_player->setY(400);
+			SCENEMANAGER->loadScene("townScene");
 			_player->changeState(FLY);
 		}
 		return;
@@ -144,7 +143,11 @@ void dungeonScene::render()
 	RENDERMANAGER->render(getMemDC());
 
 	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
-	Rectangle(getMemDC(), _portal.left - CAM->getX(), _portal.top - CAM->getY(), _portal.right - CAM->getX(), _portal.bottom - CAM->getY());
+	
+	if (KEYMANAGER->isToggleKey(VK_F1))
+	{
+		_stagePixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
+	}
 }
 
 void dungeonScene::release()
