@@ -62,6 +62,7 @@ private:
 
 	int _oldX;	// 이전 x위치
 	int _oldY;	// 이전 y위치
+	int _walkY;
 public:
 	HRESULT init();
 	void release();
