@@ -40,7 +40,7 @@ void loadingScene::update(void)
 	_loading->update(); //로딩바 업데이트
 
 	//로딩완료후 씬변경
-	if (_loading->loadingDone() && (KEYMANAGER->isOnceKeyDown(VK_SPACE) || KEYMANAGER->isOnceKeyDown(VK_LBUTTON))) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
+	if (_loading->loadingDone()) //loadingImage와 loadingSound의 인자값으로 addimage, addframeimage하고 다 되면 true
 	{
 		loadingEffect();
 		SCENEMANAGER->loadScene("startScene"); //게임씬으로 전환
@@ -185,6 +185,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("돌폭발", "Texture/Effect/stonExplode_1344x214_8x1.bmp", 1344, 214, 8, 1);
 	_loading->loadFrameImage("거북이_불릿폭발이펙트", "Texture/Enemies/Boss1/bossBulletEffect_468x111_6x1.bmp", 468, 111, 6, 1);
 	_loading->loadFrameImage("거북이_죽음폭발이펙트", "Texture/Effect/enemyBossExplode_1600x151_7x1.bmp", 1600, 151, 7, 1);
+	_loading->loadFrameImage("오투스_음식회복이펙트", "Texture/Effect/otusHeal_108x18_5x1.bmp", 108, 18, 5, 1);
 
 	// player
 	_loading->loadFrameImage("IDLE", "Texture/player/otusIdle_700x250_10x2.bmp", 700, 250, 10, 2);
@@ -344,4 +345,5 @@ void loadingScene::loadingEffect()
 	EFFECTMANAGER->addEffect("돌폭발", "돌폭발", 0.2, 10);
 	EFFECTMANAGER->addEffect("거북이_불릿폭발", "거북이_불릿폭발이펙트", 0.2, 40);
 	EFFECTMANAGER->addEffect("거북이_죽음폭발", "거북이_죽음폭발이펙트", 0.3, 7);
+	EFFECTMANAGER->addEffect("오투스_음식회복", "오투스_음식회복이펙트", 0.2, 30);
 }

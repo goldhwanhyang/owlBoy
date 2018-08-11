@@ -66,13 +66,21 @@ void dungeonScene::update()
 {
 	if (UIMANAGER->checkEndScene())
 	{
-		SCENEMANAGER->loadScene("endScene");
+		if (!_tortoise->getIsActive())
+			SCENEMANAGER->loadScene("endScene");
+		else
+		{
+			SCENEMANAGER->initScene();
+			_player->setHp(_player->getMaxHp());
+			_player->changeState(IDLE);
+		}
 		return;
 	}
 
-	if (KEYMANAGER->isOnceKeyDown('1'))
+	if (UIMANAGER->isChangingScene())
 	{
-		SCENEMANAGER->loadScene("endScene");
+		_player->frameSetting();
+		CAM->videoShooting(_player->getX(), _player->getY());
 		return;
 	}
 
