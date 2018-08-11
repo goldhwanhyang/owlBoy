@@ -284,7 +284,7 @@ void townScene::render()
 	}
 
 	//_testMap->render(getMemDC());
-	_TownMap->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
+	_TownMap->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getSourX(), CAM->getSourY(), WINSIZEX, WINSIZEY);
 
 	for (int i = 0; i < 12; ++i)
 	{

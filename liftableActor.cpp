@@ -91,7 +91,7 @@ void liftableActor::collide()
 			_state = ON_GROUND;
 			if (_weight >= 50)
 			{
-				CAM->setShakeInfo(10, 10);
+				CAM->setShakeInfo(10, 20);
 			}
 			_z = 9;
 			_hitBox = RectMakeCenter(_x, _y, _maxWidth, _maxHeight);

@@ -137,7 +137,7 @@ void dungeonScene::update()
 
 void dungeonScene::render()
 {
-	_stage->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY); //카메라 쉐이크할 이미지에 CAM->getSX(), CAM->getSY()
+	_stage->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getSourX(), CAM->getSourY(), WINSIZEX, WINSIZEY); //카메라 쉐이크할 이미지에 CAM->getSX(), CAM->getSY()
 	_enemyManager->render();
 	_stuffManager->render();
 	RENDERMANAGER->addRender(_player->getZ(), _player);
@@ -148,7 +148,7 @@ void dungeonScene::render()
 	
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
-		_stagePixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY);
+		_stagePixel->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getSourX(), CAM->getSourY(), WINSIZEX, WINSIZEY);
 	}
 }
 

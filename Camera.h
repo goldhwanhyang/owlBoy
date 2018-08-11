@@ -21,8 +21,10 @@ public:
 
 	int getMaxWidth() { return maxWidth; }
 	int getMaxHeight() { return maxHeight; }
-	int getX() { return x; }
-	int getY() { return y; }
+	int getX() { return x - sX; }
+	int getY() { return y - sY; }
+	int getSourX() { return x; }
+	int getSourY() { return y; }
 	int getSX() { return sX; }
 	int getSY() { return sY; }
 
