@@ -25,6 +25,7 @@ HRESULT geddy::init()
 
 	_x = 440.f;			// 플레이어 x좌표
 	_y = 810.f;			// 플레이어 y좌표
+	_z = 9;
 	_speed = 6.0f;
 	_angle = 0;	// 플레이어 각도
 	_gravity = 0;		// 플레이어 중력
@@ -36,7 +37,7 @@ HRESULT geddy::init()
 	_maxWidth = GEDDY_WIDTH;
 	_maxHeight = GEDDY_HEIGHT;
 
-	_isActive = true;
+	_isActive = false;
 	_weight = 40;
 	return S_OK;
 }
@@ -67,7 +68,7 @@ void geddy::update()
 			move();
 			collideWall();
 		}
-		_z = 0;
+		_z = 9;
 		if (_angle > PI / 2 && _angle < 3 * PI / 2)
 			_dir = 1;
 		else

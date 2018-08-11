@@ -4,6 +4,7 @@ class fruit :
 	public liftableActor
 {
 	image * _img;
+	image * _lifted;
 
 public:
 	HRESULT init();
