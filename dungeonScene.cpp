@@ -140,7 +140,7 @@ void dungeonScene::render()
 	_stage->render(getMemDC(), CAM->getSX(), CAM->getSY(), CAM->getX(), CAM->getY(), WINSIZEX, WINSIZEY); //카메라 쉐이크할 이미지에 CAM->getSX(), CAM->getSY()
 	_enemyManager->render();
 	_stuffManager->render();
-	_player->render();
+	RENDERMANAGER->addRender(_player->getZ(), _player);
 
 	RENDERMANAGER->render(getMemDC());
 

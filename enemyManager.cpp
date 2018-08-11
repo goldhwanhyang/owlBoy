@@ -24,7 +24,7 @@ void enemyManager::render()
 	{
 		if (!_vEnemy[i]->getIsActive()) continue;
 
-		_vEnemy[i]->render();
+		RENDERMANAGER->addRender(_vEnemy[i]->getZ(), _vEnemy[i]);
 	}
 }
 
