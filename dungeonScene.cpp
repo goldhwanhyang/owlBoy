@@ -82,6 +82,8 @@ void dungeonScene::update()
 			SCENEMANAGER->loadScene("endScene");
 		else if(_player->getState() == DEAD)
 		{
+			_player->setX(8960);
+			_player->setY(584);
 			SCENEMANAGER->initScene();
 			_player->setHp(_player->getMaxHp());
 			_player->changeState(IDLE);

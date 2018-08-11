@@ -27,7 +27,8 @@ class startScene :
 	int _effectVolumeWidth, _effectVolumeX, _effectVolumeY;
 
 	float _angle;
-
+	
+	player *_player;
 public:
 	virtual HRESULT init();
 	virtual void release();

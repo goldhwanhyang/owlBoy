@@ -11,7 +11,7 @@ HRESULT startScene::init()
 	_stone1 = IMAGEMANAGER->findImage("START_SCENE_OTUS");
 	_stone2 = IMAGEMANAGER->findImage("START_SCENE_STONE");
 
-	player * _player= SAVEDATA->getPlayer();
+	_player= SAVEDATA->getPlayer();
 	_player->init();
 	// ¸¶À» ¾ÀÀÇ ÁÂÇ¥
 	_player->setX(1963.f);
@@ -150,6 +150,8 @@ void startScene::updateStartMenu()
 		{
 		case 0:
 			SOUNDMANAGER->play("°ÔÀÓ½ÃÀÛ", 1);
+			_player->setX(1963.f);
+			_player->setY(7121.f);
 			SCENEMANAGER->loadScene("townScene");
 			break;
 		case 1:

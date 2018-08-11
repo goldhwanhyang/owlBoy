@@ -23,10 +23,22 @@ void RenderManager::render(HDC hdc)
 		{
 			x = iter->second->getX() - CAM->getX();
 			y = iter->second->getY() - CAM->getY();
-			if (0 < x + 200 && x - 200 < WINSIZEX &&
-				0 < y + 200 && y - 200 < WINSIZEY)
+
+			if (KEYMANAGER->isToggleKey(VK_F11))
 			{
-				iter->second->render();
+				if (300 < x + 200 && x - 200 < WINSIZEX -300&&
+					300 < y + 200 && y - 200 < WINSIZEY -300)
+				{
+					iter->second->render();
+				}
+			}
+			else
+			{
+				if (0 < x + 200 && x - 200 < WINSIZEX &&
+					0 < y + 200 && y - 200 < WINSIZEY)
+				{
+					iter->second->render();
+				}
 			}
 		}
 	}
@@ -51,10 +63,21 @@ void RenderManager::backgroundRender(HDC hdc)
 
 			x = WINSIZEX / 2 + (iter->second->getX() - centerX) / (5 - z);
 			y = WINSIZEY / 2 + (iter->second->getY() - centerY) / (5 - z);
-			if (0 < x + width && x < WINSIZEX &&
-				0 < y + height && y < WINSIZEY)
+			if (KEYMANAGER->isToggleKey(VK_F11))
 			{
-				iter->second->render(x, y);
+				if (300 < x + width && x < WINSIZEX - 300 &&
+					300 < y + height && y < WINSIZEY - 300)
+				{
+					iter->second->render(x, y);
+				}
+			}
+			else
+			{
+				if (0 < x + width && x < WINSIZEX &&
+					0 < y + height && y < WINSIZEY)
+				{
+					iter->second->render(x, y);
+				}
 			}
 		}
 	}
