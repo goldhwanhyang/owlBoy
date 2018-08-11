@@ -18,6 +18,8 @@ HRESULT tortoise::init(float x, float y, int dir)
 	_isActive = true;
 	_deadCount = 0;
 
+	_z = 10;
+
 	_hpBarHead = IMAGEMANAGER->findImage("거북이_체력바머리");
 	_hpBar = new progressBar;
 	_hpBar->init("Texture/Enemies/Boss1/hpBarFront", "Texture/Enemies/Boss1/hpBarBack", WINSIZEX*0.68, WINSIZEY*0.05, 300, 51);
@@ -54,6 +56,7 @@ void tortoise::update()
 			}
 			else
 			{
+				SOUNDMANAGER->play("보스폭발", _effectVolume);
 				SOUNDMANAGER->playBgm("던전", _soundVolume);
 				EFFECTMANAGER->play("거북이_죽음폭발", _phase2->getX()-135+RND->getInt(300), _phase2->getY()-100+RND->getInt(300));
 				++_deadCount;
@@ -101,5 +104,6 @@ void tortoise::release()
 //가상함수를 재정의 해주지 않아서 상위 클래스 actor의 damaged함수를 불러오고 있었다.
 void tortoise::damaged(actor *e)
 {
+	if (e->getPower() < 0) return;
 	_currentPhase->damaged(e);
 }

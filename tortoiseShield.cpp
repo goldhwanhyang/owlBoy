@@ -14,6 +14,8 @@ HRESULT tortoiseShield::init(float x, float y)
 	_gravity = 0;
 	_index = _count = 0;
 
+	_power = -1;
+
 	_maxWidth = 100;
 	_maxHeight = 100;
 	return S_OK;

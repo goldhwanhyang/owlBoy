@@ -152,6 +152,7 @@ void gawk::release()
 //shakeAngle +1마다 oldState가 생성,삭제되어 제대로 값을 저장할 수 없었음
 void gawk::damaged(actor* e)
 {
+	if (e->getPower() < 0) return;
 	//POINT t = { _ptMouse.x + CAM->getX(), _ptMouse.y + CAM->getY() };
 	_hp -= e->getPower();// _hp를 매개변수 actor의 getPower만큼 hp를 깎는다.
 	if (_hp > 0)

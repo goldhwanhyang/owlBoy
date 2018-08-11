@@ -6,8 +6,10 @@ HRESULT endScene::init()
 {
 	_y = WINSIZEY;
 	_count = _index[0] = _index[1] = _currentNum[0] = _currentNum[1] = 0;
+	_backCount = _backindex = 0;
 
-	//_backGround = IMAGEMANAGER->findImage("endingBack");
+	_backGround = new image;
+	_backGround->init("Texture/background/endingBackground_5120x800.bmp", 5120, 800, 4, 1);
 
 	_leftFrame[0] = IMAGEMANAGER->findImage("IDLE");
 	_leftFrame[1] = IMAGEMANAGER->findImage("Walk");
@@ -43,11 +45,12 @@ void endScene::update()
 	//_y -= 1;
 	if (_y < -700)
 	{
+		_backCount = (_backCount + 1) % 10;
+		if (_backCount == 0) ++_backindex;
 	}
 	else
 	{
 		_y -= 1;
-		//TODO 엔딩이미지
 	}
 }
 
@@ -57,7 +60,7 @@ void endScene::render()
 	creditsAni(_leftFrame, WINSIZEX / 6, 0);
 	creditsAni(_rightFrame, WINSIZEX - 147, 1);
 	creditsText();
-
+	_backGround->frameRender(getMemDC(), 0, _y + 700, _backindex, 0);
 }
 
 void endScene::creditsText()

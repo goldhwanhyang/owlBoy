@@ -216,6 +216,7 @@ void torque::release()
 
 void torque::damaged(actor * e)
 {
+	if (e->getPower() < 0) return;
 	_state = STUN;
 	_hp -= e->getPower();
 	if(_hp > 0 && e->getPower() == 0) _isKnockBack = true;
