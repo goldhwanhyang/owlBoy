@@ -6,10 +6,9 @@ HRESULT endScene::init()
 {
 	_y = WINSIZEY;
 	_count = _index[0] = _index[1] = _currentNum[0] = _currentNum[1] = 0;
-	_backCount = _backindex = 0;
+	_backCount = _backindex = _alpha = 0;
 
-	_backGround = new image;
-	_backGround->init("Texture/background/endingBackground_5120x800.bmp", 5120, 800, 4, 1);
+	_backGround = IMAGEMANAGER->findImage("엔딩");
 
 	_leftFrame[0] = IMAGEMANAGER->findImage("IDLE");
 	_leftFrame[1] = IMAGEMANAGER->findImage("Walk");
@@ -43,10 +42,24 @@ void endScene::release()
 void endScene::update()
 {
 	//_y -= 1;
-	if (_y < -700)
+	if (_y < -800)
 	{
 		_backCount = (_backCount + 1) % 10;
-		if (_backCount == 0) ++_backindex;
+		if (_backCount == 0)
+		{
+			++_backindex;
+			if (_backindex > 4)
+				_backindex = 0;
+		}
+		_alpha++;
+		if (_alpha >= 255)
+		{
+			_alpha = 255;
+			if (KEYMANAGER->isOnceKeyDown(' '))
+			{
+				SCENEMANAGER->loadScene("startScene");
+			}
+		}
 	}
 	else
 	{
@@ -56,11 +69,24 @@ void endScene::update()
 
 void endScene::render()
 {
-	_count = (_count + 1) % 15;
-	creditsAni(_leftFrame, WINSIZEX / 6, 0);
-	creditsAni(_rightFrame, WINSIZEX - 147, 1);
-	creditsText();
-	_backGround->frameRender(getMemDC(), 0, _y + 700, _backindex, 0);
+	if (_y < -800)
+	{
+		if (_alpha >= 255)
+			_backGround->frameRender(getMemDC(), 0, 0, _backindex, 0);
+		else
+		{
+			creditsAni(_leftFrame, WINSIZEX / 6, 0);
+			creditsAni(_rightFrame, WINSIZEX - 147, 1);
+			_backGround->alphaFrameRender(getMemDC(), 0, 0, _backindex, 0, _alpha);
+		}
+	}
+	else
+	{
+		_count = (_count + 1) % 15;
+		creditsAni(_leftFrame, WINSIZEX / 6, 0);
+		creditsAni(_rightFrame, WINSIZEX - 147, 1);
+		creditsText();
+	}
 }
 
 void endScene::creditsText()
@@ -85,17 +111,12 @@ void endScene::creditsText()
 	oldFont = (HFONT)SelectObject(getMemDC(), font);
 	char str[128];
 
-	sprintf_s(str, "팀 포트폴리오 [모작] 아울보이를 플레이 해주셔서 감사합니다.");
+	sprintf_s(str, "[TEAM] 왜 우리만 셋이조");
 	SetTextAlign(getMemDC(), TA_CENTER); //텍스트 중앙정렬
 	TextOut(getMemDC(), WINSIZEX / 2, _y, str, strlen(str));
 
-	sprintf_s(str, "[TEAM] 왜 우리만 셋이조");
-	SetTextAlign(getMemDC(), TA_RIGHT); //텍스트 오른쪽정렬
-	TextOut(getMemDC(), WINSIZEX-140, _y+35, str, strlen(str));
-
 	sprintf_s(str, "제작자");
-	SetTextAlign(getMemDC(), TA_CENTER); //텍스트 중앙정렬
-	TextOut(getMemDC(), WINSIZEX / 2, _y + 135, str, strlen(str));
+	TextOut(getMemDC(), WINSIZEX / 2, _y+135, str, strlen(str));
 
 	sprintf_s(str, "이재영 팀장");
 	TextOut(getMemDC(), WINSIZEX / 2, _y + 235, str, strlen(str));
@@ -106,8 +127,11 @@ void endScene::creditsText()
 	sprintf_s(str, "박동건");
 	TextOut(getMemDC(), WINSIZEX / 2, _y + 435, str, strlen(str));
 
-	sprintf_s(str, "박성우 선생님 감사합니다.");
+	sprintf_s(str, "팀 포트폴리오 [모작] 아울보이를 플레이 해주셔서 감사합니다.");
 	TextOut(getMemDC(), WINSIZEX / 2, _y + 635, str, strlen(str));
+
+	sprintf_s(str, "박성우 선생님 감사합니다.");
+	TextOut(getMemDC(), WINSIZEX / 2, _y + 670, str, strlen(str));
 
 	SelectObject(getMemDC(), oldFont);
 	DeleteObject(font);

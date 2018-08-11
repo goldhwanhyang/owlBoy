@@ -163,8 +163,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("나무1", "Texture/background/tree1_420x140_3x1.bmp", 420, 140, 3, 1);
 	_loading->loadFrameImage("나무2", "Texture/background/tree2_1200x400_3x1.bmp", 1200, 400, 3, 1);
 	_loading->loadFrameImage("나무3", "Texture/background/tree3_1020x300_3x1.bmp", 1020, 300, 3, 1);
-
-
+	_loading->loadFrameImage("엔딩", "Texture/background/endingBackground_5120x800.bmp", 5120, 800, 4, 1);
 
 	// background - 시작메뉴
 	_loading->loadImage("START_SCENE_BACKGROUND", "Texture/background/startBackground_50x50.bmp", WINSIZEX, WINSIZEY);
