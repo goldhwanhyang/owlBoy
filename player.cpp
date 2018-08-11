@@ -42,6 +42,7 @@ HRESULT player::init()
 	_frameCount[ROLL] = 5;
 	_frameCount[ATK] = 5;
 	_frameCount[FLY] = 8;
+
 	_liftImg = IMAGEMANAGER->findImage("LIFT2");									//	(물체 앞에서 잡고있는 프레임)
 
 	//hp바
@@ -132,7 +133,8 @@ void player::update()
 
 		if (_liftableActor != NULL)
 		{
-			changeState(LIFT);
+			if(_state != ROLL)
+				changeState(LIFT);
 			_liftableActor->lifted(this);
 		}
 	}
@@ -163,16 +165,20 @@ void player::render()
 	}
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 
-	char str[128];
+	//char str[128];
 	//sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
-	sprintf_s(str, " 코인 : %d", _coin);
-	TextOut(getMemDC(), 10, 10, str, strlen(str));
+	//sprintf_s(str, " 코인 : %d", _coin);
+	//TextOut(getMemDC(), 10, 10, str, strlen(str));
 	
 	if (_liftableActor != NULL)
 	{
+		//구르기 상태일때는 LIFT2이미지를 출력하지 않는다.
+		if (_state == ROLL)
+			_liftImg->setX(-1);
+		else
+			_liftImg->setX(_x);
 		_liftImg->setFrameX(img[_state]->getFrameX());
 		_liftImg->setFrameY(img[_state]->getFrameY());
-		_liftImg->setX(_x);
 		_liftImg->setY(_y);
 	}
 
@@ -327,7 +333,8 @@ void player::groundAxis(WAY axisX, WAY axisY)										// 키 입력으로 바꿔준 상�
 			// 점프를 했다가 떨어질때 자연스럽게 떨어지기 위해 중력을 조절
 			if (_state == JUMP)
 				_gravity += -sinf(PI / 2) * _jumpSpeed;
-			changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
+			if(_state != FLY)
+				changeState(JUMPFALL);			// 스테이트가 바뀔때 마다 index, count 0으로초기화해주는 함수.
 		}
 	}
 
