@@ -17,8 +17,7 @@
 /*
 	마우스 우클릭을 누르고있으면 포물선을 그려주는것
 	WALK일 때 대각선으로 내려가는거
-	coin
-
+	
 */
 
 HRESULT player::init()
@@ -51,12 +50,12 @@ HRESULT player::init()
 		_hpBar = new progressBar;
 		_hpBar->init("HP_FRONT", "HP_BACK", 120, 63, 220, 30);
 		_maxHp = 30;	// 맥스HP
-		_hp = 29;	// 현재 에너지(이미지수정때문에29)
+		_hp = 15;	// 현재 에너지(이미지수정때문에29)
 		_hpBar->setGauge(_hp, _maxHp);
 	}
 	//코인
 	_maxCoin = 9999;
-	_coin = 1111;
+	_coin = 0;
 
 	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
@@ -65,6 +64,7 @@ HRESULT player::init()
 	_isBack = false;																// 공격하고 뒤로밀려나기
 	_x = 440.f;																		// 플레이어 x좌표
 	_y = 810.f;																		// 플레이어 y좌표
+	_z = 10;
 	_power = 0;																		// 오터스의 파워 초기화
 	_speed = 7.0f;																	// 플레이어 달리기 속도 ( 나중에 상태에 따라서 날고있을 때 속도,땅에있을때 속도, 구를때 속도 등등 상태에 따라 속도 바꿔주기 )	
 	_jumpSpeed = 15.f;																// 플레이어 점프 속도
@@ -87,7 +87,7 @@ HRESULT player::init()
 	_beforeState = _state;															// 이전 상태에 현재 상태를 저장
 	_oldX = 0;																		// 이전 X위치
 	_oldY = 0;																		// 이전 Y위치
-
+	_walkY = 0;
 
 	_enemyManager = NULL;															// townScene에 들어갔을 땐 0으로 만들어준다. 초기화해준다. (안해주면 쓰레기값을 가져와서 터짐)
 	_liftableActor = NULL;															// 초기화 ( 안해주면 터짐 )
@@ -138,7 +138,6 @@ void player::update()
 			_liftableActor->lifted(this);
 		}
 	}
-	
 	// 아래 상하좌우 검사하기전에 히트박스를 먼저 갱신 해주고 검사를한다.
 	// 오투스의 렉트 
 	_hitBox = RectMakeCenter(_x, _y, OTUS_WIDTH, OTUS_HEIGTH);	
@@ -158,8 +157,7 @@ void player::render()
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
 		Rectangle(getMemDC(), _rollHitBox.left - CAM->getX(), _rollHitBox.top - CAM->getY(), _rollHitBox.right - CAM->getX(), _rollHitBox.bottom - CAM->getY());
-		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());
-		
+		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());		
 	}
 	if (_state == ATK)	// 렉트가 공격할때만 나타나게
 	{
@@ -168,12 +166,12 @@ void player::render()
 	img[_state]->frameRender(getMemDC(), _x - CAM->getX() - img[_state]->getFrameWidth() / 2, _y - CAM->getY() - img[_state]->getFrameHeight() / 2);
 
 	char str[128];
-	sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
+	//sprintf_s(str, "X좌표 : %.f  Y좌표 : %.f  중력 : %.f 인덱스 : %d  스피드 : %.f   각도 : %.2f   x축 : %d   y축 : %d 상태 : %d  점프카운트 : %d", _x, _y,_gravity, _index, _speed, _angle, _FX, _FY,_state, _jumpCount);
+	sprintf_s(str, " 코인 : %d", _coin);
 	TextOut(getMemDC(), 10, 10, str, strlen(str));
 	
 	if (_liftableActor != NULL)
 	{
-		_liftableActor->render();
 		_liftImg->setFrameX(img[_state]->getFrameX());
 		_liftImg->setFrameY(img[_state]->getFrameY());
 		_liftImg->setX(_x);
@@ -183,22 +181,33 @@ void player::render()
 	_hpBar->render();
 	friendsFace->render(getMemDC(), 50, 50);
 
-	//천의자리 
-	//IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
-	//IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
-	//
-	////백의자리
-	//IMAGEMANAGER->findImage("number")->setFrameX(_coin % 1000);
-	//IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
-	//
-	////십의자리
-	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 10);
+	//천의자리 1234 / 1000 = 1.234니까 1이 나옴
+	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
+	
+	//백의 자리 
+	IMAGEMANAGER->findImage("number")->setFrameX(((_coin % 1000)/100));
+	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
+
+	//십의자리
+	IMAGEMANAGER->findImage("number")->setFrameX((_coin % 100)/10);
 	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 90, 150);
 	
 	//일의자리
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 10);
 	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 110, 150);
 
+	//(_coin  % 100) /10
+	//	(_coin % 10)
+	/*
+	1234 / 1000 == 1.234 >> 1이 나오고
+	(1234 % 1000) / 100 >> 2가 나오고
+	1234 / 100 == 12.34
+	1234 % 100 == 34
+	1280 / 100 == 1.280
+	1280 % 100 == 280
+	(1280 % 100) / 10 28
+	*/
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //키입력함수 ( 불값, 상태정도만 바꿔주기 )
@@ -290,6 +299,8 @@ void player::groundAxis(WAY axisX, WAY axisY)										// 키 입력으로 바꿔준 상�
 	*/
 	if (_state != ROLL)
 	{
+		if (_gravity > _jumpSpeed * 2)
+			_gravity = _jumpSpeed * 2;
 		_y += _gravity;		// y에 중력값을 계속 더해준다. 
 		_gravity += 0.5f;	// 아래로 내려갈 수 있게 점프가 아니어도 계속 중력값을 더해준다.
 		if (_state == ATK)
@@ -625,7 +636,13 @@ void player::collideMap()
 	}
 	//아래 검사
 	//for (int i = _hitBox.bottom - _speed; i <= _hitBox.bottom; i++)
-	for (int i = _y + (OTUS_HEIGTH /2) - _speed; i <= _y + (OTUS_HEIGTH / 2); i++)
+	//walk상태 일때만 조금 더 아래를 검사한다.
+	if (_state == WALK)
+		_walkY = 20;
+	else
+		_walkY = 0;
+
+	for (int i = _y + (OTUS_HEIGTH /2) - _speed; i <= _y + (OTUS_HEIGTH / 2) + _walkY; i++)
 	{
 		color = GetPixel(_mapPixel->getMemDC(), _x, i);	// for문을 돌면서 _y를 i로 검사
 		r = GetRValue(color);
@@ -829,6 +846,7 @@ void player::damaged(actor * e)
 		{
 			_hp = 0;
 			changeState(DEAD);	// hp가 0과 같거나 이하가 되면 0으로 고정시켜주고 DEAD상태로 바꿔준다.
+			UIMANAGER->startingSceneChange(_x, _y);
 			_isKnockBack = false;
 		}
 		_hpBar->setGauge(_hp, _maxHp);
@@ -869,11 +887,11 @@ void player::frameSetting()
 				else
 					changeState(_beforeState);
 			}
-			if (_state == JUMPFALL)
+			else if (_state == JUMPFALL)
 			{
-				_index = img[_state]->getMaxFrameX();
+				_index = img[_state]->getMaxFrameX() - 2;
 			}
-			if (_state == DEAD)
+			else if (_state == DEAD)
 			{
 				_index = img[_state]->getMaxFrameX();
 			}
