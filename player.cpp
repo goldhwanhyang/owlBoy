@@ -157,7 +157,7 @@ void player::render()
 {
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{
-		Rectangle(getMemDC(), _rollHitBox.left - CAM->getX(), _rollHitBox.top - CAM->getY(), _rollHitBox.right - CAM->getX(), _rollHitBox.bottom - CAM->getY());
+		//Rectangle(getMemDC(), _rollHitBox.left - CAM->getX(), _rollHitBox.top - CAM->getY(), _rollHitBox.right - CAM->getX(), _rollHitBox.bottom - CAM->getY());
 		Rectangle(getMemDC(), _hitBox.left - CAM->getX(), _hitBox.top - CAM->getY(), _hitBox.right - CAM->getX(), _hitBox.bottom - CAM->getY());		
 	}
 	if (_state == ATK)	// 렉트가 공격할때만 나타나게
