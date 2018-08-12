@@ -19,11 +19,13 @@ class tortoise : public enemy
 	image* _hpBarHead;
 	progressBar* _hpBar;
 public:
+	virtual void damaged(actor *e);
+	virtual void drawUI();
+
 	virtual HRESULT init(float x, float y, int dir);
 	virtual void update();
 	virtual void render();
 	virtual void release();
-	virtual void damaged(actor *e);
 
 	bool getIsStandby() { return _phase1->getIsStandby(); }
 	void setIsStandby(bool standby) { _phase1->setIsStandby(standby); }

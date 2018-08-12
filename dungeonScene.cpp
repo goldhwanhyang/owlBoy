@@ -145,6 +145,8 @@ void dungeonScene::render()
 	RENDERMANAGER->render(getMemDC());
 
 	_stageTunnel->render(getMemDC(), 1755 - CAM->getX() + CAM->getSX(), 400 - CAM->getY() + CAM->getSY());
+
+	_tortoise->drawUI();
 	
 	if (KEYMANAGER->isToggleKey(VK_F1))
 	{

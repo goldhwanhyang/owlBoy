@@ -37,6 +37,9 @@ void tortoise::update()
 			_currentPhase->update();
 			//hp¹Ù ¾÷µ¥ÀÌÆ®
 			_hpBar->update();
+			_x = _currentPhase->getX();
+			_y = _currentPhase->getY();
+			_hitBox = _currentPhase->getHitbox();
 			_hpBar->setGauge(_currentPhase->getHp(), _currentPhase->getMaxHp());
 		}
 		else
@@ -60,7 +63,6 @@ void tortoise::update()
 				++_deadCount;
 			}
 		}
-		_hitBox = _currentPhase->getHitbox();
 	}
 }
 
@@ -74,7 +76,8 @@ void tortoise::render()
 			//hpBar·»´õ
 			if (getIsStandby())
 			{
-				_hpBarHead->render(getMemDC(), _hpBar->getRect().left - _hpBarHead->getWidth(),_hpBar->getRect().top-7);
+				HDC uiDC = UIMANAGER->getUIDC();
+				_hpBarHead->render(uiDC, _hpBar->getRect().left - _hpBarHead->getWidth(),_hpBar->getRect().top-7);
 				_hpBar->render();
 			}
 		}
@@ -104,4 +107,21 @@ void tortoise::damaged(actor *e)
 {
 	if (e->getPower() < 0) return;
 	_currentPhase->damaged(e);
+}
+
+void tortoise::drawUI()
+{
+	if (_isActive)
+	{
+		if (_currentPhase->getIsActive())
+		{
+			//hpBar·»´õ
+			if (getIsStandby())
+			{
+				HDC uiDC = UIMANAGER->getUIDC();
+				_hpBarHead->render(uiDC, _hpBar->getRect().left - _hpBarHead->getWidth(), _hpBar->getRect().top - 7);
+				_hpBar->render();
+			}
+		}
+	}
 }

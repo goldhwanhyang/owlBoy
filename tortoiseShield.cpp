@@ -119,8 +119,7 @@ void tortoiseShield::collide()
 		if (!(r == 255 && g == 0 && b == 255))
 		{
 			_x = i + SHIELD_CONST::HITBOX_WIDTH / 2;
-			_angle = 4.71; //270µµ
-			if (_speed > 3) _speed -= 3;
+			_speed = 0;
 			break;
 		}
 	}
@@ -136,8 +135,7 @@ void tortoiseShield::collide()
 		if (!(r == 255 && g == 0 && b == 255))
 		{
 			_x = i - SHIELD_CONST::HITBOX_WIDTH / 2;
-			_angle = 4.71;
-			if (_speed > 3) _speed -= 3;
+			_speed = 0;
 			break;
 		}
 	}
