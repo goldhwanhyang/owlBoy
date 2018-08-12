@@ -182,24 +182,25 @@ void player::render()
 		_liftImg->setY(_y);
 	}
 
+	HDC uiDC = UIMANAGER->getUIDC();
 	_hpBar->render();
-	friendsFace->render(getMemDC(), 50, 50);
+	friendsFace->render(uiDC, 50, 50);
 
 	//천의자리 1234 / 1000 = 1.234니까 1이 나옴
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 50, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 50, 150);
 	
 	//백의 자리 
 	IMAGEMANAGER->findImage("number")->setFrameX(((_coin % 1000)/100));
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 70, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 70, 150);
 
 	//십의자리
 	IMAGEMANAGER->findImage("number")->setFrameX((_coin % 100)/10);
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 90, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 90, 150);
 	
 	//일의자리
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 10);
-	IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), 110, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 110, 150);
 
 	//(_coin  % 100) /10
 	//	(_coin % 10)
