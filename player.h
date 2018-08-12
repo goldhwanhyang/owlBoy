@@ -42,6 +42,7 @@ private:
 	image* _map;
 
 	image* friendsFace;
+	image* coin;
 
 	RECT _spinHitBox;
 	RECT _rollHitBox;

@@ -109,7 +109,6 @@ void loadingScene::loadingImage()
 	_loading->loadImage("BACK", "Texture/Text/back_135x39.bmp", 135, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("BACK_TO_GAME", "Texture/Text/backtoGame_285x39.bmp", 285, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("BACK_TO_MENU", "Texture/Text/backtoMenu_456x63.bmp", 456, 63, true, RGB(255, 0, 255));
-	_loading->loadImage("COIN", "Texture/Text/coin_66x39.bmp", 66, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("CONTINUE", "Texture/Text/continue_135x39.bmp", 135, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("GAME_EXIT", "Texture/Text/gameExit_150x39.bmp", 150, 39, true, RGB(255, 0, 255));
 	_loading->loadImage("GO_TO_TITLE", "Texture/Text/gotoStart_408x39.bmp", 408, 39, true, RGB(255, 0, 255));
@@ -133,6 +132,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("VOLUME_RIGHT", "Texture/UI/volumeProgressFrontRight_19x66.bmp", 19, 50, true, RGB(255, 0, 255));
 	//_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_1473x495.bmp", 1473, 495, true, RGB(255, 0, 255));
 	_loading->loadImage("VOLUME_SETTING", "Texture/UI/volumeSetting_800x368.bmp", 800, 368, true, RGB(255, 0, 255));
+	_loading->loadImage("COIN", "Texture/UI/coin_45x51.bmp", 45, 51, true, RGB(255, 0, 255));
 
 	// background
 	_loading->loadImage("∞À¡§", "Texture/background/black_50x50.bmp", WINSIZEX, WINSIZEY);

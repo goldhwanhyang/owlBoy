@@ -58,6 +58,7 @@ HRESULT player::init()
 	//코인
 	_maxCoin = 9999;
 	_coin = 0;
+	coin = IMAGEMANAGER->findImage("COIN");
 
 	_isDead = false;
 	_isLeft = false;																// true = 왼쪽 , false = 오른쪽
@@ -185,22 +186,23 @@ void player::render()
 	HDC uiDC = UIMANAGER->getUIDC();
 	_hpBar->render();
 	friendsFace->render(uiDC, 50, 50);
-
+	
+	coin->render(uiDC, 20, 150);
 	//천의자리 1234 / 1000 = 1.234니까 1이 나옴
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin / 1000);
-	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 50, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 70, 155);
 	
 	//백의 자리 
 	IMAGEMANAGER->findImage("number")->setFrameX(((_coin % 1000)/100));
-	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 70, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 90, 155);
 
 	//십의자리
 	IMAGEMANAGER->findImage("number")->setFrameX((_coin % 100)/10);
-	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 90, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 110, 155);
 	
 	//일의자리
 	IMAGEMANAGER->findImage("number")->setFrameX(_coin % 10);
-	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 110, 150);
+	IMAGEMANAGER->findImage("number")->frameRender(uiDC, 130, 155);
 
 	//(_coin  % 100) /10
 	//	(_coin % 10)
@@ -546,7 +548,8 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 		{
 			_liftableActor->attack();												 // _liftableActor가NULL이 아니면 게디가? 들고있는 대상이? 공격한다.
 			_liftableActor = _liftableActor->use(this);
-			changeState(FLY);
+			if(_liftableActor == NULL)
+				changeState(FLY);
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON))
