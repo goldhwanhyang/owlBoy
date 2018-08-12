@@ -87,13 +87,6 @@ void loadingScene::render(void)
 	_lineBottom->render(getMemDC(),
 		WINSIZEX / 2 - _lineBottom->getWidth() / 2,
 		WINSIZEY - _lineBottom->getHeight() - 10);
-
-	if (per >= 1)
-	{
-		char str[128];
-		sprintf_s(str, "press space");
-		TextOut(getMemDC(), WINSIZEX/2 - 50, WINSIZEY/2, str, strlen(str));
-	}
 }
 
 //로딩이미지 함수(이곳에 이미지를 전부 넣어라)
