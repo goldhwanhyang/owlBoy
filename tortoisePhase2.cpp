@@ -62,7 +62,7 @@ void tortoisePhase2::update()
 	{
 		if (_isActive)
 		{
-			SOUNDMANAGER->play("보스폭발", _effectVolume);
+			SOUNDMANAGER->play("보스폭발", _effectVolume * 0.8);
 		}
 		_isActive = false;
 	}
@@ -287,6 +287,7 @@ void tortoisePhase2::damaged(actor * e)
 		if (e->getPower() == 100)
 		{
 			_hp -= 100; //무게추공격은 실드관계없이 한방에
+			SOUNDMANAGER->play("보스폭발", _effectVolume);
 			_isActive = false;
 		}
 		else if (_isActiveShield &&	e->getPower() == 0)

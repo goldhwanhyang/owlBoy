@@ -178,7 +178,7 @@ void geddy::attack()
 	for (int i = 0; i < MAX_GEDDY_BULLET; ++i)
 	{
 		if (_bullet[i].getIsActive()) continue;
-
+		SOUNDMANAGER->play("°Ôµð½î±â", _effectVolume);
 		_bullet[i].setFireCenter(_x + 50 * cosf(_angle), _y + 50 * -sinf(_angle));
 		_bullet[i].setAngle(_angle * 180 / PI);
 		_bullet[i].setIsActive(true);
