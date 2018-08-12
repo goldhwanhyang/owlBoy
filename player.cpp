@@ -535,9 +535,9 @@ void player::commonInputKey()														 // 날고있을때나 땅에 있을 때 공용 키
 {																					
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON) && _state != ATK)
 	{							
-		SOUNDMANAGER->play("공격", _effectVolume);
 		if (_liftableActor == NULL)													// _liftableActor가 NULL이면 오터스가 아무것도 안들고 있는 상태이기때문에 오터스가 공격한다.											
 		{																			
+			SOUNDMANAGER->play("공격", _effectVolume);
 			changeState(ATK);														 // 코드를 한줄로 묶을때 함수로 만드는데 달라지는 변수를 매개변수로 빼준다.	
 			_gravity = 0.f;															 // 땅에 있을 때나 날고 있을 때 중력은 어차피 0
 			_spinHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 4, OTUS_HEIGTH / 3);	 // 오터스의 왼쪽공격(회전) 히트박스 
