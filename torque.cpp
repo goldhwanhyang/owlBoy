@@ -332,7 +332,6 @@ void torque::turn()
 
 void torque::Bfire(float angle)
 {
-	SOUNDMANAGER->play("돌던지기", _effectVolume);
 	for (int i = 0; i < _vBullet.size(); ++i)
 	{
 		if (_vBullet[i].getIsActive()) continue;
@@ -341,6 +340,7 @@ void torque::Bfire(float angle)
 		_vBullet[i].setFireCenter(_x, _y);
 		_vBullet[i].setAngle(angle);
 		++_attackCount;
+		SOUNDMANAGER->play("돌던지기", _effectVolume);
 		break;
 	}
 }
