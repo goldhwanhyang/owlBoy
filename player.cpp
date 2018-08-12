@@ -232,7 +232,7 @@ void player::groundInputKey()
 			else
 				EFFECTMANAGER->play("구르기오른쪽", _x, _y);							// 내가 왼쪽으로 구르면 왼쪽 이펙트		
 
-			SOUNDMANAGER->play("구르기", _soundVolume);
+			SOUNDMANAGER->play("구르기", _effectVolume);
 		}
 		_rollHitBox = RectMakeCenter(_x, _y, OTUS_WIDTH * 3, OTUS_HEIGTH * 1.2);
 	}
