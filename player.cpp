@@ -57,7 +57,6 @@ HRESULT player::init()
 	}
 	//ÄÚÀÎ
 	_maxCoin = 9999;
-	_coin = 0;
 	coin = IMAGEMANAGER->findImage("COIN");
 
 	_isDead = false;

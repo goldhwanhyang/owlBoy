@@ -102,7 +102,7 @@ public:
 	void setGeddy(geddy *g) { _geddy = g; }
 
 	int getCoin() { return _coin; }
-	int setCoin(int coin) { _coin = coin; }
+	void setCoin(int coin) { _coin = coin; }
 	// 코인 함수 증가시키기 숫자넣으면 코인의값을 증가시키는 함수
 	int sumCoin(int coin);
 

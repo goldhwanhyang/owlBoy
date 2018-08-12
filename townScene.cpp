@@ -90,6 +90,7 @@ HRESULT townScene::init()
 	_topCloud = IMAGEMANAGER->findImage("마을_천장");
 	_player = SAVEDATA->getPlayer();
 	_player->init();
+	_player->setCoin(0);
 	
 	//CAM->setRange(_testMap->getWidth(), _testMap->getHeight());
 
