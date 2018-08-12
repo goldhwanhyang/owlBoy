@@ -7,7 +7,7 @@ HRESULT tortoiseShield::init(float x, float y)
 	_x = x;
 	_y = y;
 	_gravity = 0;
-	_z = 10;
+	_z = 20;
 
 	_image = IGM->findImage("°ÅºÏÀÌ_¶³¾îÁø¹æÆÐ");
 	_lifted = IMAGEMANAGER->findImage("LIFT2");
